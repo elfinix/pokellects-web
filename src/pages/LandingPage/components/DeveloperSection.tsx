@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 
 export const DeveloperSection: React.FC = () => {
   return (
-    <section id="developer" className="scroll-mt-16 py-20 bg-white border-t border-slate-200 px-6">
+    <section id="developer" className="scroll-mt-16 py-20 bg-white/75 backdrop-blur-xs border-t border-slate-200/80 px-6">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Section Header with Motion Reveal */}
         <motion.div

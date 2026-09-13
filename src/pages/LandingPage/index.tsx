@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { POKEMON_DATABASE } from '../../services/pokemonIndex';
 import { Pokemon } from '../../types/pokemon';
 import SmoothScrollProvider from '../../components/common/SmoothScrollProvider';
+import BackgroundSystem from './components/BackgroundSystem';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import AboutSection from './components/AboutSection';
@@ -53,7 +54,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) =
 
   return (
     <SmoothScrollProvider>
-      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-red-600 selection:text-white">
+      <div className="min-h-screen bg-slate-50/40 relative text-slate-900 flex flex-col selection:bg-red-600 selection:text-white">
+        {/* Dynamic Interactive Background System */}
+        <BackgroundSystem />
+
         {/* 1. Header / Navbar */}
         <Header onNavigateToLogin={onNavigateToLogin} />
 

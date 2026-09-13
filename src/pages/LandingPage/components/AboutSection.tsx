@@ -17,7 +17,7 @@ const cardVariants = {
 
 export const AboutSection: React.FC = () => {
   return (
-    <section id="about" className="scroll-mt-16 py-20 bg-white border-y border-slate-200 px-6">
+    <section id="about" className="scroll-mt-16 py-20 bg-white/75 backdrop-blur-xs border-y border-slate-200/80 px-6">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* Section Header with Viewport Entrance */}
         <motion.div
