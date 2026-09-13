@@ -432,7 +432,6 @@ export const ThreeHeroCanvas: React.FC<ThreeHeroCanvasProps> = ({
     <div
       ref={containerRef}
       className="w-full h-[380px] sm:h-[450px] lg:h-[490px] relative flex items-center justify-center cursor-pointer select-none"
-      title="Click the Pokéball to reveal a Pokémon!"
     />
   );
 };

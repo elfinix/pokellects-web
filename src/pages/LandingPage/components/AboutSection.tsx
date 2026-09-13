@@ -7,51 +7,43 @@ import {
   CheckCircle2,
   Lock,
 } from 'lucide-react';
-import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 
 export const AboutSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Track raw scroll progress within this 290vh runway
+  // Track scroll progress within this 290vh runway (Lenis handles smooth wheel scrolling globally)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   });
 
-  // Damped spring physics to eliminate wheel notch stutter and create fluid momentum
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 105,
-    damping: 26,
-    mass: 0.25,
-    restDelta: 0.0005,
-  });
-
   // ================= CARD 0 (Permanent Collection Ledger) =================
   // Active: 0 -> 0.16, smoothly peels away: 0.16 -> 0.38
-  const x0 = useTransform(smoothProgress, [0, 0.16, 0.38], ['0%', '0%', '-115%']);
-  const rotate0 = useTransform(smoothProgress, [0, 0.16, 0.38], [0, 0, -4]);
-  const scale0 = useTransform(smoothProgress, [0, 0.16, 0.38], [1, 1, 0.95]);
-  const opacity0 = useTransform(smoothProgress, [0, 0.18, 0.38], [1, 1, 0]);
+  const x0 = useTransform(scrollYProgress, [0, 0.16, 0.38], ['0%', '0%', '-115%']);
+  const rotate0 = useTransform(scrollYProgress, [0, 0.16, 0.38], [0, 0, -4]);
+  const scale0 = useTransform(scrollYProgress, [0, 0.16, 0.38], [1, 1, 0.95]);
+  const opacity0 = useTransform(scrollYProgress, [0, 0.18, 0.38], [1, 1, 0]);
 
   // ================= CARD 1 (Continuous Fast Input) =================
   // Glides in: 0.16 -> 0.38, active: 0.38 -> 0.58, peels away: 0.58 -> 0.78
   const x1 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.16, 0.38, 0.58, 0.78],
     ['40%', '0%', '0%', '-115%']
   );
   const rotate1 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.16, 0.38, 0.58, 0.78],
     [3, 0, 0, -4]
   );
   const scale1 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.16, 0.38, 0.58, 0.78],
     [0.94, 1, 1, 0.95]
   );
   const opacity1 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.16, 0.30, 0.58, 0.76],
     [0, 1, 1, 0]
   );
@@ -59,22 +51,22 @@ export const AboutSection: React.FC = () => {
   // ================= CARD 2 (Smart Arena Progression) =================
   // Glides in: 0.58 -> 0.78, active: 0.78 -> 1.0 (100% solid, fully opaque, generous allowance)
   const x2 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.58, 0.78, 1.0],
     ['40%', '0%', '0%']
   );
   const rotate2 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.58, 0.78, 1.0],
     [3, 0, 0]
   );
   const scale2 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.58, 0.78, 1.0],
     [0.94, 1, 1]
   );
   const opacity2 = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [0.58, 0.72, 1.0],
     [0, 1, 1]
   );
@@ -100,8 +92,9 @@ export const AboutSection: React.FC = () => {
               rotate: rotate0,
               opacity: opacity0,
               zIndex: 30,
+              willChange: 'transform, opacity',
             }}
-            className="absolute inset-0 w-full h-full rounded-3xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md shadow-slate-900/[0.04] p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
+            className="absolute inset-0 w-full h-full rounded-3xl bg-white border border-slate-200/90 shadow-md shadow-slate-900/[0.04] p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 via-rose-400 to-amber-400" />
@@ -233,8 +226,9 @@ export const AboutSection: React.FC = () => {
               rotate: rotate1,
               opacity: opacity1,
               zIndex: 20,
+              willChange: 'transform, opacity',
             }}
-            className="absolute inset-0 w-full h-full rounded-3xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md shadow-slate-900/[0.04] p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
+            className="absolute inset-0 w-full h-full rounded-3xl bg-white border border-slate-200/90 shadow-md shadow-slate-900/[0.04] p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500" />
@@ -340,8 +334,9 @@ export const AboutSection: React.FC = () => {
               rotate: rotate2,
               opacity: opacity2,
               zIndex: 10,
+              willChange: 'transform, opacity',
             }}
-            className="absolute inset-0 w-full h-full rounded-3xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md shadow-slate-900/[0.04] p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
+            className="absolute inset-0 w-full h-full rounded-3xl bg-white border border-slate-200/90 shadow-md shadow-slate-900/[0.04] p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 via-pink-400 to-amber-400" />

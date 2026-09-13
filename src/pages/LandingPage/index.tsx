@@ -73,7 +73,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) =
         <AboutSection />
 
         {/* 4. Battle Arena Minigames */}
-        <ArenaSection />
+        <ArenaSection onNavigateToLogin={onNavigateToLogin} />
 
         {/* 5. Meet the Developer */}
         <DeveloperSection />

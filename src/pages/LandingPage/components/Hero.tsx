@@ -316,7 +316,7 @@ export const Hero: React.FC<HeroProps> = ({
             transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-700 transition-colors select-none cursor-pointer"
           >
-            <span>Explore the Ledger</span>
+            <span>Explore the features</span>
             <ChevronDown className="w-3.5 h-3.5" />
           </motion.a>
         </div>

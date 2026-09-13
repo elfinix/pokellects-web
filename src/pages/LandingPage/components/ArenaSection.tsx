@@ -1,180 +1,594 @@
-import React from 'react';
-import { Eye, Type, Volume2, HelpCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import {
+  Eye,
+  Type,
+  Volume2,
+  Trophy,
+  ArrowRight,
+  Flame,
+  Sparkles,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.08,
-      duration: 0.45,
-      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-    },
-  }),
-};
+interface ArenaSectionProps {
+  onNavigateToLogin?: () => void;
+}
 
-export const ArenaSection: React.FC = () => {
+type GameMode = 'silhouette' | 'hangmon' | 'identicry' | 'pokedle';
+
+export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin }) => {
+  const [hoveredCard, setHoveredCard] = useState<GameMode | null>(null);
+  const [isPlayingCry, setIsPlayingCry] = useState(false);
+  const cryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Web Audio Synthesizer for Identicry Hover Effect
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const playIdenticryAudio = () => {
+    try {
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioCtx) return;
+
+      if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
+        audioCtxRef.current = new AudioCtx();
+      }
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+
+      const ctx = audioCtxRef.current;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      // Retro 8-bit ghost species sound cry (~750ms duration)
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(340, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+      osc.frequency.exponentialRampToValueAtTime(560, now + 0.3);
+      osc.frequency.exponentialRampToValueAtTime(250, now + 0.55);
+      osc.frequency.exponentialRampToValueAtTime(420, now + 0.72);
+
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.75);
+
+      setIsPlayingCry(true);
+      if (cryTimerRef.current) clearTimeout(cryTimerRef.current);
+      cryTimerRef.current = setTimeout(() => {
+        setIsPlayingCry(false);
+      }, 750);
+    } catch {
+      // Audio autoplay policy fallback
+      setIsPlayingCry(true);
+      if (cryTimerRef.current) clearTimeout(cryTimerRef.current);
+      cryTimerRef.current = setTimeout(() => {
+        setIsPlayingCry(false);
+      }, 750);
+    }
+  };
+
+  const handleIdenticryEnter = () => {
+    setHoveredCard('identicry');
+    playIdenticryAudio();
+  };
+
+  const handleIdenticryLeave = () => {
+    setHoveredCard(null);
+    // Allow soundwaves to complete their natural audio duration and smoothly transition out
+  };
+
+  const hangmonLetters = ['C', 'H', 'A', 'R', 'I', 'Z', 'A', 'R', 'D'];
+  const alphabetPool = ['A', 'B', 'C', 'D', 'E', 'H', 'I', 'M', 'N', 'O', 'P', 'R', 'T', 'Z'];
+
+  // 36 slender frequency bars for studio-grade acoustic visualizer
+  const frequencyBars = [
+    18, 28, 42, 60, 78, 92, 70, 52, 38, 56, 74, 95, 84, 66, 48, 62, 80, 100,
+    90, 72, 54, 36, 50, 68, 88, 76, 58, 44, 60, 82, 94, 78, 56, 40, 26, 16,
+  ];
+
   return (
-    <section id="arena" className="scroll-mt-16 py-16 sm:py-20 px-6">
+    <section id="arena" className="scroll-mt-16 py-20 lg:py-28 px-4 sm:px-6 lg:px-8 relative font-sans">
+      {/* Ambient decorative aura */}
+      <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-red-100/15 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-amber-100/10 rounded-full blur-3xl pointer-events-none -z-10" />
+
       <div className="max-w-7xl mx-auto space-y-12">
-        {/* Centered Section Header with Motion Entrance */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="text-center max-w-2xl mx-auto space-y-3"
         >
-          <span className="text-xs font-bold uppercase tracking-widest text-red-600">
-            Minigame Arena
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200 select-none">
+            <Flame className="w-3.5 h-3.5 text-red-500" />
+            <span>Arena Discovery Vault</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 font-display tracking-tight">
             Battle Arena Challenges
           </h2>
-          <p className="text-slate-600 text-sm leading-relaxed">
-            Every game round is drawn exclusively from Pokémon you have not yet unlocked.
-            Win the challenge to register that species directly into your Pokédex.
+          <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
+            Four specialized trial formats engineered to test visual instinct, vocabulary, acoustic memory, and deductive logic. Hover into each card to trigger its live preview.
           </p>
         </motion.div>
 
-        {/* Clean, Polished Minigame Cards with Staggered Entrance and Hover Feedback */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* 1. Who's That Pokémon */}
+        {/* 2x2 Interactive Action Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          {/* ================= CARD 1: WHO'S THAT POKÉMON? (Silhouette Reveal) ================= */}
           <motion.div
-            custom={0}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-            whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
-            className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between cursor-default"
+            onMouseEnter={() => setHoveredCard('silhouette')}
+            onMouseLeave={() => setHoveredCard(null)}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-amber-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+            {/* Top Accent Gradient Line */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
+
+            {/* Glowing Aura on Hover */}
+            <div
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-amber-400/20 via-orange-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
+                hoveredCard === 'silhouette' ? 'opacity-100' : 'opacity-30'
+              }`}
+            />
+
+            {/* Header */}
+            <div className="flex items-center justify-between gap-3 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-600 flex items-center justify-center shadow-2xs shrink-0">
                   <Eye className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                  Silhouette
-                </span>
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                    01 · Visual Recognition
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold font-display text-slate-900 tracking-tight">
+                    Who's That Pokémon?
+                  </h3>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Who's That Pokémon?</h3>
-                <p className="text-xs text-slate-500 mt-1">Visual Recognition</p>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Identify the shadowy silhouette against a 15-second timer. Use optional generation
-                and type hints to secure the unlock before time runs out.
-              </p>
+
+              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-amber-50 border-amber-200 text-amber-800">
+                15s Blitz
+              </span>
             </div>
-            <div className="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-              <span>Timer: 15s</span>
-              <span className="font-medium text-slate-700">3 Attempts</span>
+
+            {/* Centerpiece: Dynamic Silhouette / Reveal Action */}
+            <div className="my-auto py-2 relative z-10 flex items-center justify-center">
+              <div className="flex flex-col sm:flex-row items-center gap-6 w-full">
+                {/* Radar Circle Container */}
+                <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-gradient-to-b from-amber-50/80 to-orange-50/50 border border-amber-200/80 flex items-center justify-center shadow-inner overflow-hidden shrink-0">
+                  {/* Rotating Radar Ring */}
+                  <div
+                    className={`absolute inset-2 rounded-full border border-dashed border-amber-300/60 transition-all ${
+                      hoveredCard === 'silhouette' ? 'animate-spin' : ''
+                    }`}
+                    style={{ animationDuration: '6s' }}
+                  />
+
+                  {/* Pokémon Sprite (Morphs from pure black silhouette to full color artwork) */}
+                  <motion.img
+                    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+                    alt="Pikachu"
+                    animate={{
+                      filter:
+                        hoveredCard === 'silhouette'
+                          ? 'brightness(1) drop-shadow(0 12px 20px rgba(245,158,11,0.45))'
+                          : 'brightness(0) drop-shadow(0 6px 12px rgba(0,0,0,0.25))',
+                      scale: hoveredCard === 'silhouette' ? [1, 1.08, 1.04] : 1,
+                    }}
+                    transition={{ duration: 0.35 }}
+                    className="w-28 h-28 sm:w-32 sm:h-32 object-contain select-none transition-all z-10"
+                  />
+                </div>
+
+                {/* Info & Action Feed (Clean typography, no redundant title) */}
+                <div className="space-y-2.5 text-left flex-1">
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-amber-700 block">
+                      {hoveredCard === 'silhouette' ? 'Recognition Verified' : 'Mystery Silhouette'}
+                    </span>
+                    <h4 className="text-lg sm:text-xl font-bold font-display text-slate-900 mt-0.5">
+                      {hoveredCard === 'silhouette' ? '#025 Pikachu' : 'Rapid Visual Blitz'}
+                    </h4>
+                  </div>
+
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    {hoveredCard === 'silhouette'
+                      ? 'Target confirmed! High reflex score unlocks electric typing badges.'
+                      : 'Identify the shadowy outline under the rapid 15s timer before clues expire.'}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    <span
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                        hoveredCard === 'silhouette'
+                          ? 'bg-amber-100 text-amber-900 border border-amber-300 font-semibold'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200'
+                      }`}
+                    >
+                      ⚡ Electric Type
+                    </span>
+                    <span
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                        hoveredCard === 'silhouette'
+                          ? 'bg-amber-100 text-amber-900 border border-amber-300 font-semibold'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200'
+                      }`}
+                    >
+                      📍 Gen 1 Kanto
+                    </span>
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium">
+                      ⏱️ 15s Limit
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Cue */}
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs relative z-10">
+              <span className="text-slate-500 font-medium">
+                {hoveredCard === 'silhouette'
+                  ? '✨ Revealed on hover'
+                  : 'Hover card to reveal silhouette'}
+              </span>
+              <span className="text-amber-700 font-semibold text-xs flex items-center gap-1">
+                <span>+1 Guaranteed Entry</span>
+              </span>
             </div>
           </motion.div>
 
-          {/* 2. Hangmon */}
+          {/* ================= CARD 2: HANGMON (Words Animate to Boxes) ================= */}
           <motion.div
-            custom={1}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-            whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
-            className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between cursor-default"
+            onMouseEnter={() => setHoveredCard('hangmon')}
+            onMouseLeave={() => setHoveredCard(null)}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center">
+            {/* Top Accent Gradient Line */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-transparent" />
+
+            {/* Glowing Aura on Hover */}
+            <div
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-blue-400/20 via-cyan-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
+                hoveredCard === 'hangmon' ? 'opacity-100' : 'opacity-30'
+              }`}
+            />
+
+            {/* Header */}
+            <div className="flex items-center justify-between gap-3 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200/80 text-blue-600 flex items-center justify-center shadow-2xs shrink-0">
                   <Type className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                  Word Puzzle
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                    02 · Letter Deduction
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold font-display text-slate-900 tracking-tight">
+                    Hangmon
+                  </h3>
+                </div>
+              </div>
+
+              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-blue-50 border-blue-200 text-blue-800">
+                6 Strikes
+              </span>
+            </div>
+
+            {/* Centerpiece: Letter Flying / Appearing Action */}
+            <div className="my-auto py-2 relative z-10 space-y-4">
+              {/* Top Status Header */}
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Clue: Flame Pokémon</span>
+                <span
+                  className={`font-semibold px-2.5 py-0.5 rounded-full transition-all ${
+                    hoveredCard === 'hangmon'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'text-slate-500 bg-slate-100'
+                  }`}
+                >
+                  {hoveredCard === 'hangmon' ? 'Solved: #006 Charizard ✓' : '9-Letter Target'}
                 </span>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Hangmon</h3>
-                <p className="text-xs text-slate-500 mt-1">Letter Deduction</p>
+
+              {/* Word Letter Slots */}
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2">
+                {hangmonLetters.map((char, idx) => {
+                  const isFilled = hoveredCard === 'hangmon';
+
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={false}
+                      animate={{
+                        scale: isFilled ? [0.8, 1.15, 1] : 1,
+                        y: isFilled ? [10, -3, 0] : 0,
+                        backgroundColor: isFilled ? '#ffffff' : '#f8fafc',
+                        borderColor: isFilled ? '#3b82f6' : '#e2e8f0',
+                        color: isFilled ? '#2563eb' : 'transparent',
+                      }}
+                      transition={{
+                        duration: 0.35,
+                        delay: isFilled ? idx * 0.035 : 0,
+                        ease: 'backOut',
+                      }}
+                      className={`w-7 h-10 sm:w-8 sm:h-11 rounded-xl border-2 flex items-center justify-center font-bold text-sm sm:text-base shadow-xs select-none transition-colors ${
+                        !isFilled ? 'border-dashed' : ''
+                      }`}
+                    >
+                      {isFilled ? char : '•'}
+                    </motion.div>
+                  );
+                })}
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Solve the concealed Pokémon name letter-by-letter. Rely on category cues and word
-                length before reaching maximum strikes.
-              </p>
+
+              {/* Bottom Alphabet Selection Pool */}
+              <div className="space-y-1.5 pt-1">
+                <span className="text-xs text-slate-400 font-medium block text-center">
+                  Alphabet Selection Pool
+                </span>
+                <div className="flex items-center justify-center gap-1 sm:gap-1.5 flex-wrap max-w-sm mx-auto">
+                  {alphabetPool.map((letter) => {
+                    const isUsed = hoveredCard === 'hangmon' && hangmonLetters.includes(letter);
+
+                    return (
+                      <motion.span
+                        key={letter}
+                        animate={{
+                          opacity: isUsed ? 0.35 : 1,
+                          scale: isUsed ? 0.9 : 1,
+                          backgroundColor: isUsed ? '#f1f5f9' : '#ffffff',
+                        }}
+                        transition={{ duration: 0.2 }}
+                        className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg border text-xs font-semibold flex items-center justify-center transition-all ${
+                          isUsed
+                            ? 'line-through text-slate-400 border-slate-200'
+                            : 'text-slate-700 border-slate-200/90 shadow-2xs'
+                        }`}
+                      >
+                        {letter}
+                      </motion.span>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <div className="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-              <span>Strikes: 6</span>
-              <span className="font-medium text-slate-700">Category Hint</span>
+
+            {/* Footer Cue */}
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs relative z-10">
+              <span className="text-slate-500 font-medium">
+                {hoveredCard === 'hangmon'
+                  ? '✨ Letters deduced into slots'
+                  : 'Hover card to animate deduction'}
+              </span>
+              <span className="text-blue-700 font-semibold text-xs flex items-center gap-1">
+                <span>+1 Guaranteed Entry</span>
+              </span>
             </div>
           </motion.div>
 
-          {/* 3. Identicry */}
+          {/* ================= CARD 3: IDENTICRY (Studio Equalizer & Synth Cry) ================= */}
           <motion.div
-            custom={2}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-            whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
-            className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between cursor-default"
+            onMouseEnter={handleIdenticryEnter}
+            onMouseLeave={handleIdenticryLeave}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-purple-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center">
+            {/* Top Accent Gradient Line */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-transparent" />
+
+            {/* Glowing Aura on Hover */}
+            <div
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-purple-400/20 via-pink-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
+                hoveredCard === 'identicry' ? 'opacity-100' : 'opacity-30'
+              }`}
+            />
+
+            {/* Header */}
+            <div className="flex items-center justify-between gap-3 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-200/80 text-purple-600 flex items-center justify-center shadow-2xs shrink-0">
                   <Volume2 className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                  Audio Cry
-                </span>
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                    03 · Acoustic Memory
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold font-display text-slate-900 tracking-tight">
+                    Identicry
+                  </h3>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Identicry</h3>
-                <p className="text-xs text-slate-500 mt-1">Acoustic Training</p>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Listen to the authentic Pokémon sound cry and select the matching species from four
-                choices. Replays are limited to test auditory memory.
-              </p>
+
+              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-purple-50 border-purple-200 text-purple-800 flex items-center gap-1.5">
+                <span>Retro Audio</span>
+              </span>
             </div>
-            <div className="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-              <span>3 Audio Replays</span>
-              <span className="font-medium text-slate-700">4 Choices</span>
+
+            {/* Centerpiece: Studio-Grade Slender Frequency Bars & Candidate Selection */}
+            <div className="my-auto py-2 relative z-10 space-y-3.5">
+              {/* Equalizer Visualizer Box (Taller & Slender Bars) */}
+              <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-2.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-600 font-semibold flex items-center gap-1.5">
+                    <Volume2 className={`w-3.5 h-3.5 ${isPlayingCry ? 'text-purple-600 animate-pulse' : 'text-slate-400'}`} />
+                    <span>Acoustic Frequency Profile</span>
+                  </span>
+                  <span className="text-purple-700 font-semibold text-xs">
+                    {isPlayingCry
+                      ? 'Playing 8-bit Cry...'
+                      : (hoveredCard === 'identicry' ? 'Acoustic Signal Active' : '44.1 kHz Hi-Fi')}
+                  </span>
+                </div>
+
+                {/* 36 Slender Visualizer Bars: Animated strictly during audio cry playback with smooth exit deceleration */}
+                <div className="flex items-end justify-between gap-[2.5px] sm:gap-[3px] h-20 w-full px-1">
+                  {frequencyBars.map((baseHeight, idx) => (
+                    <motion.div
+                      key={idx}
+                      animate={{
+                        height:
+                          isPlayingCry
+                            ? [
+                                `${Math.max(12, baseHeight * 0.3)}%`,
+                                `${baseHeight}%`,
+                                `${Math.max(12, baseHeight * 0.55)}%`,
+                              ]
+                            : '18%',
+                      }}
+                      transition={
+                        isPlayingCry
+                          ? {
+                              repeat: Infinity,
+                              duration: 0.32 + (idx % 6) * 0.05,
+                              ease: 'easeInOut',
+                            }
+                          : {
+                              duration: 0.65,
+                              ease: [0.22, 1, 0.36, 1],
+                              delay: (idx % 8) * 0.02,
+                            }
+                      }
+                      className={`w-full max-w-[5px] rounded-t-full transition-colors duration-500 ${
+                        isPlayingCry
+                          ? 'bg-gradient-to-t from-purple-600 via-fuchsia-500 to-indigo-400'
+                          : 'bg-slate-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* 4 Candidate Species Pills: Dependent on card hover */}
+              <div className="grid grid-cols-4 gap-2 text-center text-xs font-semibold">
+                <div
+                  className={`py-2 px-1 rounded-xl border transition-all ${
+                    hoveredCard === 'identicry'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-sm'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                  }`}
+                >
+                  <span>Gengar {hoveredCard === 'identicry' ? '✓' : ''}</span>
+                </div>
+                <div className="py-2 px-1 rounded-xl bg-white border border-slate-200 text-slate-500">
+                  Haunter
+                </div>
+                <div className="py-2 px-1 rounded-xl bg-white border border-slate-200 text-slate-500">
+                  Gastly
+                </div>
+                <div className="py-2 px-1 rounded-xl bg-white border border-slate-200 text-slate-500">
+                  Misdreavus
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Cue: Dependent on card hover */}
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs relative z-10">
+              <span className="text-slate-500 font-medium">
+                {hoveredCard === 'identicry'
+                  ? (isPlayingCry ? '🔊 8-bit sound cry playing' : '✨ Acoustic profile active')
+                  : 'Hover card to play sound cry'}
+              </span>
+              <span className="text-purple-700 font-semibold text-xs flex items-center gap-1">
+                <span>+1 Guaranteed Entry</span>
+              </span>
             </div>
           </motion.div>
 
-          {/* 4. Pokédle (Coming Soon) */}
+          {/* ================= CARD 4: MORE COMING SOON! ================= */}
           <motion.div
-            custom={3}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-            className="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex flex-col justify-between cursor-default"
+            onMouseEnter={() => setHoveredCard('pokedle')}
+            onMouseLeave={() => setHoveredCard(null)}
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-slate-50/60 hover:bg-white border border-dashed border-slate-300/80 hover:border-red-300/80 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col items-center justify-center overflow-hidden cursor-default"
           >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center">
-                  <HelpCircle className="w-5 h-5" />
-                </div>
-                <span className="text-[11px] font-semibold text-slate-500 bg-slate-200/80 px-2 py-0.5 rounded-md">
-                  Coming Soon
-                </span>
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-slate-800">Pokédle</h3>
-                <p className="text-xs text-slate-400 mt-1">Multi-Criteria Deduction</p>
-              </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Deduce the secret Pokémon using feedback on primary/secondary types, height, weight,
-                generation, and evolution stage.
-              </p>
-            </div>
-            <div className="pt-4 mt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
-              <span>In Development</span>
-              <span className="font-medium">Future Update</span>
+            {/* Top Accent Gradient Line */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-orange-400 to-transparent" />
+
+            {/* Glowing Aura on Hover (Top Right) */}
+            <div
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-red-400/20 via-orange-400/10 to-transparent blur-2xl pointer-events-none transition-all duration-700 ease-out ${
+                hoveredCard === 'pokedle' ? 'opacity-100 scale-125' : 'opacity-30 scale-100'
+              }`}
+            />
+
+            {/* Centerpiece: Clean, Straight-up Engagement with Silky Smooth Hover Transitions */}
+            <div className="relative z-10 flex flex-col items-center justify-center space-y-4 text-center">
+              <motion.div
+                animate={{
+                  scale: hoveredCard === 'pokedle' ? 1.08 : 1,
+                }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="w-16 h-16 rounded-3xl bg-gradient-to-b from-red-50 to-orange-50/60 border border-red-200/80 flex items-center justify-center text-red-500"
+              >
+                <Sparkles className="w-8 h-8 animate-pulse" />
+              </motion.div>
+
+              <motion.div
+                animate={{
+                  y: hoveredCard === 'pokedle' ? -2 : 0,
+                }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="space-y-1.5 max-w-xs"
+              >
+                <h4 className="text-base sm:text-lg font-bold font-display text-slate-800 transition-colors duration-500 ease-out group-hover:text-red-600">
+                  New challenge modes underway
+                </h4>
+                <p className="text-xs text-slate-400 leading-relaxed transition-colors duration-500 ease-out group-hover:text-slate-500">
+                  More arcade formats are being crafted for the upcoming arena season.
+                </p>
+              </motion.div>
             </div>
           </motion.div>
+        </div>
+
+        {/* Bottom Arena Feature Badges & Direct Launch CTA */}
+        <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          {/* Subtle glowing corner light */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="space-y-2 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <Trophy className="w-5 h-5 text-amber-400" />
+              <span className="text-xs font-semibold tracking-wider uppercase text-amber-400">
+                Arena Progression Ladder
+              </span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white">
+              Win Streaks Unlock Higher Rarity Species
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl font-normal leading-relaxed">
+              Reach 3-win, 5-win, and 10-win milestones to guarantee starter evolutions, pseudo-legendaries,
+              and mythical Pokémon encounters directly registered into your ledger.
+            </p>
+          </div>
+
+          <motion.button
+            type="button"
+            onClick={onNavigateToLogin}
+            whileHover={{ scale: 1.025, y: -1 }}
+            whileTap={{ scale: 0.975 }}
+            transition={{ type: 'spring', stiffness: 450, damping: 25 }}
+            className="group relative overflow-hidden px-7 py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-base shadow-md transition-colors flex items-center gap-2 shrink-0 cursor-pointer"
+          >
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+            <span className="relative z-10">Launch Arena Mode</span>
+            <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-200" />
+          </motion.button>
         </div>
       </div>
     </section>
