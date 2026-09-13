@@ -5,7 +5,7 @@ interface ThreeHeroCanvasProps {
   onBallClick?: () => void;
 }
 
-const ThreeHeroCanvas: React.FC<ThreeHeroCanvasProps> = ({ onBallClick }) => {
+export const ThreeHeroCanvas: React.FC<ThreeHeroCanvasProps> = ({ onBallClick }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const clickCallbackRef = useRef(onBallClick);
 
