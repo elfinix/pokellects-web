@@ -94,7 +94,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSuccess }
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Username / Email Field */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 block">
@@ -107,7 +107,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSuccess }
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="e.g. ash_ketchum or ash@pokellects.dev"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:outline-hidden focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all shadow-xs"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-500 focus:bg-white transition-all shadow-xs"
                 />
               </div>
             </div>
@@ -127,7 +127,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSuccess }
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:outline-hidden focus:ring-2 focus:ring-rose-500 focus:bg-white transition-all shadow-xs"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-500 focus:bg-white transition-all shadow-xs"
                 />
                 <button
                   type="button"
@@ -142,7 +142,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSuccess }
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-sm shadow-md shadow-rose-200 transition-all flex items-center justify-center gap-2 cursor-pointer hover:shadow-lg"
+              className="w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-xs hover:shadow transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Sign In to Pokellects</span>
               <ArrowRight className="w-4 h-4" />
@@ -222,7 +222,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSuccess }
 
       {/* Simple Footer */}
       <footer className="text-center text-xs text-slate-400">
-        Pokellects Authentication • Secure SQLite & Session Architecture
+        Pokellects • Personal Pokédex & Collection
       </footer>
     </div>
   );

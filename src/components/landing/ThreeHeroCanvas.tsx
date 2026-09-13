@@ -1,8 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-const ThreeHeroCanvas: React.FC = () => {
+interface ThreeHeroCanvasProps {
+  onBallClick?: () => void;
+}
+
+const ThreeHeroCanvas: React.FC<ThreeHeroCanvasProps> = ({ onBallClick }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const clickCallbackRef = useRef(onBallClick);
+
+  useEffect(() => {
+    clickCallbackRef.current = onBallClick;
+  }, [onBallClick]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -24,7 +33,7 @@ const ThreeHeroCanvas: React.FC = () => {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
-    // 3. Lighting (Soft studio lighting for sleek light modern theme)
+    // 3. Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
@@ -33,11 +42,11 @@ const ThreeHeroCanvas: React.FC = () => {
     keyLight.castShadow = true;
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0xf43f5e, 1.2); // Rose rim light
+    const rimLight = new THREE.DirectionalLight(0xf43f5e, 1.2);
     rimLight.position.set(-6, -4, -4);
     scene.add(rimLight);
 
-    const fillLight = new THREE.PointLight(0x38bdf8, 1.0, 15); // Subtle cyan fill
+    const fillLight = new THREE.PointLight(0x38bdf8, 1.0, 15);
     fillLight.position.set(-5, 4, 3);
     scene.add(fillLight);
 
@@ -134,11 +143,11 @@ const ThreeHeroCanvas: React.FC = () => {
     const colors = new Float32Array(particleCount * 3);
 
     const palette = [
-      new THREE.Color(0xf43f5e), // Rose
-      new THREE.Color(0x3b82f6), // Blue
-      new THREE.Color(0x10b981), // Emerald
-      new THREE.Color(0xf59e0b), // Amber
-      new THREE.Color(0x8b5cf6), // Violet
+      new THREE.Color(0xf43f5e),
+      new THREE.Color(0x3b82f6),
+      new THREE.Color(0x10b981),
+      new THREE.Color(0xf59e0b),
+      new THREE.Color(0x8b5cf6),
     ];
 
     for (let i = 0; i < particleCount; i += 1) {
@@ -175,23 +184,33 @@ const ThreeHeroCanvas: React.FC = () => {
     pokeGroup.rotation.x = 0.25;
     pokeGroup.rotation.y = -0.35;
 
-    // 5. Mouse Interaction
+    // 5. Mouse Interaction & Click Impulse
     let targetRotationX = 0.25;
     let targetRotationY = -0.35;
-    let mouseX = 0;
-    let mouseY = 0;
+    let scaleImpulse = 1.0;
+    let jumpImpulse = 0.0;
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       const normX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       const normY = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
-      mouseX = normX;
-      mouseY = normY;
       targetRotationY = normX * 0.8;
       targetRotationX = -normY * 0.6 + 0.2;
     };
 
+    const handleClick = () => {
+      // Trigger a springy squash & stretch physical pop
+      scaleImpulse = 1.25;
+      jumpImpulse = 0.45;
+      buttonMat.emissiveIntensity = 1.0;
+
+      if (clickCallbackRef.current) {
+        clickCallbackRef.current();
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('click', handleClick);
 
     // 6. Animation Loop
     let animationFrameId: number;
@@ -201,8 +220,15 @@ const ThreeHeroCanvas: React.FC = () => {
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Soft hovering floating motion
-      pokeGroup.position.y = Math.sin(elapsedTime * 1.4) * 0.12;
+      // Soft hovering floating motion + jump impulse
+      pokeGroup.position.y = Math.sin(elapsedTime * 1.4) * 0.12 + jumpImpulse;
+      jumpImpulse *= 0.88;
+
+      // Springy scale impulse recovery
+      pokeGroup.scale.x += (scaleImpulse - pokeGroup.scale.x) * 0.15;
+      pokeGroup.scale.y += ((1 / scaleImpulse) - pokeGroup.scale.y) * 0.15;
+      pokeGroup.scale.z += (scaleImpulse - pokeGroup.scale.z) * 0.15;
+      scaleImpulse += (1.0 - scaleImpulse) * 0.1;
 
       // Smooth damped rotation following cursor
       pokeGroup.rotation.y += (targetRotationY - pokeGroup.rotation.y) * 0.05;
@@ -216,7 +242,7 @@ const ThreeHeroCanvas: React.FC = () => {
       particleSystem.rotation.x = Math.sin(elapsedTime * 0.4) * 0.1;
 
       // Pulse button light
-      buttonMat.emissiveIntensity = 0.25 + Math.sin(elapsedTime * 3) * 0.2;
+      buttonMat.emissiveIntensity += ((0.25 + Math.sin(elapsedTime * 3) * 0.2) - buttonMat.emissiveIntensity) * 0.08;
 
       renderer.render(scene, camera);
     };
@@ -237,6 +263,7 @@ const ThreeHeroCanvas: React.FC = () => {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('click', handleClick);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
       if (renderer.domElement.parentNode) {
@@ -249,13 +276,9 @@ const ThreeHeroCanvas: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="w-full h-[400px] sm:h-[480px] lg:h-[520px] relative flex items-center justify-center cursor-grab active:cursor-grabbing"
-    >
-      <div className="absolute -bottom-4 text-[11px] font-medium text-slate-400 select-none pointer-events-none flex items-center gap-1.5 bg-white/70 px-3 py-1 rounded-full border border-slate-200/60 shadow-2xs">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        Interactive 3D Engine • Move cursor to inspect
-      </div>
-    </div>
+      className="w-full h-[380px] sm:h-[440px] lg:h-[480px] relative flex items-center justify-center cursor-pointer select-none"
+      title="Click the Pokéball to reveal a Pokémon!"
+    />
   );
 };
 

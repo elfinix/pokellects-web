@@ -1,393 +1,480 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Sparkles,
   ArrowRight,
   BookOpen,
   Gamepad2,
   Trophy,
-  Zap,
   Search,
+  Eye,
+  Type,
+  Volume2,
+  HelpCircle,
+  Check,
 } from 'lucide-react';
 import ThreeHeroCanvas from '../components/landing/ThreeHeroCanvas';
+import { POKEMON_DATABASE } from '../services/pokemonIndex';
+import { POKEMON_TYPE_THEMES } from '../styles/theme';
+import { Pokemon } from '../types/pokemon';
 
 interface LandingPageProps {
   onNavigateToLogin: () => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
+  const [revealedPokemonList, setRevealedPokemonList] = useState<Pokemon[]>([]);
+  const [revealCount, setRevealCount] = useState(0);
+  const nextTrioRef = useRef<Pokemon[]>([]);
+
+  // Pre-generate and preload the next trio of Pokémon sprites in memory
+  const prepareNextTrio = () => {
+    const shuffled = [...POKEMON_DATABASE].sort(() => 0.5 - Math.random());
+    const nextThree = shuffled.slice(0, 3);
+    nextThree.forEach((poke) => {
+      const img = new Image();
+      img.src = poke.spriteUrl;
+    });
+    nextTrioRef.current = nextThree;
+  };
+
+  // On initial mount, preload all database images into the browser cache
+  useEffect(() => {
+    POKEMON_DATABASE.forEach((poke) => {
+      const img = new Image();
+      img.src = poke.spriteUrl;
+    });
+    prepareNextTrio();
+  }, []);
+
+  const handleBallClick = () => {
+    // Instantly use the preloaded trio for zero-latency appearance
+    if (nextTrioRef.current.length === 3) {
+      setRevealedPokemonList(nextTrioRef.current);
+    } else {
+      const shuffled = [...POKEMON_DATABASE].sort(() => 0.5 - Math.random());
+      setRevealedPokemonList(shuffled.slice(0, 3));
+    }
+    setRevealCount((c) => c + 1);
+    // Immediately queue the subsequent trio in advance
+    prepareNextTrio();
+  };
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-rose-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-red-600 selection:text-white">
       {/* 1. Header / Navbar */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-6 py-4">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-rose-400 text-white flex items-center justify-center font-black text-xl shadow-md shadow-rose-200">
+          {/* Brand Logo */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-black text-base shadow-xs">
               P
             </div>
-            <div>
-              <span className="font-extrabold text-xl tracking-tight text-slate-900 font-display">
-                Pokellects
-              </span>
-              <span className="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-50 text-rose-600 border border-rose-100">
-                Personal Pokédex
-              </span>
-            </div>
+            <span className="font-extrabold text-lg tracking-tight text-slate-900 font-display">
+              Pokellects
+            </span>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-            <a href="#about" className="hover:text-rose-600 transition-colors">
+          {/* Middle Navigation */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500">
+            <a href="#about" className="hover:text-slate-900 transition-colors">
               About
             </a>
-            <a href="#features" className="hover:text-rose-600 transition-colors">
-              Features
-            </a>
-            <a href="#arena" className="hover:text-rose-600 transition-colors">
+            <a href="#arena" className="hover:text-slate-900 transition-colors">
               Arena Games
             </a>
-            <a href="#developer" className="hover:text-rose-600 transition-colors">
+            <a href="#developer" className="hover:text-slate-900 transition-colors">
               Meet the Developer
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          {/* Sleek Refined CTA */}
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onNavigateToLogin}
-              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm cursor-pointer shadow-md shadow-slate-200 transition-all flex items-center gap-2 hover:gap-2.5"
+              className="px-4.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs sm:text-sm transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
             >
               <span>Get Started</span>
-              <ArrowRight className="w-4 h-4 text-rose-400" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* 2. Hero Section with ThreeJS 3D Canvas */}
-      <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 px-6">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-rose-100/50 via-sky-100/40 to-amber-100/30 blur-3xl rounded-full pointer-events-none -z-10" />
-
+      {/* 2. Hero Section */}
+      <section className="relative overflow-hidden pt-12 pb-16 lg:pt-16 lg:pb-24 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Copy & CTAs */}
+          {/* Left Column: Core Value Proposition */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200/80 shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+              <Sparkles className="w-3.5 h-3.5 text-red-600" />
               <span>A Permanent Pokémon Knowledge Collection</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-950 font-display leading-[1.12]">
-              Build your personal Pokédex, <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-orange-500 to-amber-500">discovery by discovery</span>.
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 font-display leading-[1.12]">
+              Build your personal Pokédex, <span className="text-red-600">one discovery at a time</span>.
             </h1>
 
             <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              Unlike traditional quizzes where answers vanish when the tab closes,
-              <strong> Pokellects preserves your progress</strong>. Every Pokémon you identify,
-              remember, and unlock becomes a permanent piece of your personal collection.
+              Unlike traditional quizzes where your answers vanish once the tab closes,
+              <strong> Pokellects saves every entry you uncover</strong>. Identify species, test
+              your memory, and unlock Pokémon into a lasting personal collection.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+            {/* CTAs with solid high-contrast buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
               <button
                 type="button"
                 onClick={onNavigateToLogin}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-base shadow-lg shadow-rose-200 transition-all flex items-center justify-center gap-2 cursor-pointer hover:shadow-xl hover:-translate-y-0.5"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-base shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Launch Your Pokédex</span>
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
               <a
                 href="#about"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 font-semibold text-base border border-slate-200 shadow-2xs transition-all text-center"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-base border border-slate-300 shadow-2xs transition-colors text-center"
               >
-                Learn How It Works
+                How It Works
               </a>
             </div>
 
-            {/* Quick Trust Highlights */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 max-w-lg mx-auto lg:mx-0 text-left">
+            {/* Numerical Metrics */}
+            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200 max-w-lg mx-auto lg:mx-0 text-left">
               <div>
-                <div className="text-xl sm:text-2xl font-black text-slate-900 font-display">1,025</div>
-                <div className="text-xs text-slate-500">National Pokédex</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display">1,025</div>
+                <div className="text-xs text-slate-500 mt-0.5">Species to Discover</div>
               </div>
               <div>
-                <div className="text-xl sm:text-2xl font-black text-rose-600 font-display">Persistent</div>
-                <div className="text-xs text-slate-500">SQLite Synced</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display">9</div>
+                <div className="text-xs text-slate-500 mt-0.5">Generations Covered</div>
               </div>
               <div>
-                <div className="text-xl sm:text-2xl font-black text-slate-900 font-display">Gen 1–9</div>
-                <div className="text-xs text-slate-500">Full Universe</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display">18</div>
+                <div className="text-xs text-slate-500 mt-0.5">Elemental Types</div>
               </div>
             </div>
           </div>
 
-          {/* Right Column: ThreeJS 3D Pokéball */}
-          <div className="lg:col-span-5 flex items-center justify-center">
-            <div className="w-full max-w-md bg-white/60 backdrop-blur-md rounded-3xl p-4 border border-slate-200/80 shadow-xl relative group">
-              <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 text-white text-[10px] font-semibold backdrop-blur-md">
-                <Zap className="w-3 h-3 text-amber-400" />
-                Three.js 3D WebGL
-              </div>
-              <ThreeHeroCanvas />
+          {/* Right Column: Clean Floating 3D Pokéball with Random Pokémon Emergence */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
+            <div className="w-full max-w-md flex items-center justify-center relative">
+              <ThreeHeroCanvas onBallClick={handleBallClick} />
+
+              {/* Revealed 3 Random Pokémon Emergence (Overlapping in Front of Upper Pokéball) */}
+              {revealedPokemonList.length > 0 && (
+                <div
+                  key={revealCount}
+                  className="absolute top-4 sm:top-6 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center -space-x-2 sm:space-x-1 w-full max-w-[440px] pointer-events-none px-2"
+                >
+                  {revealedPokemonList.map((poke, index) => {
+                    const theme = POKEMON_TYPE_THEMES[poke.types[0]];
+                    const animClass =
+                      index === 0
+                        ? 'animate-burst-left z-10 hover:z-30 hover:rotate-0'
+                        : index === 1
+                        ? 'animate-burst-center z-20 hover:z-30'
+                        : 'animate-burst-right z-10 hover:z-30 hover:rotate-0';
+
+                    const delays = ['0ms', '80ms', '160ms'];
+
+                    return (
+                      <div
+                        key={`${poke.id}-${revealCount}-${index}`}
+                        className={`${animClass} bg-white/95 backdrop-blur-md p-2.5 sm:p-3 rounded-2xl border border-slate-200 shadow-xl flex flex-col items-center text-center flex-1 max-w-[125px] sm:max-w-[132px] transition-all pointer-events-auto hover:scale-110 cursor-pointer`}
+                        style={{ animationDelay: delays[index] }}
+                        title={`${poke.displayName} (#${poke.id})`}
+                      >
+                        <span className="text-[9px] font-mono font-bold text-slate-400">
+                          #{String(poke.id).padStart(4, '0')}
+                        </span>
+                        <div className="w-13 h-13 sm:w-15 sm:h-15 flex items-center justify-center my-0.5">
+                          <img
+                            src={poke.spriteUrl}
+                            alt={poke.displayName}
+                            loading="eager"
+                            decoding="sync"
+                            className="w-12 h-12 sm:w-14 sm:h-14 object-contain drop-shadow-xs"
+                          />
+                        </div>
+                        <div className="w-full">
+                          <div className="text-[11px] sm:text-xs font-bold text-slate-900 truncate">
+                            {poke.displayName}
+                          </div>
+                          <div className="flex items-center justify-center gap-1 mt-0.5">
+                            <span
+                              className="px-1.5 py-0.2 rounded text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-white"
+                              style={{ backgroundColor: theme.accentHex }}
+                            >
+                              {poke.types[0]}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* 3. About the System */}
-      <section id="about" className="py-20 bg-white border-y border-slate-200/80 px-6">
+      <section id="about" className="py-20 bg-white border-y border-slate-200 px-6">
         <div className="max-w-7xl mx-auto space-y-16">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600">
-              The Pokellects Philosophy
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-red-600">
+              The Pokellects Experience
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
-              Why settle for temporary trivia scores when you can fill a Pokédex?
+              A Pokédex That Never Resets
             </h2>
             <p className="text-slate-600 text-base leading-relaxed">
-              Standard trivia games reset every session. Pokellects turns your Pokémon acumen into a
-              tangible, growing encyclopedia. Every quiz completed and every silhouette guessed adds
-              a permanent badge to your trainer ledger.
+              Standard trivia games reset with every reload. Pokellects gives your knowledge permanence,
+              turning identification and memory into a persistent, rewarding archive.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4 hover:border-rose-300 transition-colors">
-              <div className="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
                 <BookOpen className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Personal Pokédex Vault</h3>
+              <h3 className="text-lg font-bold text-slate-900">Personal Collection Ledger</h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Track completion metrics across all nine generations. See your captured species in full
-                color while mystery silhouettes fuel your desire to discover what’s missing.
+                Track completion progress across the National Pokédex. Unlocked Pokémon appear in full
+                vibrant detail, while undiscovered entries challenge you to complete the roster.
               </p>
             </div>
 
-            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4 hover:border-rose-300 transition-colors">
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
               <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
                 <Search className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Keyboard-First Continuous Play</h3>
+              <h3 className="text-lg font-bold text-slate-900">Continuous Fast Input</h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Designed for high flow. Type a name in the floating bar → reveal detailed stats and
-                cries in a glassmorphic dialog → press <kbd className="px-1.5 py-0.5 bg-white rounded border text-xs">Esc</kbd> to refocus and keep registering.
+                Streamlined for speed. Type a Pokémon’s name in the floating bar, inspect its entry,
+                then hit <kbd className="px-1.5 py-0.5 bg-white rounded border border-slate-300 text-xs">Esc</kbd> to return immediately to the input bar.
               </p>
             </div>
 
-            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4 hover:border-rose-300 transition-colors">
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
               <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
                 <Gamepad2 className="w-6 h-6" />
               </div>
               <h3 className="text-lg font-bold text-slate-900">Arena-Driven Discovery</h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Stuck on what to register next? The Arena exclusively presents Pokémon you haven’t
-                unlocked yet, rewarding your game victories with direct Pokédex entries.
+                Every victory in the Arena registers a brand new Pokémon directly into your ledger.
+                The game specifically selects species you haven’t discovered yet.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4. Arena Minigames Showcase */}
+      {/* 4. Battle Arena Minigames (Centered header & clean cards) */}
       <section id="arena" className="py-20 px-6">
         <div className="max-w-7xl mx-auto space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-rose-600">
-                Play to Unlock
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
-                The Battle Arena Minigames
-              </h2>
-              <p className="text-slate-600 text-sm max-w-xl">
-                Every victory unlocks a new Pokémon you didn’t have in your collection before.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onNavigateToLogin}
-              className="self-start md:self-auto px-5 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>Play in Arena</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+          {/* Centered Section Header */}
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-red-600">
+              Minigame Arena
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display">
+              Battle Arena Challenges
+            </h2>
+            <p className="text-slate-600 text-sm leading-relaxed">
+              Every game round is drawn exclusively from Pokémon you have not yet unlocked.
+              Win the challenge to register that species directly into your Pokédex.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between hover:shadow-md transition-all">
-              <div className="space-y-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">
-                  Easy • Visual
-                </span>
-                <h3 className="text-lg font-bold text-slate-900">Who's That Pokémon?</h3>
+          {/* Clean, Polished Minigame Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 1. Who's That Pokémon */}
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                    <Eye className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                    Silhouette
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Who's That Pokémon?</h3>
+                  <p className="text-xs text-slate-500 mt-1">Visual Recognition</p>
+                </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  The iconic TV silhouette challenge. Identify species before the countdown expires to
-                  claim the entry.
+                  Identify the shadowy silhouette against a 15-second timer. Use optional generation
+                  and type hints to secure the unlock before time runs out.
                 </p>
               </div>
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <div className="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                 <span>Timer: 15s</span>
-                <span className="text-emerald-600 font-semibold">Available Now</span>
+                <span className="font-medium text-slate-700">3 Attempts</span>
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between hover:shadow-md transition-all">
-              <div className="space-y-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700">
-                  Medium • Word Puzzle
-                </span>
-                <h3 className="text-lg font-bold text-slate-900">Hangmon</h3>
+            {/* 2. Hangmon */}
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center">
+                    <Type className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                    Word Puzzle
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Hangmon</h3>
+                  <p className="text-xs text-slate-500 mt-1">Letter Deduction</p>
+                </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Classic hangman mechanics tailored for Pokémon names. Deduce the letters before
-                  strikes run out.
+                  Solve the concealed Pokémon name letter-by-letter. Rely on category cues and word
+                  length before reaching maximum strikes.
                 </p>
               </div>
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <div className="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                 <span>Strikes: 6</span>
-                <span className="text-emerald-600 font-semibold">Available Now</span>
+                <span className="font-medium text-slate-700">Category Hint</span>
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between hover:shadow-md transition-all">
-              <div className="space-y-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-700">
-                  Hard • Audio
-                </span>
-                <h3 className="text-lg font-bold text-slate-900">Identicry</h3>
+            {/* 3. Identicry */}
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center">
+                    <Volume2 className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                    Audio Cry
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Identicry</h3>
+                  <p className="text-xs text-slate-500 mt-1">Acoustic Training</p>
+                </div>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Train your acoustic instincts. Listen to the authentic sound cry and match it to the
-                  correct species.
+                  Listen to the authentic Pokémon sound cry and select the matching species from four
+                  choices. Replays are limited to test auditory memory.
                 </p>
               </div>
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span>Replays: 3</span>
-                <span className="text-emerald-600 font-semibold">Available Now</span>
+              <div className="pt-4 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <span>3 Audio Replays</span>
+                <span className="font-medium text-slate-700">4 Choices</span>
               </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-50/80 border border-dashed border-slate-300 space-y-4 flex flex-col justify-between opacity-85">
-              <div className="space-y-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-200 text-slate-700">
-                  Coming Soon
-                </span>
-                <h3 className="text-lg font-bold text-slate-800">Pokédle</h3>
+            {/* 4. Pokédle (Coming Soon) */}
+            <div className="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center">
+                    <HelpCircle className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-500 bg-slate-200/80 px-2 py-0.5 rounded-md">
+                    Coming Soon
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-800">Pokédle</h3>
+                  <p className="text-xs text-slate-400 mt-1">Multi-Criteria Deduction</p>
+                </div>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  Multi-criteria deduction puzzle testing generation, dual typing, height, weight, and
-                  evolution lines.
+                  Deduce the secret Pokémon using feedback on primary/secondary types, height, weight,
+                  generation, and evolution stage.
                 </p>
               </div>
-              <div className="pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
+              <div className="pt-4 mt-6 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
                 <span>In Development</span>
-                <span>Next Release</span>
+                <span className="font-medium">Future Update</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. Meet the Developer (Single Developer as explicitly requested) */}
-      <section id="developer" className="py-20 bg-white border-t border-slate-200/80 px-6">
-        <div className="max-w-4xl mx-auto space-y-8">
+      {/* 5. Meet the Developer (Single Developer, no tech stack listing) */}
+      <section id="developer" className="py-20 bg-white border-t border-slate-200 px-6">
+        <div className="max-w-3xl mx-auto space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600">
-              Creator & Architect
+            <span className="text-xs font-bold uppercase tracking-widest text-red-600">
+              Behind the Project
             </span>
             <h2 className="text-3xl font-extrabold text-slate-900 font-display">
               Meet the Developer
             </h2>
-            <p className="text-slate-500 text-sm max-w-md mx-auto">
-              Crafted with attention to performance, modern React patterns, and passion for Pokémon lore.
+            <p className="text-slate-500 text-sm">
+              Built out of passion for Pokémon knowledge and thoughtful web design.
             </p>
           </div>
 
-          <div className="bg-slate-50 rounded-3xl p-8 border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center gap-8">
-            {/* Avatar Profile */}
-            <div className="relative shrink-0">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-gradient-to-tr from-rose-500 via-orange-400 to-amber-300 p-1 shadow-lg shadow-rose-200">
-                <div className="w-full h-full rounded-[22px] bg-slate-900 text-white flex flex-col items-center justify-center font-display font-black text-3xl">
-                  <span>DEV</span>
-                  <span className="text-[11px] tracking-widest text-rose-400 font-mono">POKÉ</span>
-                </div>
-              </div>
-              <div className="absolute -bottom-2 -right-2 px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-bold border-2 border-white shadow-xs">
-                Creator
-              </div>
+          <div className="bg-slate-50 rounded-2xl p-8 border border-slate-200 flex flex-col sm:flex-row items-center gap-6">
+            <div className="w-20 h-20 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-display font-black text-2xl shrink-0 shadow-sm">
+              DEV
             </div>
 
-            {/* Bio & Details */}
-            <div className="space-y-4 text-center md:text-left flex-1">
+            <div className="space-y-3 text-center sm:text-left flex-1">
               <div>
-                <h3 className="text-2xl font-bold text-slate-900 font-display">
-                  Lead Software Engineer
+                <h3 className="text-xl font-bold text-slate-900 font-display">
+                  Pokellects Creator
                 </h3>
-                <p className="text-xs font-semibold text-rose-600 mt-0.5">
-                  Full-Stack Web Architect & Pokémon Trainer
+                <p className="text-xs font-medium text-slate-500 mt-0.5">
+                  Lifelong Pokémon Fan & Software Developer
                 </p>
               </div>
 
               <p className="text-sm text-slate-600 leading-relaxed">
-                "Pokellects was born out of a desire to give Pokémon quizzes the permanence they
-                deserve. By blending modern web standards with Three.js rendering, reactive state, and
-                keyboard-first ergonomics, our goal is to build the ultimate web Pokédex experience."
+                "I wanted to create a platform where testing your Pokémon memory feels genuinely
+                rewarding. Instead of a temporary quiz score that disappears when you leave the page,
+                Pokellects is designed as a persistent, keyboard-first Pokédex companion that grows with
+                you."
               </p>
-
-              {/* Tech Stack Badges */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1">
-                {[
-                  'React 19',
-                  'Vite 8',
-                  'TypeScript',
-                  'Tailwind CSS v4',
-                  'Three.js',
-                  'SQLite Ready',
-                  'Recharts',
-                ].map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-medium shadow-2xs"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center font-black text-sm">
+      {/* 6. Footer (No tech stack mentions) */}
+      <footer className="bg-slate-900 text-slate-400 py-10 px-6 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-800">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center font-black text-xs">
                 P
               </div>
-              <span className="font-extrabold text-lg text-white font-display">
+              <span className="font-extrabold text-base text-white font-display">
                 Pokellects
               </span>
             </div>
 
             <div className="flex items-center gap-6 text-xs text-slate-400">
               <a href="#about" className="hover:text-white transition-colors">
-                About System
-              </a>
-              <a href="#features" className="hover:text-white transition-colors">
-                Architecture
+                About
               </a>
               <a href="#arena" className="hover:text-white transition-colors">
-                Minigames
+                Arena Games
+              </a>
+              <a href="#developer" className="hover:text-white transition-colors">
+                Developer
               </a>
               <button
                 type="button"
                 onClick={onNavigateToLogin}
-                className="text-rose-400 hover:text-rose-300 font-semibold cursor-pointer"
+                className="text-red-400 hover:text-red-300 font-medium cursor-pointer"
               >
                 Sign In
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
             <p>
-              Pokellects © 2026. Built with React 19, Tailwind CSS v4 & Three.js.
+              Pokellects © 2026. A personal Pokémon collection and knowledge game.
             </p>
             <p className="text-center sm:text-right">
               Pokémon and Pokémon character names are trademarks of Nintendo, Creatures Inc., and Game Freak.
