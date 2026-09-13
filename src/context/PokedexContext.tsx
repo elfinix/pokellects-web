@@ -1,0 +1,247 @@
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { Pokemon, UnlockedPokemonEntry } from '../types/pokemon';
+import { POKEMON_DATABASE, resolvePokemonByQuery, getPokemonById } from '../services/pokemonIndex';
+import storageService from '../services/storageService';
+import { useAuth } from './AuthContext';
+
+export interface RegisterResult {
+  success: boolean;
+  registeredList: Pokemon[];
+  alreadyUnlockedCount: number;
+  newlyUnlockedCount: number;
+  message: string;
+}
+
+export interface PokedexStats {
+  totalUnlocked: number;
+  totalDexCount: number; // 1025 standard
+  completionRatePercent: number;
+  byGeneration: Record<number, { unlocked: number; total: number }>;
+  byType: Record<string, number>;
+}
+
+interface PokedexContextType {
+  unlockedIds: number[];
+  unlockedEntries: UnlockedPokemonEntry[];
+  isPokemonUnlocked: (id: number) => boolean;
+  registerByQuery: (
+    query: string,
+    method?: UnlockedPokemonEntry['discoveryMethod']
+  ) => RegisterResult;
+  registerById: (
+    id: number,
+    method?: UnlockedPokemonEntry['discoveryMethod']
+  ) => RegisterResult;
+  selectedPokemon: Pokemon | null;
+  isModalOpen: boolean;
+  openDetailModal: (pokemon: Pokemon) => void;
+  closeDetailModal: () => void;
+  stats: PokedexStats;
+  allPokemon: Pokemon[];
+}
+
+const PokedexContext = createContext<PokedexContextType | undefined>(undefined);
+
+export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { currentUser } = useAuth();
+  const playerId = currentUser?.id || 'usr-player-1';
+
+  const [unlockedEntries, setUnlockedEntries] = useState<UnlockedPokemonEntry[]>([]);
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Sync unlocked entries whenever active user changes
+  useEffect(() => {
+    if (playerId) {
+      const entries = storageService.getPlayerUnlockedEntries(playerId);
+      setUnlockedEntries(entries);
+    }
+  }, [playerId]);
+
+  const unlockedIds = useMemo(
+    () => unlockedEntries.map((e) => e.pokemonId),
+    [unlockedEntries]
+  );
+
+  const unlockedSet = useMemo(() => new Set(unlockedIds), [unlockedIds]);
+
+  const isPokemonUnlocked = useCallback(
+    (id: number) => unlockedSet.has(id),
+    [unlockedSet]
+  );
+
+  const openDetailModal = useCallback((pokemon: Pokemon) => {
+    setSelectedPokemon(pokemon);
+    setIsModalOpen(true);
+  }, []);
+
+  const closeDetailModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  /**
+   * Registers a Pokémon using user search input.
+   * Implements OPTION A: If the query matches multiple variants (e.g. "Nidoran" or "Tauros"),
+   * all canonical matching variants are registered simultaneously.
+   */
+  const registerByQuery = useCallback(
+    (
+      query: string,
+      method: UnlockedPokemonEntry['discoveryMethod'] = 'manual_dex_input'
+    ): RegisterResult => {
+      const matches = resolvePokemonByQuery(query);
+
+      if (matches.length === 0) {
+        return {
+          success: false,
+          registeredList: [],
+          alreadyUnlockedCount: 0,
+          newlyUnlockedCount: 0,
+          message: `No Pokémon matching "${query}" was found in the National Pokédex.`,
+        };
+      }
+
+      let newCount = 0;
+      let alreadyCount = 0;
+
+      matches.forEach((p) => {
+        const { isNew } = storageService.registerPokemonToPlayer(playerId, p.id, method);
+        if (isNew) {
+          newCount += 1;
+        } else {
+          alreadyCount += 1;
+        }
+      });
+
+      // Update state with newly refreshed entries
+      const refreshedEntries = storageService.getPlayerUnlockedEntries(playerId);
+      setUnlockedEntries(refreshedEntries);
+
+      // Open detail modal for the primary/first match as requested in the spec
+      openDetailModal(matches[0]);
+
+      let message = "";
+      if (matches.length > 1) {
+        message = `Registered all ${matches.length} matching variants for "${matches[0].displayName}"! (${newCount} new, ${alreadyCount} already known)`;
+      } else if (newCount > 0) {
+        message = `Successfully registered #${matches[0].id} ${matches[0].displayName} to your Pokédex!`;
+      } else {
+        message = `#${matches[0].id} ${matches[0].displayName} is already registered in your Pokédex.`;
+      }
+
+      return {
+        success: true,
+        registeredList: matches,
+        alreadyUnlockedCount: alreadyCount,
+        newlyUnlockedCount: newCount,
+        message,
+      };
+    },
+    [playerId, openDetailModal]
+  );
+
+  /**
+   * Direct registration by ID (e.g. from Arena mini-games)
+   */
+  const registerById = useCallback(
+    (
+      id: number,
+      method: UnlockedPokemonEntry['discoveryMethod'] = 'whos_that_pokemon'
+    ): RegisterResult => {
+      const pokemon = getPokemonById(id);
+      if (!pokemon) {
+        return {
+          success: false,
+          registeredList: [],
+          alreadyUnlockedCount: 0,
+          newlyUnlockedCount: 0,
+          message: `Pokémon #${id} not found.`,
+        };
+      }
+
+      const { isNew } = storageService.registerPokemonToPlayer(playerId, id, method);
+      const refreshedEntries = storageService.getPlayerUnlockedEntries(playerId);
+      setUnlockedEntries(refreshedEntries);
+
+      openDetailModal(pokemon);
+
+      return {
+        success: true,
+        registeredList: [pokemon],
+        alreadyUnlockedCount: isNew ? 0 : 1,
+        newlyUnlockedCount: isNew ? 1 : 0,
+        message: isNew
+          ? `Discovered and registered #${pokemon.id} ${pokemon.displayName}!`
+          : `#${pokemon.id} ${pokemon.displayName} was already in your Pokédex.`,
+      };
+    },
+    [playerId, openDetailModal]
+  );
+
+  // Calculate comprehensive stats for Dashboard & Pokédex Toolbox
+  const stats: PokedexStats = useMemo(() => {
+    const totalUnlocked = unlockedEntries.length;
+    const totalDexCount = 1025;
+    const completionRatePercent = Math.min(
+      100,
+      parseFloat(((totalUnlocked / totalDexCount) * 100).toFixed(1))
+    );
+
+    const byGeneration: Record<number, { unlocked: number; total: number }> = {};
+    for (let g = 1; g <= 9; g += 1) {
+      const totalInGen = POKEMON_DATABASE.filter((p) => p.generation === g).length;
+      const unlockedInGen = POKEMON_DATABASE.filter(
+        (p) => p.generation === g && unlockedSet.has(p.id)
+      ).length;
+      byGeneration[g] = { unlocked: unlockedInGen, total: totalInGen };
+    }
+
+    const byType: Record<string, number> = {};
+    unlockedEntries.forEach((entry) => {
+      const poke = getPokemonById(entry.pokemonId);
+      if (poke) {
+        poke.types.forEach((t) => {
+          byType[t] = (byType[t] || 0) + 1;
+        });
+      }
+    });
+
+    return {
+      totalUnlocked,
+      totalDexCount,
+      completionRatePercent,
+      byGeneration,
+      byType,
+    };
+  }, [unlockedEntries, unlockedSet]);
+
+  return (
+    <PokedexContext.Provider
+      value={{
+        unlockedIds,
+        unlockedEntries,
+        isPokemonUnlocked,
+        registerByQuery,
+        registerById,
+        selectedPokemon,
+        isModalOpen,
+        openDetailModal,
+        closeDetailModal,
+        stats,
+        allPokemon: POKEMON_DATABASE,
+      }}
+    >
+      {children}
+    </PokedexContext.Provider>
+  );
+};
+
+export function usePokedex() {
+  const context = useContext(PokedexContext);
+  if (!context) {
+    throw new Error('usePokedex must be used within a PokedexProvider');
+  }
+  return context;
+}
+
+export default PokedexProvider;
