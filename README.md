@@ -1,32 +1,57 @@
-# React + TypeScript + Vite
+# Pokellects
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> **A personal Pokémon knowledge companion & collection game that never resets.**
 
-Currently, two official plugins are available:
+![Status: In Active Development](https://img.shields.io/badge/status-in%20active%20development-amber.svg)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Unlike standard trivia quizzes where scores and answers vanish once the tab closes, **Pokellects** turns identification, memory, and trivia into a permanent personal Pokédex ledger. Test your knowledge across all 9 generations, unlock entries into your collection, and tackle minigames in the Battle Arena.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚧 Status: Work in Progress
 
-## Expanding the Oxlint configuration
+Pokellects is actively being built. Core systems currently in development and preview:
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- [x] **Interactive 3D Hero Companion** — WebGL Pokéball with physics interaction and instant sprite summon mechanics.
+- [x] **Light-First Design System** — Clean, modern UI with Pokémon type-accented palettes.
+- [x] **Relational Storage & Session Engine** — Persistent trainer profiles, unlock ledgers, and multi-match query handling.
+- [ ] **Player Dashboard & Pokédex Shell** — Visual National Pokédex grid with fast filters, generation buckets, and progress metrics.
+- [ ] **Continuous Fast Input** — Floating keyboard-first identification engine for rapid-fire logging.
+- [ ] **Battle Arena Minigames** — _Who's That Pokémon?_, _Hangmon_, and _Identicry_ drawn exclusively from your undiscovered roster.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+---
+
+## ⚡ Sneakpeek: What's Coming
+
+| Feature                     | Description                                                                                                           |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Personal Pokédex Ledger** | Track completion across 1,025 species with elemental type breakdowns and discovery timelines.                         |
+| **Continuous Fast Input**   | Streamlined speed: type Pokémon names into a floating input bar and inspect entries without losing your flow.         |
+| **Battle Arena Challenges** | Arena challenges exclusively select Pokémon you haven't yet unlocked. Win the round to register the species directly. |
+| **100% Client Persistence** | Zero setup required; progress is saved automatically with local relational database backing.                          |
+
+---
+
+## 🛠️ Local Development
+
+To run the sneakpeek build locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/elfinix/pokellects-web.git
+cd pokellects-web
+
+# Install dependencies
+npm install
+
+# Start the Vite development server
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open http://localhost:5173 in your browser.
+
+---
+
+## ⚖️ Disclaimer
+
+_Pokellects is a fan-made, non-commercial open-source project. Pokémon and Pokémon character names, sprites, and data are trademarks and copyright of Nintendo, Creatures Inc., and GAME FREAK inc. Pokémon data sourced via PokeAPI._
