@@ -1,10 +1,18 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 export const DeveloperSection: React.FC = () => {
   return (
-    <section id="developer" className="py-20 bg-white border-t border-slate-200 px-6">
+    <section id="developer" className="scroll-mt-16 py-20 bg-white border-t border-slate-200 px-6">
       <div className="max-w-3xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
+        {/* Section Header with Motion Reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center space-y-2"
+        >
           <span className="text-xs font-bold uppercase tracking-widest text-red-600">
             Behind the Project
           </span>
@@ -14,9 +22,17 @@ export const DeveloperSection: React.FC = () => {
           <p className="text-slate-500 text-sm">
             Built out of passion for Pokémon knowledge and thoughtful web design.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="bg-slate-50 rounded-2xl p-8 border border-slate-200 flex flex-col sm:flex-row items-center gap-6">
+        {/* Profile Card with Depth and Subtle Hover Lift */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          whileHover={{ y: -3, transition: { duration: 0.2, ease: 'easeOut' } }}
+          className="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-md transition-shadow flex flex-col sm:flex-row items-center gap-6 cursor-default"
+        >
           <div className="w-20 h-20 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-display font-black text-2xl shrink-0 shadow-sm">
             DEV
           </div>
@@ -38,7 +54,7 @@ export const DeveloperSection: React.FC = () => {
               you."
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

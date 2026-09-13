@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { POKEMON_DATABASE } from '../../services/pokemonIndex';
 import { Pokemon } from '../../types/pokemon';
+import SmoothScrollProvider from '../../components/common/SmoothScrollProvider';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import AboutSection from './components/AboutSection';
@@ -51,30 +52,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) =
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-red-600 selection:text-white">
-      {/* 1. Header / Navbar */}
-      <Header onNavigateToLogin={onNavigateToLogin} />
+    <SmoothScrollProvider>
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-red-600 selection:text-white">
+        {/* 1. Header / Navbar */}
+        <Header onNavigateToLogin={onNavigateToLogin} />
 
-      {/* 2. Hero Section with 3D Canvas & Burst Cards */}
-      <Hero
-        onNavigateToLogin={onNavigateToLogin}
-        onBallClick={handleBallClick}
-        revealedPokemonList={revealedPokemonList}
-        revealCount={revealCount}
-      />
+        {/* 2. Hero Section with 3D Canvas & Burst Cards */}
+        <Hero
+          onNavigateToLogin={onNavigateToLogin}
+          onBallClick={handleBallClick}
+          revealedPokemonList={revealedPokemonList}
+          revealCount={revealCount}
+        />
 
-      {/* 3. About the System */}
-      <AboutSection />
+        {/* 3. About the System */}
+        <AboutSection />
 
-      {/* 4. Battle Arena Minigames */}
-      <ArenaSection />
+        {/* 4. Battle Arena Minigames */}
+        <ArenaSection />
 
-      {/* 5. Meet the Developer */}
-      <DeveloperSection />
+        {/* 5. Meet the Developer */}
+        <DeveloperSection />
 
-      {/* 6. Footer */}
-      <Footer onNavigateToLogin={onNavigateToLogin} />
-    </div>
+        {/* 6. Footer */}
+        <Footer onNavigateToLogin={onNavigateToLogin} />
+      </div>
+    </SmoothScrollProvider>
   );
 };
 

@@ -1,12 +1,32 @@
 import React from 'react';
 import { Eye, Type, Volume2, HelpCircle } from 'lucide-react';
+import { motion } from 'motion/react';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.08,
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
+  }),
+};
 
 export const ArenaSection: React.FC = () => {
   return (
-    <section id="arena" className="py-20 px-6">
+    <section id="arena" className="scroll-mt-16 py-16 sm:py-20 px-6">
       <div className="max-w-7xl mx-auto space-y-12">
-        {/* Centered Section Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
+        {/* Centered Section Header with Motion Entrance */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto space-y-3"
+        >
           <span className="text-xs font-bold uppercase tracking-widest text-red-600">
             Minigame Arena
           </span>
@@ -17,12 +37,20 @@ export const ArenaSection: React.FC = () => {
             Every game round is drawn exclusively from Pokémon you have not yet unlocked.
             Win the challenge to register that species directly into your Pokédex.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Clean, Polished Minigame Cards */}
+        {/* Clean, Polished Minigame Cards with Staggered Entrance and Hover Feedback */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* 1. Who's That Pokémon */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+          <motion.div
+            custom={0}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
+            className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between cursor-default"
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
@@ -45,10 +73,18 @@ export const ArenaSection: React.FC = () => {
               <span>Timer: 15s</span>
               <span className="font-medium text-slate-700">3 Attempts</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* 2. Hangmon */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+          <motion.div
+            custom={1}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
+            className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between cursor-default"
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center">
@@ -71,10 +107,18 @@ export const ArenaSection: React.FC = () => {
               <span>Strikes: 6</span>
               <span className="font-medium text-slate-700">Category Hint</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* 3. Identicry */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-slate-300 transition-all">
+          <motion.div
+            custom={2}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
+            className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between cursor-default"
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center">
@@ -97,10 +141,17 @@ export const ArenaSection: React.FC = () => {
               <span>3 Audio Replays</span>
               <span className="font-medium text-slate-700">4 Choices</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* 4. Pokédle (Coming Soon) */}
-          <div className="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex flex-col justify-between">
+          <motion.div
+            custom={3}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            className="p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex flex-col justify-between cursor-default"
+          >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center">
@@ -123,7 +174,7 @@ export const ArenaSection: React.FC = () => {
               <span>In Development</span>
               <span className="font-medium">Future Update</span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
