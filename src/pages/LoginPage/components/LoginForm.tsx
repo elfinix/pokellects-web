@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle } from 'lucide-react';
 
 interface LoginFormProps {
@@ -8,6 +9,7 @@ interface LoginFormProps {
   setPassword: (val: string) => void;
   errorMessage: string | null;
   onSubmit: (e: React.FormEvent) => void;
+  isSubmitting?: boolean;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
@@ -17,71 +19,107 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   setPassword,
   errorMessage,
   onSubmit,
+  isSubmitting = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState<'id' | 'pass' | null>(null);
 
   return (
-    <div className="space-y-6">
-      {errorMessage && (
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
+    <div className="space-y-4">
+      {/* Error Banner */}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2.5 shadow-2xs"
+          >
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+            <span className="font-medium">{errorMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <form onSubmit={onSubmit} className="space-y-4">
-        {/* Username / Email Field */}
+      <form onSubmit={onSubmit} className="space-y-3.5">
+        {/* Username or Email */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 block">
             Username or Email
           </label>
-          <div className="relative">
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <div
+            className={`relative rounded-2xl transition-all duration-200 ${
+              focusedField === 'id' ? 'ring-2 ring-rose-500/20' : ''
+            }`}
+          >
+            <Mail
+              className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
+                focusedField === 'id' ? 'text-rose-500' : 'text-slate-400'
+              }`}
+            />
             <input
               type="text"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
+              onFocus={() => setFocusedField('id')}
+              onBlur={() => setFocusedField(null)}
               placeholder="e.g. ash_ketchum or ash@pokellects.dev"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-500 focus:bg-white transition-all shadow-xs"
+              autoComplete="username"
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200/90 bg-slate-50/60 text-slate-900 text-sm focus:outline-hidden focus:border-rose-400 focus:bg-white transition-all placeholder:text-slate-400 shadow-2xs"
             />
           </div>
         </div>
 
-        {/* Password Field with Visibility Toggle */}
+        {/* Password */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-slate-700 block">
-              Password
-            </label>
-            <span className="text-[11px] text-slate-400">Demo enabled</span>
-          </div>
-          <div className="relative">
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <label className="text-xs font-bold text-slate-700 block">
+            Password
+          </label>
+          <div
+            className={`relative rounded-2xl transition-all duration-200 ${
+              focusedField === 'pass' ? 'ring-2 ring-rose-500/20' : ''
+            }`}
+          >
+            <Lock
+              className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
+                focusedField === 'pass' ? 'text-rose-500' : 'text-slate-400'
+              }`}
+            />
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setFocusedField('pass')}
+              onBlur={() => setFocusedField(null)}
               placeholder="Enter your password"
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 bg-slate-50/50 text-slate-900 text-sm focus:outline-hidden focus:ring-2 focus:ring-red-500 focus:bg-white transition-all shadow-xs"
+              autoComplete="current-password"
+              className="w-full pl-10 pr-10 py-2.5 rounded-2xl border border-slate-200/90 bg-slate-50/60 text-slate-900 text-sm focus:outline-hidden focus:border-rose-400 focus:bg-white transition-all placeholder:text-slate-400 shadow-2xs"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-0.5 cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer transition-colors"
               title={showPassword ? 'Hide password' : 'Show password'}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
-        <button
+        {/* Submit Button with Rich Brand Gradient & Sheen */}
+        <motion.button
           type="submit"
-          className="w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-xs hover:shadow transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          disabled={isSubmitting}
+          whileTap={{ scale: 0.985 }}
+          className="w-full mt-1.5 py-3 px-4 rounded-2xl bg-gradient-to-r from-red-600 via-rose-500 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-sm shadow-md shadow-rose-500/20 hover:shadow-lg hover:shadow-rose-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer relative overflow-hidden disabled:opacity-70"
         >
-          <span>Sign In to Pokellects</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
+          {/* Subtle button sheen swipe on hover */}
+          <div className="absolute inset-0 w-1/2 h-full bg-white/15 skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-700 ease-out pointer-events-none" />
+
+          <span className="relative z-10">{isSubmitting ? 'Signing in...' : 'Sign In'}</span>
+          <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+        </motion.button>
       </form>
     </div>
   );

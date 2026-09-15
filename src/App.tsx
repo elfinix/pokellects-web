@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PokedexProvider, usePokedex } from './context/PokedexContext';
 import LandingPage from './pages/LandingPage';
@@ -431,7 +432,11 @@ function MainApp() {
   const { currentUser, logout } = useAuth();
   const [currentView, setCurrentView] = useState<ViewMode>('landing');
 
-  // If user is already authenticated and visits, they can go to app or stay on landing
+  // Reset scroll whenever view changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [currentView]);
+
   const handleNavigateToLogin = () => {
     setCurrentView('login');
   };
@@ -449,24 +454,53 @@ function MainApp() {
     setCurrentView('landing');
   };
 
-  if (currentView === 'landing') {
-    return <LandingPage onNavigateToLogin={handleNavigateToLogin} />;
-  }
-
-  if (currentView === 'login') {
-    return (
-      <LoginPage
-        onBackToLanding={handleBackToLanding}
-        onLoginSuccess={handleLoginSuccess}
-      />
-    );
-  }
-
   return (
-    <AuthenticatedWorkspace
-      onLogOut={handleLogOut}
-      onReturnToLanding={handleBackToLanding}
-    />
+    <AnimatePresence mode="wait">
+      {currentView === 'landing' && (
+        <motion.div
+          key="landing"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.995 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full"
+        >
+          <LandingPage onNavigateToLogin={handleNavigateToLogin} />
+        </motion.div>
+      )}
+
+      {currentView === 'login' && (
+        <motion.div
+          key="login"
+          initial={{ opacity: 0, y: 16, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.995 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full"
+        >
+          <LoginPage
+            onBackToLanding={handleBackToLanding}
+            onLoginSuccess={handleLoginSuccess}
+          />
+        </motion.div>
+      )}
+
+      {currentView === 'app' && (
+        <motion.div
+          key="app"
+          initial={{ opacity: 0, y: 16, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.995 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full"
+        >
+          <AuthenticatedWorkspace
+            onLogOut={handleLogOut}
+            onReturnToLanding={handleBackToLanding}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
