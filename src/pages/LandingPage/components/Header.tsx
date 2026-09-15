@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
 import { motion, useScroll, useMotionValueEvent } from 'motion/react';
 import { useLenis } from 'lenis/react';
 
@@ -102,7 +101,39 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
             {/* Specular Sheen Sweep */}
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
             <span className="relative z-10">Get Started</span>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-200 relative z-10" />
+            {/* Animated Pokéball that spins and scales on hover */}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="w-4 h-4 relative z-10 transition-transform duration-500 ease-out group-hover:rotate-[360deg] group-hover:scale-110 drop-shadow-xs shrink-0"
+              aria-hidden="true"
+            >
+              {/* Top half (red) */}
+              <path
+                d="M 2 12 A 10 10 0 0 1 22 12 H 14.5 A 2.5 2.5 0 0 0 9.5 12 Z"
+                fill="#ef4444"
+              />
+              {/* Bottom half (white) */}
+              <path
+                d="M 22 12 A 10 10 0 0 1 2 12 H 9.5 A 2.5 2.5 0 0 0 14.5 12 Z"
+                fill="#ffffff"
+              />
+              {/* Outer boundary circle */}
+              <circle cx="12" cy="12" r="10" stroke="#0f172a" strokeWidth="1.5" />
+              {/* Center dividing lines */}
+              <line x1="2" y1="12" x2="9.5" y2="12" stroke="#0f172a" strokeWidth="1.5" />
+              <line x1="14.5" y1="12" x2="22" y2="12" stroke="#0f172a" strokeWidth="1.5" />
+              {/* Center outer button */}
+              <circle cx="12" cy="12" r="3" fill="#0f172a" />
+              {/* Center inner button */}
+              <circle
+                cx="12"
+                cy="12"
+                r="1.4"
+                fill="#ffffff"
+                className="group-hover:fill-rose-200 transition-colors"
+              />
+            </svg>
           </motion.button>
         </div>
       </div>

@@ -241,12 +241,12 @@ export const DeveloperSection: React.FC = () => {
   };
 
   return (
-    <section id="developer" className="scroll-mt-16 pt-6 lg:pt-8 pb-20 lg:pb-28 px-4 sm:px-6 lg:px-8 relative font-sans overflow-hidden">
+    <section id="developer" className="scroll-mt-16 pt-12 lg:pt-16 pb-20 lg:pb-28 px-4 sm:px-6 lg:px-8 relative font-sans overflow-hidden">
       {/* Ambient background glows */}
       <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-red-100/20 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-blue-100/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
-      <div className="max-w-3xl mx-auto space-y-8">
+      <div className="max-w-3xl mx-auto space-y-12 sm:space-y-14">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -268,7 +268,7 @@ export const DeveloperSection: React.FC = () => {
         </motion.div>
 
         {/* Floating Pokémon Trainer Card with Grounded Breathing Shadow */}
-        <div className="relative flex flex-col items-center">
+        <div className="relative flex flex-col items-center pt-3 sm:pt-5">
           {/* Continuous Floating Levitation Wrapper (No hover freeze, no CSS transition conflict) */}
           <motion.div
             animate={{
@@ -286,7 +286,7 @@ export const DeveloperSection: React.FC = () => {
               whileHover={{ scale: 1.012 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
               onMouseEnter={() => setSheenKey((k) => k + 1)}
-              className="relative w-full group rounded-3xl bg-white/95 border-2 border-slate-200/90 hover:border-red-400/80 shadow-xl hover:shadow-2xl overflow-hidden select-none cursor-default"
+              className="relative w-full group rounded-3xl bg-white/95 border-2 border-slate-200/90 shadow-xl hover:shadow-2xl overflow-hidden select-none cursor-default"
             >
               {/* Diagonal Holographic Foil Sheen: One-Way Sweep from Top-Left to Bottom-Right */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden z-20 rounded-3xl">

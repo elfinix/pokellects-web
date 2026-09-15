@@ -95,7 +95,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
   ];
 
   return (
-    <section id="arena" className="scroll-mt-16 pt-6 lg:pt-8 pb-8 lg:pb-10 px-4 sm:px-6 lg:px-8 relative font-sans">
+    <section id="arena" className="scroll-mt-16 pt-14 lg:pt-18 pb-14 lg:pb-18 px-4 sm:px-6 lg:px-8 relative font-sans">
       {/* Ambient decorative aura */}
       <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-red-100/15 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-amber-100/10 rounded-full blur-3xl pointer-events-none -z-10" />
