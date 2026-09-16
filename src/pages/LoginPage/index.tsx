@@ -176,7 +176,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
             <div className="relative z-10 flex items-center justify-center pt-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200/80 shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-red-500" />
-                <span>Gotta Name em All</span>
+                <span>Gotta Name 'em All</span>
               </div>
             </div>
 
@@ -229,21 +229,36 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
                 Discover and catalog over 1,000 species into your personal collection.
               </p>
 
-              {/* Smooth rotation indicator dots */}
+              {/* Smooth rotation indicator dots with fluid motion spring transition */}
               <div className="flex items-center justify-center gap-1.5 pt-3">
-                {MYSTERY_POKEMON.map((poke, idx) => (
-                  <button
-                    key={poke.id}
-                    type="button"
-                    onClick={() => setSilhouetteIndex(idx)}
-                    aria-label={`Show silhouette ${idx + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                      idx === silhouetteIndex
-                        ? 'w-6 bg-gradient-to-r from-red-600 to-rose-500 shadow-xs'
-                        : 'w-1.5 bg-slate-200 hover:bg-slate-300'
-                    }`}
-                  />
-                ))}
+                {MYSTERY_POKEMON.map((poke, idx) => {
+                  const isActive = idx === silhouetteIndex;
+                  return (
+                    <motion.button
+                      key={poke.id}
+                      type="button"
+                      onClick={() => setSilhouetteIndex(idx)}
+                      aria-label={`Show silhouette ${idx + 1}`}
+                      layout
+                      initial={false}
+                      animate={{
+                        width: isActive ? 24 : 6,
+                      }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 350,
+                        damping: 26,
+                      }}
+                      className="h-1.5 rounded-full bg-slate-200 hover:bg-slate-300 relative overflow-hidden cursor-pointer shadow-2xs"
+                    >
+                      <motion.div
+                        animate={{ opacity: isActive ? 1 : 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-full h-full rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-red-500"
+                      />
+                    </motion.button>
+                  );
+                })}
               </div>
             </div>
           </div>
