@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    // For demo purposes, we can switch to demo player or null
+    storageService.setActiveUserId('');
     setCurrentUser(null);
   };
 

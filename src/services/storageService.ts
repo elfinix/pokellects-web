@@ -85,8 +85,9 @@ class StorageService {
 
   public getActiveUser(): AppUser | null {
     const activeId = localStorage.getItem(STORAGE_KEYS.ACTIVE_USER_ID);
+    if (!activeId) return null;
     const users = this.getUsers();
-    return users.find((u) => u.id === activeId) || users[0] || null;
+    return users.find((u) => u.id === activeId) || null;
   }
 
   public setActiveUserId(userId: string): void {

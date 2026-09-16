@@ -141,3 +141,31 @@
 .animate-burst-right {
   animation: poke-burst-right 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
+
+/* Liquid Metric Card Fluid Wave Keyframes */
+@keyframes liquid-wave-1 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes liquid-wave-2 {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-liquid-wave-1 {
+  animation: liquid-wave-1 4s linear infinite;
+}
+
+.animate-liquid-wave-2 {
+  animation: liquid-wave-2 6.5s linear infinite;
+}
+

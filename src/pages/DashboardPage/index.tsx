@@ -1,0 +1,572 @@
+import React from 'react';
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  CartesianGrid,
+} from 'recharts';
+import {
+  Trophy,
+  BookOpen,
+  Swords,
+  ArrowRight,
+  TrendingUp,
+  Sparkles,
+  Award,
+  BarChart3,
+  PieChart as PieChartIcon,
+} from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { usePokedex } from '../../context/PokedexContext';
+import { POKEMON_TYPE_THEMES } from '../../styles/theme';
+import { WorkspaceTab } from '../../components/common/AppShell';
+import { LiquidMetricCard } from './components/LiquidMetricCard';
+
+interface DashboardPageProps {
+  onNavigate: (tab: WorkspaceTab) => void;
+}
+
+// Custom High-Contrast Tooltip for Generation Roster Completion Chart
+const CustomGenTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    const registered = payload.find((p: any) => p.dataKey === 'unlocked')?.value || 0;
+    const undiscovered = payload.find((p: any) => p.dataKey === 'undiscovered')?.value || 0;
+    const total = registered + undiscovered;
+    const percent = total > 0 ? Math.round((registered / total) * 100) : 0;
+
+    return (
+      <div className="bg-slate-900 text-white p-3 rounded-2xl shadow-xl border border-slate-800 text-xs space-y-2 min-w-[150px] pointer-events-none">
+        <div className="font-bold text-slate-100 flex items-center justify-between border-b border-slate-800/80 pb-1.5">
+          <span>{label}</span>
+          <span className="text-[10px] font-mono font-bold text-red-400 bg-red-950/60 px-1.5 py-0.5 rounded border border-red-800/40">
+            {percent}%
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-3 text-slate-300">
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+            <span>Registered</span>
+          </span>
+          <span className="font-mono font-bold text-white text-sm">{registered}</span>
+        </div>
+        <div className="flex items-center justify-between gap-3 text-slate-400">
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="w-2 h-2 rounded-full bg-slate-500 shrink-0" />
+            <span>Undiscovered</span>
+          </span>
+          <span className="font-mono font-bold text-slate-300 text-sm">{undiscovered}</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+// Custom High-Contrast Tooltip for Type Distribution Pie Chart
+const CustomTypeTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div className="bg-slate-900 text-white px-3.5 py-2.5 rounded-2xl shadow-xl border border-slate-800 text-xs flex items-center gap-3 pointer-events-none">
+        <span
+          className="w-3 h-3 rounded-full shrink-0 shadow-xs"
+          style={{ backgroundColor: data.payload.color }}
+        />
+        <span className="font-bold text-slate-100">{data.name}</span>
+        <span className="font-mono font-bold text-red-400 ml-auto text-sm">{data.value}</span>
+      </div>
+    );
+  }
+  return null;
+};
+
+export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
+  const { currentUser } = useAuth();
+  const { allPokemon, unlockedIds, stats, openDetailModal } = usePokedex();
+
+  const unlockedPokemonList = allPokemon.filter((p) => unlockedIds.includes(p.id));
+
+  // 1. Generation Breakdown Data for Recharts Bar Chart
+  const genData = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((gen) => {
+    const totalInGen = allPokemon.filter((p) => p.generation === gen).length;
+    const unlockedInGen = unlockedPokemonList.filter((p) => p.generation === gen).length;
+    return {
+      name: `Gen ${gen}`,
+      unlocked: unlockedInGen,
+      undiscovered: Math.max(0, totalInGen - unlockedInGen),
+      total: totalInGen,
+    };
+  });
+
+  // 2. Type Distribution Data for Recharts Pie Chart
+  const typeCountMap: Record<string, number> = {};
+  unlockedPokemonList.forEach((poke) => {
+    poke.types.forEach((t) => {
+      typeCountMap[t] = (typeCountMap[t] || 0) + 1;
+    });
+  });
+
+  const typePieData = Object.entries(typeCountMap)
+    .map(([type, count]) => ({
+      name: type.toUpperCase(),
+      value: count,
+      color: POKEMON_TYPE_THEMES[type as keyof typeof POKEMON_TYPE_THEMES]?.accentHex || '#94a3b8',
+    }))
+    .sort((a, b) => b.value - a.value);
+
+  // Partner / Featured Pokémon (default to first unlocked or Pikachu)
+  const featuredPokemon = unlockedPokemonList[0] || allPokemon[0];
+
+  return (
+    <div className="space-y-8 pb-12">
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-red-600 via-red-600 to-red-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg shadow-red-600/15 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-red-500/30">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+
+        <div className="space-y-2 text-center md:text-left relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs text-xs font-semibold text-white border border-white/10">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Trainer Progress Overview</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black font-display tracking-tight">
+            Welcome, {currentUser?.firstName}!
+          </h1>
+          <p className="text-xs sm:text-sm text-white/90 max-w-lg leading-relaxed font-normal">
+            Your personal Pokédex is synced. Identify species in the Pokédex or test your recall in the Battle Arena to expand your collection.
+          </p>
+        </div>
+
+        {/* Quick Launch Buttons */}
+        <div className="flex flex-wrap items-center gap-3 relative z-10 shrink-0">
+          <button
+            type="button"
+            onClick={() => onNavigate('pokedex')}
+            className="px-5 py-3 rounded-2xl bg-white text-slate-900 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-all shadow-md flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <BookOpen className="w-4 h-4 text-red-600" />
+            <span>Open Pokédex</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('arena')}
+            className="px-5 py-3 rounded-2xl bg-slate-950/40 hover:bg-slate-950/60 text-white font-bold text-xs sm:text-sm transition-all border border-white/20 flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Swords className="w-4 h-4 text-amber-400" />
+            <span>Arena Trials</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Top 4 Metrics Grid with Liquid Transition on Hover */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Metric 1: Registered Total */}
+        <LiquidMetricCard
+          liquidGradient="from-red-600 via-red-600 to-red-700"
+          crestColor="text-red-600"
+          shadowColor="hover:shadow-red-600/25"
+          topBarGradient="from-red-600 to-red-400"
+        >
+          {(isHovered) => (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${
+                    isHovered ? 'text-white/90' : 'text-slate-500'
+                  }`}
+                >
+                  Registered
+                </span>
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    isHovered
+                      ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs scale-105 shadow-xs'
+                      : 'bg-red-50 border border-red-100/80 text-red-600 shadow-xs shadow-red-500/10'
+                  }`}
+                >
+                  <BookOpen className="w-4.5 h-4.5" />
+                </div>
+              </div>
+
+              <div>
+                <div
+                  className={`text-3xl sm:text-4xl font-black font-display tracking-tight transition-colors duration-300 ${
+                    isHovered ? 'text-white' : 'text-slate-900'
+                  }`}
+                >
+                  {stats.totalUnlocked}
+                  <span
+                    className={`text-sm font-semibold font-mono transition-colors duration-300 ${
+                      isHovered ? 'text-white/75' : 'text-slate-400'
+                    }`}
+                  >
+                    {' '}
+                    / 1,025
+                  </span>
+                </div>
+                <div
+                  className={`text-xs mt-1.5 flex items-center gap-1 transition-colors duration-300 ${
+                    isHovered ? 'text-white/90' : 'text-slate-500'
+                  }`}
+                >
+                  <TrendingUp
+                    className={`w-3.5 h-3.5 transition-colors duration-300 ${
+                      isHovered ? 'text-white' : 'text-emerald-500'
+                    }`}
+                  />
+                  <span
+                    className={`font-semibold transition-colors duration-300 ${
+                      isHovered ? 'text-white font-bold' : 'text-emerald-600'
+                    }`}
+                  >
+                    {stats.completionRatePercent}%
+                  </span>
+                  <span>National Dex complete</span>
+                </div>
+              </div>
+
+              <div
+                className={`w-full h-2 rounded-full overflow-hidden p-0.5 transition-colors duration-300 ${
+                  isHovered ? 'bg-black/25' : 'bg-slate-100'
+                }`}
+              >
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ease-out ${
+                    isHovered
+                      ? 'bg-white shadow-xs'
+                      : 'bg-gradient-to-r from-red-600 to-red-500 shadow-xs shadow-red-500/30'
+                  }`}
+                  style={{ width: `${Math.min(100, stats.completionRatePercent)}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </LiquidMetricCard>
+
+        {/* Metric 2: Completion Rate */}
+        <LiquidMetricCard
+          liquidGradient="from-emerald-600 via-emerald-600 to-teal-700"
+          crestColor="text-emerald-600"
+          shadowColor="hover:shadow-emerald-600/25"
+          topBarGradient="from-emerald-500 to-teal-400"
+        >
+          {(isHovered) => (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${
+                    isHovered ? 'text-white/90' : 'text-slate-500'
+                  }`}
+                >
+                  Completion
+                </span>
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    isHovered
+                      ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs scale-105 shadow-xs'
+                      : 'bg-emerald-50 border border-emerald-100/80 text-emerald-600 shadow-xs shadow-emerald-500/10'
+                  }`}
+                >
+                  <TrendingUp className="w-4.5 h-4.5" />
+                </div>
+              </div>
+
+              <div>
+                <div
+                  className={`text-3xl sm:text-4xl font-black font-display tracking-tight transition-colors duration-300 ${
+                    isHovered ? 'text-white' : 'text-emerald-600'
+                  }`}
+                >
+                  {stats.completionRatePercent}%
+                </div>
+                <span
+                  className={`text-xs mt-1 block transition-colors duration-300 ${
+                    isHovered ? 'text-white/80' : 'text-slate-400'
+                  }`}
+                >
+                  National Dex Progress
+                </span>
+              </div>
+
+              <div
+                className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg inline-block transition-all duration-300 ${
+                  isHovered
+                    ? 'text-white bg-white/20 border border-white/30'
+                    : 'text-emerald-700 bg-emerald-50/60 border border-emerald-100/60'
+                }`}
+              >
+                {1025 - stats.totalUnlocked} species remaining to discover
+              </div>
+            </div>
+          )}
+        </LiquidMetricCard>
+
+        {/* Metric 3: Arena Battles Won */}
+        <LiquidMetricCard
+          liquidGradient="from-amber-500 via-amber-600 to-orange-600"
+          crestColor="text-amber-500"
+          shadowColor="hover:shadow-amber-500/25"
+          topBarGradient="from-amber-500 to-yellow-400"
+        >
+          {(isHovered) => (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${
+                    isHovered ? 'text-white/90' : 'text-slate-500'
+                  }`}
+                >
+                  Arena Victories
+                </span>
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    isHovered
+                      ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs scale-105 shadow-xs'
+                      : 'bg-amber-50 border border-amber-100/80 text-amber-600 shadow-xs shadow-amber-500/10'
+                  }`}
+                >
+                  <Trophy className="w-4.5 h-4.5" />
+                </div>
+              </div>
+
+              <div>
+                <div
+                  className={`text-3xl sm:text-4xl font-black font-display tracking-tight transition-colors duration-300 ${
+                    isHovered ? 'text-white' : 'text-slate-900'
+                  }`}
+                >
+                  {(currentUser as any)?.stats?.arenaWins || 8}
+                </div>
+                <span
+                  className={`text-xs mt-1 block transition-colors duration-300 ${
+                    isHovered ? 'text-white/80' : 'text-slate-400'
+                  }`}
+                >
+                  Completed Mini-Trials
+                </span>
+              </div>
+
+              <div
+                className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg inline-block transition-all duration-300 ${
+                  isHovered
+                    ? 'text-white bg-white/20 border border-white/30'
+                    : 'text-amber-700 bg-amber-50/60 border border-amber-100/60'
+                }`}
+              >
+                5-Win Streak Active
+              </div>
+            </div>
+          )}
+        </LiquidMetricCard>
+
+        {/* Metric 4: Partner Spotlight */}
+        <LiquidMetricCard
+          liquidGradient="from-blue-600 via-indigo-600 to-purple-700"
+          crestColor="text-blue-600"
+          shadowColor="hover:shadow-indigo-600/25"
+          topBarGradient="from-blue-500 to-indigo-500"
+        >
+          {(isHovered) => (
+            <div className="flex items-center justify-between gap-3 h-full">
+              <div className="space-y-1.5 min-w-0">
+                <span
+                  className={`text-[11px] font-bold uppercase tracking-wider block transition-colors duration-300 ${
+                    isHovered ? 'text-white/80' : 'text-slate-400'
+                  }`}
+                >
+                  Lead Partner
+                </span>
+                <div
+                  className={`text-xl font-black truncate font-display transition-colors duration-300 ${
+                    isHovered ? 'text-white' : 'text-slate-900'
+                  }`}
+                >
+                  {featuredPokemon.displayName}
+                </div>
+                <span
+                  className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-bold transition-all duration-300 ${
+                    isHovered
+                      ? 'text-white bg-white/20 border border-white/30'
+                      : 'text-red-700 bg-red-50 border border-red-200/60'
+                  }`}
+                >
+                  #{String(featuredPokemon.id).padStart(4, '0')}
+                </span>
+              </div>
+              <div
+                className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 ${
+                  isHovered
+                    ? 'bg-white/20 border border-white/30 shadow-inner scale-105 backdrop-blur-xs'
+                    : 'bg-gradient-to-b from-slate-50 to-red-50/30 border border-slate-200/80 shadow-2xs'
+                }`}
+              >
+                <img
+                  src={featuredPokemon.spriteUrl}
+                  alt={featuredPokemon.displayName}
+                  className="w-14 h-14 object-contain drop-shadow-sm group-hover:-translate-y-0.5 transition-transform duration-300"
+                />
+              </div>
+            </div>
+          )}
+        </LiquidMetricCard>
+      </div>
+
+      {/* Recharts Data Analytics Grid (Equal Height on Desktop) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* Generation Completion Bar Chart */}
+        <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs hover:shadow-sm transition-shadow flex flex-col justify-between h-full">
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-red-600" />
+                  <span>Generation Roster Completion</span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Unlocked vs Undiscovered species across Generations 1 through 9
+                </p>
+              </div>
+
+              {/* Legend Badges */}
+              <div className="flex items-center gap-3 text-xs font-semibold shrink-0">
+                <span className="flex items-center gap-1.5 text-slate-700">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600" />
+                  <span>Registered</span>
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-500">
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+                  <span>Undiscovered</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="h-64 sm:h-72 w-full pt-4 flex-1">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={genData} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomGenTooltip />} cursor={{ fill: 'rgba(241, 245, 249, 0.6)' }} />
+                <Bar dataKey="unlocked" name="Registered" fill="#dc2626" radius={[4, 4, 0, 0]} stackId="a" />
+                <Bar dataKey="undiscovered" name="Undiscovered" fill="#e2e8f0" radius={[4, 4, 0, 0]} stackId="a" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Type Distribution Pie Chart */}
+        <div className="lg:col-span-4 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs hover:shadow-sm transition-shadow flex flex-col justify-between h-full">
+          <div>
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <PieChartIcon className="w-4 h-4 text-purple-600" />
+              <span>Type Distribution</span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Elemental typing diversity of registered Pokémon
+            </p>
+          </div>
+
+          <div className="h-48 sm:h-56 w-full flex items-center justify-center my-auto py-2">
+            {typePieData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={typePieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={75}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {typePieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTypeTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-xs text-slate-400 italic">
+                Register Pokémon to populate type analytics
+              </div>
+            )}
+          </div>
+
+          {/* Top Types Legend */}
+          <div className="pt-3 border-t border-slate-100 mt-auto">
+            <div className="flex flex-wrap gap-1.5 text-xs">
+              {typePieData.slice(0, 5).map((item) => (
+                <div key={item.name} className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
+                  <span className="w-2 h-2 rounded-full shrink-0 shadow-2xs" style={{ backgroundColor: item.color }} />
+                  <span className="font-semibold text-slate-700 text-[10px]">{item.name}</span>
+                  <span className="text-[10px] text-slate-400 font-mono font-medium">({item.value})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Discoveries Carousel/Grid */}
+      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Award className="w-4 h-4 text-red-600" />
+              <span>Recently Registered Species</span>
+            </h3>
+            <p className="text-xs text-slate-400">
+              Your latest discoveries added to the personal collection ledger
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onNavigate('pokedex')}
+            className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <span>View All</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {unlockedPokemonList.slice(0, 6).map((poke) => (
+            <button
+              key={poke.id}
+              type="button"
+              onClick={() => openDetailModal(poke)}
+              className="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-xs transition-all text-center flex flex-col items-center justify-between cursor-pointer group"
+            >
+              <span className="text-[10px] font-mono font-bold text-slate-400 group-hover:text-red-600 transition-colors">
+                #{String(poke.id).padStart(4, '0')}
+              </span>
+              <img
+                src={poke.spriteUrl}
+                alt={poke.displayName}
+                className="w-14 h-14 object-contain my-1.5 group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform duration-300 drop-shadow-xs"
+              />
+              <div className="w-full">
+                <span className="text-xs font-bold text-slate-800 truncate block group-hover:text-slate-950">
+                  {poke.displayName}
+                </span>
+                <span className="text-[9px] text-red-600 font-semibold uppercase tracking-wider">
+                  {poke.types[0]}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardPage;
