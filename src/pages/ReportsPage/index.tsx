@@ -25,13 +25,16 @@ export const ReportsPage: React.FC = () => {
   }, [allPokemon, unlockedIds, search, sortOrder]);
 
   return (
-    <div className="space-y-6 pb-16 max-w-4xl">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-2.5">
-          <BarChart3 className="w-7 h-7 text-blue-500" />
+    <div className="space-y-7 sm:space-y-8 pb-16 max-w-4xl">
+      {/* Header with proper breathing room */}
+      <div className="space-y-2 pb-1">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200/80 flex items-center justify-center text-blue-500 shadow-2xs shrink-0">
+            <BarChart3 className="w-5 h-5" />
+          </div>
           <span>Trainer Ledger Reports</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500">
+        <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
           Audited log of personal Pokédex additions and regional discovery coverage.
         </p>
       </div>

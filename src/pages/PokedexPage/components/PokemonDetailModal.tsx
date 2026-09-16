@@ -377,11 +377,9 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           )}
         </div>
 
-        {/* Modal Footer with Esc hint */}
+        {/* Modal Footer */}
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-          <span>
-            Press <kbd className="px-1.5 py-0.5 bg-slate-100 rounded-md border font-mono">Esc</kbd> to return to search
-          </span>
+          <span className="text-slate-400">Click anywhere outside to close</span>
           <button
             type="button"
             onClick={onClose}

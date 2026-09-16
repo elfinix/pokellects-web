@@ -6,13 +6,16 @@ export const SettingsPage: React.FC = () => {
   const { currentUser, isPlayer } = useAuth();
 
   return (
-    <div className="space-y-6 pb-16 max-w-4xl">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-2.5">
-          <Settings className="w-7 h-7 text-slate-700" />
+    <div className="space-y-7 sm:space-y-8 pb-16 max-w-4xl">
+      {/* Header with proper breathing room */}
+      <div className="space-y-2 pb-1">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 shadow-2xs shrink-0">
+            <Settings className="w-5 h-5" />
+          </div>
           <span>Trainer Settings & Hotkeys</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500">
+        <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
           Configure personal workspace preferences and inspect keyboard shortcuts.
         </p>
       </div>

@@ -151,9 +151,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
           >
             <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
             <span>Back to Home</span>
-            <kbd className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-slate-200/70 text-[10px] font-mono text-slate-500">
-              Esc
-            </kbd>
           </button>
 
           <div className="flex items-center gap-2.5">

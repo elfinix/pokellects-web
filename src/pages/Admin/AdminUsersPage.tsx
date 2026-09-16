@@ -25,16 +25,16 @@ export const AdminUsersPage: React.FC = () => {
   }, [availableUsers, search, roleFilter]);
 
   return (
-    <div className="space-y-6 pb-16 max-w-5xl">
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 mb-2">
+    <div className="space-y-7 sm:space-y-8 pb-16 max-w-5xl">
+      <div className="space-y-2 pb-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
           <Shield className="w-3.5 h-3.5 text-purple-600" />
           <span>Administration</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight">
           Registered Trainer Directory
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500">
+        <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
           Inspect player progress, role permissions, and active SQLite credential records.
         </p>
       </div>

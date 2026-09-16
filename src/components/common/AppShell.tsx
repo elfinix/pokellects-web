@@ -82,7 +82,10 @@ export const AppShell: React.FC<AppShellProps> = ({
   }, [currentUser]);
 
   return (
-    <div className="min-h-screen bg-slate-50/60 text-slate-900 flex font-sans selection:bg-red-600 selection:text-white">
+    <div
+      className="min-h-screen bg-slate-50/60 text-slate-900 flex font-sans selection:bg-red-600 selection:text-white"
+      style={{ '--sidebar-width': isSidebarCollapsed ? '5rem' : '16rem' } as React.CSSProperties}
+    >
       {/* ========================================================================= */}
       {/* DESKTOP SIDEBAR: Standard Side Bar | Main Page Architecture               */}
       {/* ========================================================================= */}

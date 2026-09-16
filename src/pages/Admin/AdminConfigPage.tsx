@@ -26,16 +26,16 @@ export const AdminConfigPage: React.FC = () => {
   return (
     <div className="space-y-8 pb-16 max-w-4xl">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 mb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
             <Shield className="w-3.5 h-3.5 text-purple-600" />
             <span>Administrator Control Center</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight">
             Game Configurations & Feature Flags
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <p className="text-xs sm:text-sm text-slate-500 max-w-2xl leading-relaxed">
             Tune minigame parameters, strike limits, timers, and system feature toggles.
           </p>
         </div>

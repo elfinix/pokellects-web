@@ -169,3 +169,30 @@
   animation: liquid-wave-2 6.5s linear infinite;
 }
 
+/* Liquid Vertical Fluid Wave Keyframes (for left-to-right fluid tides) */
+@keyframes liquid-wave-v1 {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes liquid-wave-v2 {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-liquid-wave-v1 {
+  animation: liquid-wave-v1 4s linear infinite;
+}
+
+.animate-liquid-wave-v2 {
+  animation: liquid-wave-v2 6.5s linear infinite;
+}
+
