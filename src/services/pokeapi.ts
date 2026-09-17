@@ -80,7 +80,47 @@ export async function fetchSpeciesLore(id: number): Promise<{
   }
 }
 
+/**
+ * Fetches species evolution chain and recursively builds the EvolutionNode tree.
+ */
+const evolutionUrlCache = new Map<string, EvolutionNode>();
+
+export async function fetchEvolutionChain(chainUrl: string): Promise<EvolutionNode | null> {
+  if (evolutionUrlCache.has(chainUrl)) {
+    return evolutionUrlCache.get(chainUrl)!;
+  }
+
+  try {
+    const res = await fetch(chainUrl);
+    if (!res.ok) return null;
+    const data = await res.json();
+
+    const parseChainLink = (link: any): EvolutionNode => {
+      const match = link.species?.url?.match(/\/pokemon-species\/(\d+)\//);
+      const id = match ? parseInt(match[1], 10) : 0;
+      const detail = link.evolution_details?.[0];
+
+      return {
+        id,
+        name: link.species?.name || '',
+        minLevel: detail?.min_level || undefined,
+        item: detail?.item?.name?.replace('-', ' ') || undefined,
+        trigger: detail?.trigger?.name?.replace('-', ' ') || undefined,
+        evolvesTo: link.evolves_to && link.evolves_to.length > 0 ? link.evolves_to.map(parseChainLink) : [],
+      };
+    };
+
+    const tree = parseChainLink(data.chain);
+    evolutionUrlCache.set(chainUrl, tree);
+    return tree;
+  } catch (err) {
+    console.warn('[PokeAPI] Evolution chain fetch failed:', err);
+    return null;
+  }
+}
+
 export default {
   fetchPokemonDetail,
   fetchSpeciesLore,
+  fetchEvolutionChain,
 };

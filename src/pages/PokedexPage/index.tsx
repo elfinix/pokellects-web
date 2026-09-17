@@ -295,6 +295,13 @@ export const PokedexPage: React.FC = () => {
       });
   }, [allPokemon, filters, unlockedIds, selectedRegion]);
 
+  // List of registered Pokémon sorted by Pokédex # for modal navigation
+  const registeredPokemonList = useMemo(() => {
+    return allPokemon
+      .filter((p) => unlockedIds.includes(p.id))
+      .sort((a, b) => a.id - b.id);
+  }, [allPokemon, unlockedIds]);
+
   // Circular progress math (radius 19, circumference ~119.38)
   const ringRadius = 19;
   const circumference = 2 * Math.PI * ringRadius;
@@ -508,7 +515,6 @@ export const PokedexPage: React.FC = () => {
                   color: isBannerHovered ? '#ffffff' : currentRegionInfo.accentHex,
                   backdropFilter: isBannerHovered ? 'blur(8px)' : undefined,
                 }}
-                title="Hover to surge regional atmosphere"
               >
                 {currentRegionInfo.renderIcon(isBannerHovered)}
               </div>
@@ -860,6 +866,9 @@ export const PokedexPage: React.FC = () => {
         pokemon={selectedPokemon}
         isOpen={isModalOpen}
         onClose={closeDetailModal}
+        registeredPokemonList={registeredPokemonList}
+        unlockedIds={unlockedIds}
+        onNavigatePokemon={openDetailModal}
       />
     </div>
   );
