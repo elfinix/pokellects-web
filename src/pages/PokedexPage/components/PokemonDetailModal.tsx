@@ -154,9 +154,9 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Celebrate newly registered Pokémon with particle burst
+  // Celebrate newly registered Pokémon with particle burst (only in main Pokédex flow, not from minigames where confetti already fired on win)
   useEffect(() => {
-    if (isOpen && isNewlyRegistered && typeof window !== 'undefined') {
+    if (isOpen && isNewlyRegistered && showNavigation && typeof window !== 'undefined') {
       try {
         const flags = storageService.getFeatureFlags();
         if (flags.enableConfetti) {
@@ -171,7 +171,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
         // Safe fallback
       }
     }
-  }, [isOpen, isNewlyRegistered, pokemon?.id]);
+  }, [isOpen, isNewlyRegistered, showNavigation, pokemon?.id]);
 
   // Reset modal state to defaults on exit
   useEffect(() => {

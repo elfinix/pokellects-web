@@ -32,6 +32,11 @@ This specification documents the visual, structural, and behavioral design langu
 - Victories record the species to the user's collection via `registerById(id, method)`.
 - Registration happens silently in the background without automatically opening the modal or triggering discovery overlays when switching to the Pokédex tab.
 
+### 4. Complete Identity Concealment on Loss
+- When a player fails or runs out of attempts/chances in a minigame (such as Hangmon or Identicry), **DO NOT reveal the Pokémon's artwork, name, Dex number, or details**!
+- The purpose is testing and sharpening Dex recall; revealing the mystery Pokémon spoils the challenge.
+- Present a clean, concealed loss screen with a prompt to advance to the next mystery Pokémon.
+
 ---
 
 ## 3. Canvas & Visual Anatomy

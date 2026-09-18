@@ -22,6 +22,8 @@ import storageService, { ArenaSessionRecord } from '../../services/storageServic
 import { ARENA_GAMES_METADATA } from '../../services/mockdata';
 import { GameMetadata, ArenaGameType } from '../../types/game';
 import WhosThatPokemon from './WhosThatPokemon';
+import Hangmon from './Hangmon';
+import Identicry from './Identicry';
 
 interface ArenaPageProps {
   onPlayGame?: (gameId: ArenaGameType) => void;
@@ -158,8 +160,12 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
 
   const handleLaunchGame = (gameId: ArenaGameType) => {
     setSelectedGame(null);
-    if (gameId === 'whos_that_pokemon') {
-      setActiveGame('whos_that_pokemon');
+    if (
+      gameId === 'whos_that_pokemon' ||
+      gameId === 'hangmon' ||
+      gameId === 'identicry'
+    ) {
+      setActiveGame(gameId);
     }
     if (onPlayGame) {
       onPlayGame(gameId);
@@ -183,6 +189,28 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
   if (activeGame === 'whos_that_pokemon') {
     return (
       <WhosThatPokemon
+        onBack={() => {
+          setActiveGame(null);
+          setSessions(storageService.getArenaSessions(currentUser?.id));
+        }}
+      />
+    );
+  }
+
+  if (activeGame === 'hangmon') {
+    return (
+      <Hangmon
+        onBack={() => {
+          setActiveGame(null);
+          setSessions(storageService.getArenaSessions(currentUser?.id));
+        }}
+      />
+    );
+  }
+
+  if (activeGame === 'identicry') {
+    return (
+      <Identicry
         onBack={() => {
           setActiveGame(null);
           setSessions(storageService.getArenaSessions(currentUser?.id));
