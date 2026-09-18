@@ -6,6 +6,7 @@ import { DEMO_CREDENTIALS } from '../../services/mockdata';
 import { useHotkeys } from '../../hooks/useHotkeys';
 import LoginForm from './components/LoginForm';
 import DemoAccounts from './components/DemoAccounts';
+import { PokellectsLogo } from '../../components/common/PokellectsLogo';
 
 interface LoginPageProps {
   onBackToLanding: () => void;
@@ -152,9 +153,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
           </button>
 
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-600 to-rose-400 text-white flex items-center justify-center font-black text-sm shadow-xs shadow-rose-200">
-              P
-            </div>
+            <PokellectsLogo size={32} className="shadow-xs shadow-red-200" />
             <span className="font-extrabold text-base tracking-tight text-slate-900 font-display">
               Pokellects
             </span>

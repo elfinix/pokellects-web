@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useMotionValueEvent } from 'motion/react';
 import { useLenis } from 'lenis/react';
+import { PokellectsLogo } from '../../../components/common/PokellectsLogo';
 
 interface HeaderProps {
   onNavigateToLogin: () => void;
@@ -55,9 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
           onClick={handleNavClick('#hero')}
           className="flex items-center gap-2.5 select-none cursor-pointer group"
         >
-          <div className="w-8 h-8 rounded-lg bg-red-600 group-hover:bg-red-700 text-white flex items-center justify-center font-black text-base shadow-xs transition-colors">
-            P
-          </div>
+          <PokellectsLogo size={32} className="shadow-xs transition-transform group-hover:scale-105" />
           <span className="font-extrabold text-lg tracking-tight text-slate-900 font-display group-hover:text-slate-700 transition-colors">
             Pokellects
           </span>
@@ -73,8 +72,8 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
             About
           </a>
           <a
-            href="#arena"
-            onClick={handleNavClick('#arena')}
+            href="#games"
+            onClick={handleNavClick('#games')}
             className="hover:text-slate-900 transition-colors"
           >
             Minigames

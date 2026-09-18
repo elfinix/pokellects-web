@@ -19,6 +19,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
 import { globalScrollToTop } from '../../context/SmoothScrollContext';
+import { PokellectsLogo } from './PokellectsLogo';
 
 export type WorkspaceTab =
   | 'dashboard'
@@ -124,9 +125,7 @@ export const AppShell: React.FC<AppShellProps> = ({
               onClick={isSidebarCollapsed ? () => setIsSidebarCollapsed(false) : undefined}
               title={isSidebarCollapsed ? 'Click to expand sidebar' : undefined}
             >
-              <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-sm shadow-xs shadow-red-200 shrink-0">
-                P
-              </div>
+              <PokellectsLogo size={36} className="shadow-xs shadow-red-200" />
               <AnimatePresence initial={false}>
                 {!isSidebarCollapsed && (
                   <motion.div
@@ -345,9 +344,7 @@ export const AppShell: React.FC<AppShellProps> = ({
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-xs shadow-xs shadow-red-200">
-                P
-              </div>
+              <PokellectsLogo size={28} className="shadow-xs shadow-red-200" />
               <span className="font-extrabold text-sm tracking-tight text-slate-900 font-display">
                 Pokellects
               </span>
@@ -388,9 +385,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-sm shadow-xs shadow-red-200">
-                        P
-                      </div>
+                      <PokellectsLogo size={32} className="shadow-xs shadow-red-200" />
                       <span className="font-extrabold text-base tracking-tight text-slate-900 font-display">
                         Pokellects
                       </span>

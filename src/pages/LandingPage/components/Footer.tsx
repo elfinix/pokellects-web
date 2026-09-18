@@ -1,4 +1,5 @@
 import React from 'react';
+import { PokellectsLogo } from '../../../components/common/PokellectsLogo';
 
 interface FooterProps {
   onNavigateToLogin: () => void;
@@ -10,9 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToLogin }) => {
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center font-black text-xs">
-              P
-            </div>
+            <PokellectsLogo size={28} className="shadow-xs" />
             <span className="font-extrabold text-base text-white font-display">
               Pokellects
             </span>
@@ -22,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToLogin }) => {
             <a href="#about" className="hover:text-white transition-colors">
               About
             </a>
-            <a href="#arena" className="hover:text-white transition-colors">
+            <a href="#games" className="hover:text-white transition-colors">
               Minigames
             </a>
             <a href="#developer" className="hover:text-white transition-colors">

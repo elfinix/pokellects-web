@@ -389,6 +389,100 @@ export async function fetchCompletePokemon(idOrName: number | string): Promise<P
 }
 
 /**
+ * Formats rich, authentic, human-readable evolution criteria from PokeAPI evolution_details.
+ * Accurately handles levels, items, friendship, time of day, trade holds, moves, locations, etc.
+ */
+export function formatEvolutionDetails(detail: any): string {
+  if (!detail) return 'Evolution';
+
+  // 1. Level-Up with conditions
+  if (detail.trigger?.name === 'level-up' || detail.min_level) {
+    // Friendship / Affection
+    if (detail.min_happiness || detail.min_affection) {
+      if (detail.time_of_day === 'day') return 'Friendship (Day)';
+      if (detail.time_of_day === 'night') return 'Friendship (Night)';
+      if (detail.held_item?.name) return `Friendship + ${formatDisplayName(detail.held_item.name)}`;
+      return 'High Friendship';
+    }
+
+    // Held Item during Level Up
+    if (detail.held_item?.name) {
+      const itemName = formatDisplayName(detail.held_item.name);
+      if (detail.time_of_day === 'night') return `Hold ${itemName} (Night)`;
+      if (detail.time_of_day === 'day') return `Hold ${itemName} (Day)`;
+      return `Hold ${itemName}`;
+    }
+
+    // Known Move or Move Type
+    if (detail.known_move?.name) {
+      return `Learn ${formatDisplayName(detail.known_move.name)}`;
+    }
+    if (detail.known_move_type?.name) {
+      return `${formatDisplayName(detail.known_move_type.name)} Move + Affection`;
+    }
+
+    // Location / Special Environmental Area
+    if (detail.location?.name) {
+      return `Near ${formatDisplayName(detail.location.name)}`;
+    }
+
+    // Special Level Up Criteria
+    if (detail.min_level) {
+      const lvl = `Lv. ${detail.min_level}`;
+      if (detail.time_of_day === 'day') return `${lvl} (Day)`;
+      if (detail.time_of_day === 'night') return `${lvl} (Night)`;
+      if (detail.time_of_day === 'dusk') return `${lvl} (Dusk)`;
+      if (detail.needs_overworld_rain) return `${lvl} (Rain)`;
+      if (detail.gender === 1) return `${lvl} (Female)`;
+      if (detail.gender === 2) return `${lvl} (Male)`;
+      if (detail.party_species?.name) return `${lvl} (Party: ${formatDisplayName(detail.party_species.name)})`;
+      if (detail.party_type?.name) return `${lvl} (${formatDisplayName(detail.party_type.name)} in party)`;
+      if (detail.relative_physical_stats === 1) return `${lvl} (Atk > Def)`;
+      if (detail.relative_physical_stats === -1) return `${lvl} (Atk < Def)`;
+      if (detail.relative_physical_stats === 0) return `${lvl} (Atk = Def)`;
+      return lvl;
+    }
+
+    // Beauty (e.g. Feebas)
+    if (detail.min_beauty) return 'High Beauty';
+
+    // Inverted device
+    if (detail.turn_upside_down) return 'Upside-down Device';
+  }
+
+  // 2. Evolution Item (e.g. Stones)
+  if (detail.item?.name) {
+    return formatDisplayName(detail.item.name);
+  }
+
+  // 3. Trade
+  if (detail.trigger?.name === 'trade') {
+    if (detail.held_item?.name) {
+      return `Trade (${formatDisplayName(detail.held_item.name)})`;
+    }
+    if (detail.trade_species?.name) {
+      return `Trade with ${formatDisplayName(detail.trade_species.name)}`;
+    }
+    return 'Trade';
+  }
+
+  // 4. Special Triggers
+  if (detail.trigger?.name === 'shed') return 'Shed (Empty Poké Ball)';
+  if (detail.trigger?.name === 'spin') return 'Spin with Sweet';
+  if (detail.trigger?.name === 'three-critical-hits') return '3 Critical Hits';
+  if (detail.trigger?.name === 'take-damage') return 'Take Damage under Stone';
+  if (detail.trigger?.name === 'tower-of-darkness') return 'Tower of Darkness';
+  if (detail.trigger?.name === 'tower-of-waters') return 'Tower of Waters';
+  if (detail.trigger?.name === 'recoil-damage') return 'Recoil Damage in Battle';
+  if (detail.trigger?.name === 'agile-style-move') return '20 Agile Style Moves';
+  if (detail.trigger?.name === 'strong-style-move') return '20 Strong Style Moves';
+
+  // Fallback
+  if (detail.trigger?.name) return formatDisplayName(detail.trigger.name);
+  return 'Evolution';
+}
+
+/**
  * Fetches species evolution chain and recursively builds the EvolutionNode tree.
  */
 export async function fetchEvolutionChain(chainUrl: string): Promise<EvolutionNode | null> {
@@ -412,6 +506,7 @@ export async function fetchEvolutionChain(chainUrl: string): Promise<EvolutionNo
         minLevel: detail?.min_level || undefined,
         item: detail?.item?.name ? formatDisplayName(detail.item.name) : undefined,
         trigger: detail?.trigger?.name ? formatDisplayName(detail.trigger.name) : undefined,
+        evolutionDetailsText: detail ? formatEvolutionDetails(detail) : undefined,
         evolvesTo: link.evolves_to && link.evolves_to.length > 0 ? link.evolves_to.map(parseChainLink) : [],
       };
     };

@@ -3,10 +3,12 @@ import {
   Eye,
   Type,
   Volume2,
+  ScrollText,
   Trophy,
   ArrowRight,
   Flame,
-  Swords,
+  Sparkles,
+  Lock,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -14,7 +16,7 @@ interface ArenaSectionProps {
   onNavigateToLogin?: () => void;
 }
 
-type GameMode = 'silhouette' | 'hangmon' | 'identicry' | 'pokedle';
+type GameMode = 'silhouette' | 'hangmon' | 'identicry' | 'biologist';
 
 export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin }) => {
   const [hoveredCard, setHoveredCard] = useState<GameMode | null>(null);
@@ -82,7 +84,6 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
 
   const handleIdenticryLeave = () => {
     setHoveredCard(null);
-    // Allow soundwaves to complete their natural audio duration and smoothly transition out
   };
 
   const hangmonLetters = ['C', 'H', 'A', 'R', 'I', 'Z', 'A', 'R', 'D'];
@@ -95,7 +96,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
   ];
 
   return (
-    <section id="arena" className="scroll-mt-16 pt-14 lg:pt-18 pb-14 lg:pb-18 px-4 sm:px-6 lg:px-8 relative font-sans">
+    <section id="games" className="scroll-mt-16 pt-14 lg:pt-18 pb-14 lg:pb-18 px-4 sm:px-6 lg:px-8 relative font-sans">
       {/* Ambient decorative aura */}
       <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-red-100/15 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-amber-100/10 rounded-full blur-3xl pointer-events-none -z-10" />
@@ -111,13 +112,13 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200 select-none">
             <Flame className="w-3.5 h-3.5 text-red-500" />
-            <span>Arena Discovery Vault</span>
+            <span>Minigames Discovery Vault</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 font-display tracking-tight">
-            Battle Arena Challenges
+            Discovery Minigames
           </h2>
           <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-normal">
-            Four specialized trial formats engineered to test visual instinct, vocabulary, acoustic memory, and deductive logic. Hover into each card to trigger its live preview.
+            Four specialized trial formats engineered to test visual instinct, vocabulary, acoustic memory, and field literature deduction. Hover into each card to trigger its live preview.
           </p>
         </motion.div>
 
@@ -191,7 +192,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                   />
                 </div>
 
-                {/* Info & Action Feed (Clean typography, no redundant title) */}
+                {/* Info & Action Feed */}
                 <div className="space-y-2.5 text-left flex-1">
                   <div>
                     <span className="text-xs font-semibold uppercase tracking-wider text-amber-700 block">
@@ -205,7 +206,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                   <p className="text-xs text-slate-500 leading-relaxed">
                     {hoveredCard === 'silhouette'
                       ? 'Target confirmed! Correct deduction registers electric typing into your Dex.'
-                      : 'Identify the shadowy outline at your own pace by typing the exact name, or skip to the next.'}
+                      : 'Identify the shadowy outline at your own pace by typing the exact species name, or skip to another.'}
                   </p>
 
                   <div className="flex flex-wrap gap-1.5 pt-1">
@@ -376,7 +377,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             </div>
           </motion.div>
 
-          {/* ================= CARD 3: IDENTICRY (Studio Equalizer & Synth Cry) ================= */}
+          {/* ================= CARD 3: IDENTICRY (Audio Cry Identification) ================= */}
           <motion.div
             onMouseEnter={handleIdenticryEnter}
             onMouseLeave={handleIdenticryLeave}
@@ -411,13 +412,13 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               </div>
 
               <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-purple-50 border-purple-200 text-purple-800 flex items-center gap-1.5">
-                <span>Retro Audio</span>
+                <span>Audio Cry</span>
               </span>
             </div>
 
-            {/* Centerpiece: Studio-Grade Slender Frequency Bars & Candidate Selection */}
+            {/* Centerpiece: Equalizer & Clue Identification Feed */}
             <div className="my-auto py-2 relative z-10 space-y-3.5">
-              {/* Equalizer Visualizer Box (Taller & Slender Bars) */}
+              {/* Equalizer Visualizer Box */}
               <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-600 font-semibold flex items-center gap-1.5">
@@ -427,11 +428,11 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                   <span className="text-purple-700 font-semibold text-xs">
                     {isPlayingCry
                       ? 'Playing 8-bit Cry...'
-                      : '44.1 kHz Hi-Fi'}
+                      : 'Authentic Cry Audio'}
                   </span>
                 </div>
 
-                {/* 36 Slender Visualizer Bars: Animated strictly during audio cry playback with smooth exit deceleration */}
+                {/* 36 Slender Visualizer Bars */}
                 <div className="flex items-end justify-between gap-[2.5px] sm:gap-[3px] h-20 w-full px-1">
                   {frequencyBars.map((baseHeight, idx) => (
                     <motion.div
@@ -469,34 +470,30 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                 </div>
               </div>
 
-              {/* 4 Candidate Species Pills: Dependent on card hover */}
-              <div className="grid grid-cols-4 gap-2 text-center text-xs font-semibold">
-                <div
-                  className={`py-2 px-1 rounded-xl border transition-all ${
-                    hoveredCard === 'identicry'
-                      ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-sm'
-                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
-                  }`}
-                >
-                  <span>Gengar {hoveredCard === 'identicry' ? '✓' : ''}</span>
+              {/* Deduction Clues Pill Feed (No multiple choice spoilers) */}
+              <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-purple-50/70 border border-purple-200/60 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-purple-700 font-mono px-2 py-0.5 rounded bg-white border border-purple-200">
+                    Gen 1
+                  </span>
+                  <span className="text-[10px] font-bold text-purple-700 font-mono px-2 py-0.5 rounded bg-white border border-purple-200">
+                    Ghost / Poison
+                  </span>
+                  <span className="text-[10px] font-bold text-purple-700 font-mono px-2 py-0.5 rounded bg-white border border-purple-200">
+                    6 Letters (G•••••)
+                  </span>
                 </div>
-                <div className="py-2 px-1 rounded-xl bg-white border border-slate-200 text-slate-500">
-                  Haunter
-                </div>
-                <div className="py-2 px-1 rounded-xl bg-white border border-slate-200 text-slate-500">
-                  Gastly
-                </div>
-                <div className="py-2 px-1 rounded-xl bg-white border border-slate-200 text-slate-500">
-                  Misdreavus
-                </div>
+                <span className="text-[11px] font-bold text-purple-800 font-mono shrink-0">
+                  {hoveredCard === 'identicry' ? '→ Gengar ✓' : 'Type to solve'}
+                </span>
               </div>
             </div>
 
-            {/* Footer Cue: Dependent on card hover */}
+            {/* Footer Cue */}
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs relative z-10">
               <span className="text-slate-500 font-medium">
                 {hoveredCard === 'identicry'
-                  ? '🔊 8-bit sound cry playing'
+                  ? '🔊 Sound cry & clue analysis'
                   : 'Hover card to play sound cry'}
               </span>
               <span className="text-purple-700 font-semibold text-xs flex items-center gap-1">
@@ -505,55 +502,93 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             </div>
           </motion.div>
 
-          {/* ================= CARD 4: MORE COMING SOON! ================= */}
+          {/* ================= CARD 4: BIOLO-GIST (Bulbapedia Field Literature) ================= */}
           <motion.div
-            onMouseEnter={() => setHoveredCard('pokedle')}
+            onMouseEnter={() => setHoveredCard('biologist')}
             onMouseLeave={() => setHoveredCard(null)}
             whileHover={{ y: -4 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-slate-50/60 hover:bg-white border border-dashed border-slate-300/80 hover:border-red-300/80 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col items-center justify-center overflow-hidden cursor-default"
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-teal-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
           >
             {/* Top Accent Gradient Line */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-orange-400 to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-transparent" />
 
-            {/* Glowing Aura on Hover (Top Right) */}
+            {/* Glowing Aura on Hover */}
             <div
-              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-red-400/20 via-orange-400/10 to-transparent blur-2xl pointer-events-none transition-all duration-700 ease-out ${
-                hoveredCard === 'pokedle' ? 'opacity-100 scale-125' : 'opacity-30 scale-100'
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-teal-400/20 via-emerald-400/10 to-transparent blur-2xl pointer-events-none transition-all duration-700 ease-out ${
+                hoveredCard === 'biologist' ? 'opacity-100 scale-125' : 'opacity-30 scale-100'
               }`}
             />
 
-            {/* Centerpiece: Clean, Straight-up Engagement with Silky Smooth Hover Transitions */}
-            <div className="relative z-10 flex flex-col items-center justify-center space-y-4 text-center">
-              <motion.div
-                animate={{
-                  scale: hoveredCard === 'pokedle' ? 1.08 : 1,
-                }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="w-16 h-16 rounded-3xl bg-gradient-to-b from-red-50 to-orange-50/60 border border-red-200/80 flex items-center justify-center text-red-500"
-              >
-                <Swords className="w-8 h-8" />
-              </motion.div>
+            {/* Header */}
+            <div className="flex items-center justify-between gap-3 relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-200/80 text-teal-600 flex items-center justify-center shadow-2xs shrink-0">
+                  <ScrollText className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                    04 · Field Literature
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold font-display text-slate-900 tracking-tight">
+                    Biolo-gist
+                  </h3>
+                </div>
+              </div>
 
-              <motion.div
-                animate={{
-                  y: hoveredCard === 'pokedle' ? -2 : 0,
-                }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-1.5 max-w-xs"
-              >
-                <h4 className="text-base sm:text-lg font-bold font-display text-slate-800 transition-colors duration-500 ease-out group-hover:text-red-600">
-                  New challenge modes underway
-                </h4>
-                <p className="text-xs text-slate-400 leading-relaxed transition-colors duration-500 ease-out group-hover:text-slate-500">
-                  More arcade formats are being crafted for the upcoming arena season.
+              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-teal-50 border-teal-200 text-teal-800 flex items-center gap-1.5">
+                <span>Bulbapedia Excerpt</span>
+              </span>
+            </div>
+
+            {/* Centerpiece: Masked Passage Preview */}
+            <div className="my-auto py-2 relative z-10 space-y-3">
+              <div className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/90 text-left space-y-2 relative">
+                <div className="flex items-center justify-between text-[10px] text-teal-700 font-bold uppercase tracking-wider">
+                  <span className="flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-teal-600" />
+                    <span>Pokémon Biology</span>
+                  </span>
+                  <span className="font-mono text-slate-400">1× Redacted</span>
+                </div>
+
+                <p className="text-xs text-slate-700 font-serif leading-relaxed line-clamp-3">
+                  <span className="inline-block bg-teal-900 text-teal-900 rounded-xs px-1.5 py-0.5 text-[10px] mx-0.5 select-none align-middle font-sans">
+                    {hoveredCard === 'biologist' ? 'Lucario' : '▢▢▢▢▢'}
+                  </span>
+                  {' '}is a bipedal, canine Pokémon with fur that is predominantly blue and black. It possesses a short, round spike on the back of each forepaw and a third on its chest...
                 </p>
-              </motion.div>
+
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Hints:</span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600">
+                    Gen 4
+                  </span>
+                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-amber-500 text-white shadow-2xs">
+                    Fighting
+                  </span>
+                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-500 text-white shadow-2xs">
+                    Steel
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Cue */}
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs relative z-10">
+              <span className="text-slate-500 font-medium">
+                {hoveredCard === 'biologist'
+                  ? '✨ Redaction decoded on hover'
+                  : 'Hover card to reveal excerpt'}
+              </span>
+              <span className="text-teal-700 font-semibold text-xs flex items-center gap-1">
+                <span>+1 Guaranteed Entry</span>
+              </span>
             </div>
           </motion.div>
         </div>
 
-        {/* Bottom Arena Feature Badges & Direct Launch CTA */}
+        {/* Bottom Minigame Feature Badges & Direct Launch CTA */}
         <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           {/* Subtle glowing corner light */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -562,7 +597,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             <div className="flex items-center justify-center md:justify-start gap-2">
               <Trophy className="w-5 h-5 text-amber-400" />
               <span className="text-xs font-semibold tracking-wider uppercase text-amber-400">
-                Arena Progression Ladder
+                Minigame Progression Ladder
               </span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white">
@@ -583,7 +618,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             className="group relative overflow-hidden px-7 py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-base shadow-md transition-colors flex items-center gap-2 shrink-0 cursor-pointer"
           >
             <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-            <span className="relative z-10">Launch Arena Mode</span>
+            <span className="relative z-10">Launch Minigames</span>
             <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-200" />
           </motion.button>
         </div>

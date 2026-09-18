@@ -488,6 +488,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12, ease: 'easeOut' }}
           className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 backdrop-blur-xs"
+          data-lenis-prevent
           onClick={onClose}
         >
           <motion.div
@@ -497,6 +498,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             exit={{ opacity: 0, scale: 0.97, y: 8 }}
             transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{ willChange: 'transform, opacity' }}
+            data-lenis-prevent
             className="bg-white rounded-3xl max-w-2xl sm:max-w-3xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200/90 relative overflow-hidden flex flex-col justify-between h-[620px] sm:h-[610px] max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1359,10 +1361,13 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </div>
               </div>
 
-              {/* Dual Column Matrix Spanning Height */}
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0 overflow-y-auto">
+              {/* Dual Column Matrix Spanning Height with Direct Mouse Wheel Scrolling */}
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0" data-lenis-prevent>
                 {/* LEFT COLUMN: Vulnerabilities */}
-                <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/40 border border-rose-200/70 flex flex-col gap-2.5 overflow-y-auto">
+                <div
+                  className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/40 border border-rose-200/70 flex flex-col gap-2.5 overflow-y-auto overscroll-contain h-full"
+                  data-lenis-prevent
+                >
                   <div className="flex items-center justify-between pb-1 border-b border-rose-200/60 shrink-0">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-rose-800">
                       <Zap className="w-3.5 h-3.5 text-rose-600" />
@@ -1421,7 +1426,10 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </div>
 
                 {/* RIGHT COLUMN: Resistances & Immunities */}
-                <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/40 border border-emerald-200/70 flex flex-col gap-2.5 overflow-y-auto">
+                <div
+                  className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/40 border border-emerald-200/70 flex flex-col gap-2.5 overflow-y-auto overscroll-contain h-full"
+                  data-lenis-prevent
+                >
                   <div className="flex items-center justify-between pb-1 border-b border-emerald-200/60 shrink-0">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
                       <Shield className="w-3.5 h-3.5 text-emerald-600" />
@@ -1550,34 +1558,39 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </div>
               </div>
 
-              {/* Main Evolution Canvas */}
-              <div className="flex-1 w-full bg-slate-50/70 rounded-3xl border border-slate-200/80 flex items-center justify-center p-4 sm:p-6 min-h-0 overflow-x-auto relative">
+              {/* Main Evolution Canvas — perfectly centered for standard lineages, smoothly scrollable for multi-branch trees */}
+              <div
+                className="flex-1 w-full bg-slate-50/70 rounded-3xl border border-slate-200/80 p-3 sm:p-4 min-h-0 overflow-auto overscroll-contain relative flex"
+                data-lenis-prevent
+              >
                 {isLoadingEvolution ? (
-                  <div className="flex flex-col items-center justify-center gap-3">
+                  <div className="m-auto flex flex-col items-center justify-center gap-3">
                     <div className="w-7 h-7 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
                     <span className="text-xs text-slate-500 font-medium font-mono">
                       Tracing evolutionary lineage...
                     </span>
                   </div>
                 ) : evolutionTree && evolutionTree.evolvesTo && evolutionTree.evolvesTo.length > 0 ? (
-                  <EvolutionBranchRenderer
-                    node={evolutionTree}
-                    currentPokemonId={pokemon.id}
-                    unlockedIds={unlockedIds}
-                    activeTabBgColor={activeTabBgColor}
-                    onSelectPokemon={(p) => onNavigatePokemon && onNavigatePokemon(p)}
-                  />
+                  <div className="m-auto flex items-center justify-center min-w-max min-h-max py-2 px-1">
+                    <EvolutionBranchRenderer
+                      node={evolutionTree}
+                      currentPokemonId={pokemon.id}
+                      unlockedIds={unlockedIds}
+                      activeTabBgColor={activeTabBgColor}
+                      onSelectPokemon={(p) => onNavigatePokemon && onNavigatePokemon(p)}
+                    />
+                  </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center text-center p-6 space-y-3 max-w-sm">
-                    <div className="relative w-24 h-24 flex items-center justify-center">
-                      <div className="absolute bottom-2 w-20 h-5 rounded-[50%] bg-slate-200 border border-slate-300 shadow-xs" />
+                  <div className="m-auto flex flex-col items-center justify-center text-center p-4 space-y-2 max-w-sm">
+                    <div className="relative w-20 h-20 flex items-center justify-center">
+                      <div className="absolute bottom-2 w-16 h-4 rounded-[50%] bg-slate-200 border border-slate-300 shadow-xs" />
                       <img
                         src={pokemon.spriteUrl}
                         alt={pokemon.displayName}
-                        className="w-20 h-20 object-contain drop-shadow-sm relative z-10"
+                        className="w-16 h-16 object-contain drop-shadow-sm relative z-10"
                       />
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       <h4 className="text-sm font-bold text-slate-900">{pokemon.displayName}</h4>
                       <p className="text-xs text-slate-500 leading-relaxed">
                         This species does not evolve into or from any other Pokémon.
@@ -1689,6 +1702,32 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
 };
 
 // ==========================================
+// Subcomponent: Evolution Branch Trigger Badge
+// ==========================================
+const EvolutionTriggerBadge: React.FC<{
+  child: EvolutionNode;
+}> = ({ child }) => {
+  const text =
+    child.evolutionDetailsText ||
+    (child.minLevel
+      ? `Lv. ${child.minLevel}`
+      : child.item
+      ? child.item.replace(/-/g, ' ')
+      : child.trigger
+      ? child.trigger.replace(/-/g, ' ')
+      : 'Evolution');
+
+  return (
+    <div
+      className="flex items-center justify-center text-[9px] sm:text-[10px] font-bold font-mono text-slate-700 bg-white px-2.5 py-1 rounded-xl border border-slate-200/90 shadow-2xs whitespace-nowrap max-w-[150px] truncate select-none shrink-0"
+      title={text}
+    >
+      <span>{text}</span>
+    </div>
+  );
+};
+
+// ==========================================
 // Subcomponent: Evolution Branch Renderer
 // ==========================================
 const EvolutionBranchRenderer: React.FC<{
@@ -1701,106 +1740,154 @@ const EvolutionBranchRenderer: React.FC<{
   const isUnlocked = unlockedIds.includes(node.id);
   const isCurrent = node.id === currentPokemonId;
   const pokemonData = isUnlocked ? getPokemonById(node.id) : null;
-  const hasEvolutions = node.evolvesTo && node.evolvesTo.length > 0;
+  const hasEvolutions = !!(node.evolvesTo && node.evolvesTo.length > 0);
+  const isMultiBranch = hasEvolutions && node.evolvesTo!.length > 1;
 
-  return (
-    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 my-1">
-      {/* Node Card: Discovered vs Undiscovered Privacy Protection */}
-      <div className="flex flex-col items-center">
-        {isUnlocked && pokemonData ? (
-          /* Discovered Pokémon: Interactive Card */
-          <button
-            type="button"
-            onClick={() => onSelectPokemon(pokemonData)}
-            className={`group p-3 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-between text-center w-28 sm:w-32 cursor-pointer relative shadow-2xs ${
-              isCurrent
-                ? 'bg-white border-slate-400 ring-2 ring-offset-1 shadow-sm'
-                : 'bg-white hover:bg-slate-50 border-slate-200/90 hover:border-slate-300 hover:scale-105'
-            }`}
-            style={isCurrent ? { borderColor: activeTabBgColor } : undefined}
-            title={`View #${pokemonData.id} ${pokemonData.displayName}`}
-          >
-            {isCurrent && (
+  // Node Card Component
+  const renderCard = () => (
+    <div className="flex flex-col items-center shrink-0">
+      {isUnlocked && pokemonData ? (
+        /* Discovered Pokémon: Interactive Card */
+        <button
+          type="button"
+          onClick={() => onSelectPokemon(pokemonData)}
+          className={`group p-2.5 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-between text-center w-26 sm:w-28 h-36 sm:h-40 cursor-pointer relative shadow-2xs shrink-0 ${
+            isCurrent
+              ? 'bg-white border-slate-400 ring-2 ring-offset-1 shadow-sm'
+              : 'bg-white hover:bg-slate-50 border-slate-200/90 hover:border-slate-300 hover:scale-105'
+          }`}
+          style={isCurrent ? { borderColor: activeTabBgColor } : undefined}
+          title={`View #${pokemonData.id} ${pokemonData.displayName}`}
+        >
+          {isCurrent && (
+            <span
+              className="absolute -top-2 px-1.5 py-0.5 rounded-full text-[8px] font-black uppercase text-white tracking-wider shadow-xs z-20"
+              style={{ backgroundColor: activeTabBgColor || '#0f172a' }}
+            >
+              Viewing
+            </span>
+          )}
+          <div className="w-13 h-13 sm:w-15 sm:h-15 relative flex items-center justify-center my-0.5 shrink-0">
+            <div className="absolute bottom-0.5 w-11 sm:w-13 h-3.5 rounded-[50%] bg-slate-100 border border-slate-200/60 shadow-2xs" />
+            <img
+              src={pokemonData.spriteUrl}
+              alt={pokemonData.displayName}
+              className="w-12 h-12 sm:w-14 sm:h-14 object-contain relative z-10 transition-transform group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+          <div className="space-y-0.5 w-full">
+            <span className="text-[11px] font-bold text-slate-900 block truncate">
+              {pokemonData.displayName}
+            </span>
+            <span className="text-[9px] font-mono font-medium text-slate-400 block">
+              #{String(pokemonData.id).padStart(4, '0')}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 mt-0.5 justify-center flex-wrap">
+            {pokemonData.types.map((t) => (
               <span
-                className="absolute -top-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase text-white tracking-wider shadow-xs"
-                style={{ backgroundColor: activeTabBgColor || '#0f172a' }}
+                key={t}
+                className="px-1.5 py-0.5 rounded text-[8px] font-bold text-white uppercase shadow-2xs"
+                style={{ backgroundColor: POKEMON_TYPE_THEMES[t].accentHex }}
               >
-                Viewing
+                {t}
               </span>
-            )}
-            <div className="w-16 h-16 sm:w-18 sm:h-18 relative flex items-center justify-center my-0.5">
-              <div className="absolute bottom-1 w-14 sm:w-16 h-4 rounded-[50%] bg-slate-100 border border-slate-200/60 shadow-2xs" />
-              <img
-                src={pokemonData.spriteUrl}
-                alt={pokemonData.displayName}
-                className="w-15 h-15 sm:w-16 sm:h-16 object-contain relative z-10 transition-transform group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-            <div className="space-y-0.5 w-full">
-              <span className="text-[11px] sm:text-xs font-bold text-slate-900 block truncate">
-                {pokemonData.displayName}
-              </span>
-              <span className="text-[9px] font-mono font-medium text-slate-400 block">
-                #{String(pokemonData.id).padStart(4, '0')}
-              </span>
-            </div>
-            <div className="flex items-center gap-1 mt-1 justify-center flex-wrap">
-              {pokemonData.types.map((t) => (
-                <span
-                  key={t}
-                  className="px-1.5 py-0.5 rounded text-[8px] font-bold text-white uppercase shadow-2xs"
-                  style={{ backgroundColor: POKEMON_TYPE_THEMES[t].accentHex }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </button>
-        ) : (
-          /* Undiscovered Pokémon: Concealed Mystery Slot */
-          <div
-            className="p-3 rounded-2xl border border-dashed border-slate-300 bg-slate-100/70 flex flex-col items-center justify-between text-center w-28 sm:w-32 select-none"
-            title="Undiscovered Pokémon — register this species in your Pokédex to unlock"
-          >
-            <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-slate-200/60 border border-slate-200 flex items-center justify-center my-0.5">
-              <HelpCircle className="w-8 h-8 text-slate-400" />
-            </div>
-            <div className="space-y-0.5 w-full mt-1">
-              <span className="text-xs font-bold text-slate-400 block font-mono">
-                ???
-              </span>
-              <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-200 text-[9px] font-semibold text-slate-500">
-                <Lock className="w-2.5 h-2.5" />
-                <span>Undiscovered</span>
-              </div>
+            ))}
+          </div>
+        </button>
+      ) : (
+        /* Undiscovered Pokémon: Concealed Mystery Slot */
+        <div
+          className="p-2.5 rounded-2xl border border-dashed border-slate-300 bg-slate-100/70 flex flex-col items-center justify-between text-center w-26 sm:w-28 h-36 sm:h-40 select-none shrink-0"
+          title="Undiscovered Pokémon — register this species in your Pokédex to unlock"
+        >
+          <div className="w-13 h-13 sm:w-15 sm:h-15 rounded-2xl bg-slate-200/60 border border-slate-200 flex items-center justify-center my-0.5 shrink-0">
+            <HelpCircle className="w-7 h-7 text-slate-400" />
+          </div>
+          <div className="space-y-1 w-full mt-0.5">
+            <span className="text-[11px] font-bold text-slate-400 block font-mono">
+              ???
+            </span>
+            <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-200 text-[8px] font-semibold text-slate-500">
+              <Lock className="w-2.5 h-2.5" />
+              <span>Undiscovered</span>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
+  );
 
-      {/* Children Branches */}
-      {hasEvolutions && (
-        <div className="flex flex-col gap-3">
-          {node.evolvesTo!.map((child) => (
-            <div key={child.id} className="flex flex-col sm:flex-row items-center gap-3">
-              {/* Evolution Trigger Badge */}
-              <div className="flex flex-col items-center justify-center py-1 sm:px-1">
-                <div className="flex items-center gap-1 text-[10px] font-bold font-mono text-slate-700 bg-white px-2 py-1 rounded-xl border border-slate-200 shadow-2xs">
-                  {child.minLevel ? (
-                    <span>Lv. {child.minLevel}</span>
-                  ) : child.item ? (
-                    <span className="capitalize">{child.item.replace(/-/g, ' ')}</span>
-                  ) : child.trigger ? (
-                    <span className="capitalize">{child.trigger.replace(/-/g, ' ')}</span>
-                  ) : (
-                    <span>Evolution</span>
-                  )}
-                  <ArrowRight className="w-3 h-3 text-slate-400 hidden sm:inline" />
-                </div>
+  if (!hasEvolutions) {
+    return renderCard();
+  }
+
+  // Single-child linear branch
+  if (!isMultiBranch) {
+    const singleChild = node.evolvesTo![0];
+    return (
+      <div className="flex items-center shrink-0">
+        {renderCard()}
+
+        {/* Linear Connector */}
+        <div className="flex items-center px-1 shrink-0">
+          <div className="w-3 sm:w-4 h-[2px] bg-slate-300" />
+          <EvolutionTriggerBadge child={singleChild} />
+          <div className="w-3 sm:w-4 h-[2px] bg-slate-300" />
+          <ArrowRight className="w-3.5 h-3.5 -ml-1 text-slate-400 shrink-0" />
+        </div>
+
+        {/* Child Tree */}
+        <EvolutionBranchRenderer
+          node={singleChild}
+          currentPokemonId={currentPokemonId}
+          unlockedIds={unlockedIds}
+          activeTabBgColor={activeTabBgColor}
+          onSelectPokemon={onSelectPokemon}
+        />
+      </div>
+    );
+  }
+
+  // Multi-branch tree
+  return (
+    <div className="flex items-center shrink-0">
+      {renderCard()}
+
+      {/* Parent Stem to Spine */}
+      <div className="w-3 sm:w-5 h-[2px] bg-slate-300 shrink-0" />
+
+      {/* Children Vertical Stack */}
+      <div className="flex flex-col shrink-0">
+        {node.evolvesTo!.map((child, idx) => {
+          const isFirst = idx === 0;
+          const isLast = idx === node.evolvesTo!.length - 1;
+
+          return (
+            <div key={child.id} className="relative flex items-center py-2 pl-4 sm:pl-6 shrink-0">
+              {/* Continuous Spine Segment */}
+              <div
+                className={`absolute left-0 w-[2px] bg-slate-300 ${
+                  isFirst
+                    ? 'top-1/2 bottom-0 rounded-tl-sm'
+                    : isLast
+                    ? 'top-0 bottom-1/2 rounded-bl-sm'
+                    : 'top-0 bottom-0'
+                }`}
+              />
+
+              {/* Horizontal Branch Arm */}
+              <div className="absolute left-0 top-1/2 w-4 sm:w-6 h-[2px] bg-slate-300" />
+
+              {/* Branch Trigger Badge and Arrow */}
+              <div className="flex items-center px-1 shrink-0">
+                <EvolutionTriggerBadge child={child} />
+                <div className="w-2 sm:w-3 h-[2px] bg-slate-300" />
+                <ArrowRight className="w-3.5 h-3.5 -ml-1 text-slate-400 shrink-0" />
               </div>
 
-              {/* Recursive child render */}
+              {/* Child Subtree */}
               <EvolutionBranchRenderer
                 node={child}
                 currentPokemonId={currentPokemonId}
@@ -1809,9 +1896,9 @@ const EvolutionBranchRenderer: React.FC<{
                 onSelectPokemon={onSelectPokemon}
               />
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 };

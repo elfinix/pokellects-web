@@ -451,7 +451,13 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <Tooltip content={<CustomGenTooltip />} cursor={{ fill: 'rgba(241, 245, 249, 0.6)' }} />
+                <Tooltip
+                  content={<CustomGenTooltip />}
+                  cursor={{ fill: 'rgba(241, 245, 249, 0.6)' }}
+                  isAnimationActive={false}
+                  offset={12}
+                  wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
+                />
                 <Bar dataKey="unlocked" name="Registered" fill="#dc2626" radius={[4, 4, 0, 0]} stackId="a" />
                 <Bar dataKey="undiscovered" name="Undiscovered" fill="#e2e8f0" radius={[4, 4, 0, 0]} stackId="a" />
               </BarChart>
@@ -488,7 +494,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTypeTooltip />} />
+                  <Tooltip
+                    content={<CustomTypeTooltip />}
+                    isAnimationActive={false}
+                    offset={12}
+                    wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             ) : (

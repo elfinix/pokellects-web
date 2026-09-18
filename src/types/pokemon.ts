@@ -35,6 +35,7 @@ export interface EvolutionNode {
   minLevel?: number;
   item?: string;
   trigger?: string;
+  evolutionDetailsText?: string;
   evolvesTo?: EvolutionNode[];
 }
 

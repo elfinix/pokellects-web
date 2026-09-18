@@ -344,17 +344,17 @@ export const AboutSection: React.FC = () => {
             <div className="w-full lg:w-1/2 space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200/80">
                 <Trophy className="w-4 h-4" />
-                <span>03 • Arena Discovery</span>
+                <span>03 • Minigame Discovery</span>
               </div>
 
               <div className="space-y-3">
                 <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 font-display tracking-tight leading-[1.12]">
-                  Arena-Driven <br className="hidden sm:block" />
+                  Game-Driven <br className="hidden sm:block" />
                   <span className="text-purple-600">Smart Unlocks</span>.
                 </h3>
                 <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
-                  Combat in Pokellects carries permanent progression. Every victory in the Battle
-                  Arena algorithmically rewards a guaranteed undiscovered species directly into your
+                  Challenges in Pokellects carry permanent progression. Every victory in our
+                  minigames algorithmically rewards a guaranteed undiscovered species directly into your
                   ledger, accelerating full roster completion.
                 </p>
               </div>
@@ -371,7 +371,7 @@ export const AboutSection: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700">
                   <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0" />
-                  <span>Dynamic AI Battle Intelligence</span>
+                  <span>Deduction & Acoustic Mechanics</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700">
                   <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0" />
@@ -380,14 +380,14 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Visual Arena Victory & Unlock HUD (Light Mode) */}
+            {/* Right Column: Visual Minigame Victory & Unlock HUD (Light Mode) */}
             <div className="w-full lg:w-1/2 flex items-center justify-center">
               <div className="w-full max-w-md lg:max-w-lg rounded-2xl bg-slate-50/90 text-slate-800 p-6 sm:p-7 border border-slate-200/90 shadow-2xs relative overflow-hidden space-y-4">
                 {/* Header: Victory Banner */}
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
                   <div className="flex items-center gap-2 text-amber-600 text-xs sm:text-sm font-bold font-mono">
                     <Trophy className="w-4 h-4 text-amber-500" />
-                    <span>ARENA VICTORY</span>
+                    <span>MINIGAME VICTORY</span>
                   </div>
                   <span className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-semibold">
                     5-WIN STREAK

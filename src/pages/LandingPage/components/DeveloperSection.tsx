@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Code2, Copy, Check, ExternalLink } from 'lucide-react';
+import { Code2, Mail, ExternalLink } from 'lucide-react';
 
 interface BadgeItem {
   id: string;
@@ -225,20 +225,8 @@ const GithubIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' })
 
 export const DeveloperSection: React.FC = () => {
   const [hoveredBadge, setHoveredBadge] = useState<BadgeItem | null>(null);
-  const [isCopied, setIsCopied] = useState(false);
   const [sheenKey, setSheenKey] = useState(0);
   const contactEmail = 'elfinix.dev@gmail.com';
-
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(contactEmail);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2200);
-    } catch {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2200);
-    }
-  };
 
   return (
     <section id="developer" className="scroll-mt-16 pt-12 lg:pt-16 pb-20 lg:pb-28 px-4 sm:px-6 lg:px-8 relative font-sans overflow-hidden">
@@ -467,27 +455,13 @@ export const DeveloperSection: React.FC = () => {
                     <ExternalLink className="w-3 h-3 text-slate-400" />
                   </a>
 
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border font-semibold transition-all shadow-2xs cursor-pointer ${
-                      isCopied
-                        ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200/80 text-slate-700 hover:text-slate-900'
-                    }`}
+                  <a
+                    href={`mailto:${contactEmail}`}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-slate-900 font-semibold transition-all shadow-2xs cursor-pointer"
                   >
-                    {isCopied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Email Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5 text-slate-500" />
-                        <span>Copy Email</span>
-                      </>
-                    )}
-                  </button>
+                    <Mail className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Contact Me</span>
+                  </a>
                 </div>
 
                 {/* Prestige Certification Tag */}
