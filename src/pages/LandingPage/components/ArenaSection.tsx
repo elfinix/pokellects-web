@@ -158,7 +158,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               </div>
 
               <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-amber-50 border-amber-200 text-amber-800">
-                15s Blitz
+                Untimed / Skip
               </span>
             </div>
 
@@ -198,14 +198,14 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                       {hoveredCard === 'silhouette' ? 'Recognition Verified' : 'Mystery Silhouette'}
                     </span>
                     <h4 className="text-lg sm:text-xl font-bold font-display text-slate-900 mt-0.5">
-                      {hoveredCard === 'silhouette' ? '#025 Pikachu' : 'Rapid Visual Blitz'}
+                      {hoveredCard === 'silhouette' ? '#025 Pikachu' : 'Silhouette Scan'}
                     </h4>
                   </div>
 
                   <p className="text-xs text-slate-500 leading-relaxed">
                     {hoveredCard === 'silhouette'
-                      ? 'Target confirmed! High reflex score unlocks electric typing badges.'
-                      : 'Identify the shadowy outline under the rapid 15s timer before clues expire.'}
+                      ? 'Target confirmed! Correct deduction registers electric typing into your Dex.'
+                      : 'Identify the shadowy outline at your own pace by typing the exact name, or skip to the next.'}
                   </p>
 
                   <div className="flex flex-wrap gap-1.5 pt-1">
@@ -226,9 +226,6 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                       }`}
                     >
                       📍 Gen 1 Kanto
-                    </span>
-                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium">
-                      ⏱️ 15s Limit
                     </span>
                   </div>
                 </div>
@@ -430,7 +427,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                   <span className="text-purple-700 font-semibold text-xs">
                     {isPlayingCry
                       ? 'Playing 8-bit Cry...'
-                      : (hoveredCard === 'identicry' ? 'Acoustic Signal Active' : '44.1 kHz Hi-Fi')}
+                      : '44.1 kHz Hi-Fi'}
                   </span>
                 </div>
 
@@ -499,7 +496,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs relative z-10">
               <span className="text-slate-500 font-medium">
                 {hoveredCard === 'identicry'
-                  ? (isPlayingCry ? '🔊 8-bit sound cry playing' : '✨ Acoustic profile active')
+                  ? '🔊 8-bit sound cry playing'
                   : 'Hover card to play sound cry'}
               </span>
               <span className="text-purple-700 font-semibold text-xs flex items-center gap-1">

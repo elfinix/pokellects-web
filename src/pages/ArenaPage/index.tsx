@@ -11,6 +11,7 @@ import {
   Eye,
   Type,
   Volume2,
+  ScrollText,
   Grid3X3,
   Lock,
   Flame,
@@ -20,6 +21,7 @@ import { useAuth } from '../../context/AuthContext';
 import storageService, { ArenaSessionRecord } from '../../services/storageService';
 import { ARENA_GAMES_METADATA } from '../../services/mockdata';
 import { GameMetadata, ArenaGameType } from '../../types/game';
+import WhosThatPokemon from './WhosThatPokemon';
 
 interface ArenaPageProps {
   onPlayGame?: (gameId: ArenaGameType) => void;
@@ -50,10 +52,10 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-amber-100/80 border-amber-200 text-amber-600',
     iconColor: 'text-amber-600',
     buttonGradient: 'bg-amber-500 hover:bg-amber-600 text-white',
-    specs: ['30s Timer', '4 Multiple Choice', 'Silhouette Scan'],
+    specs: ['Species Identification', 'Direct Input', 'Silhouette Scan'],
     rules: [
       'A mystery silhouette appears on the scanner screen.',
-      'Identify the species correctly before the 30-second countdown runs out.',
+      'Type the exact species name to identify the Pokémon, or skip to another.',
       'Each correct victory registers an undiscovered Pokémon into your Pokédex.',
     ],
   },
@@ -67,10 +69,10 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-blue-100/80 border-blue-200 text-blue-600',
     iconColor: 'text-blue-600',
     buttonGradient: 'bg-blue-600 hover:bg-blue-700 text-white',
-    specs: ['6 Strikes Max', 'Letter By Letter', 'Category Clue'],
+    specs: ['6 Strikes Max', 'Letter By Letter', 'Concealed Pokémon'],
     rules: [
-      'Guess the mystery Pokémon name by choosing letters one-by-one.',
-      'Each incorrect guess adds a strike (maximum 6 strikes allowed).',
+      'Guess the hidden Pokémon name letter-by-letter before strikes run out.',
+      'The Pokémon identity and sprite remain completely concealed throughout the challenge.',
       'Solve the name to capture the Pokémon directly into your collection.',
     ],
   },
@@ -84,24 +86,41 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-purple-100/80 border-purple-200 text-purple-600',
     iconColor: 'text-purple-600',
     buttonGradient: 'bg-purple-600 hover:bg-purple-700 text-white',
-    specs: ['Audio Playback', 'Fast Recall', '4 Choices'],
+    specs: ['Audio Cry Only', 'Zero Visual Hints', '4 Choices'],
     rules: [
-      'Listen to the authentic audio cry of an unknown species.',
+      'Listen to the authentic audio cry of an unknown species without visual previews.',
       'Select the corresponding Pokémon from the 4 multiple choice options.',
       'Replay the cry if needed and lock in your answer for a guaranteed Pokédex entry.',
     ],
   },
+  biologist: {
+    icon: ScrollText,
+    accentColor: 'text-teal-500',
+    badgeBg: 'bg-teal-50 border-teal-200/80',
+    badgeText: 'text-teal-700',
+    cardBorder: 'border-teal-200/70 hover:border-teal-400/90',
+    cardBgGradient: 'from-teal-500/8 via-emerald-500/4 to-transparent',
+    iconBg: 'bg-teal-100/80 border-teal-200 text-teal-600',
+    iconColor: 'text-teal-600',
+    buttonGradient: 'bg-teal-600 hover:bg-teal-700 text-white',
+    specs: ['Bulbapedia Biology', 'Untimed / Skip', 'Text Deductions'],
+    rules: [
+      'Read authentic physical traits and ecological lore scraped directly from Bulbapedia.',
+      'Species names and explicit giveaways are redacted for maximum deduction fun.',
+      'Identify the described Pokémon at your own pace, or skip to the next clue.',
+    ],
+  },
   pokedle: {
     icon: Grid3X3,
-    accentColor: 'text-emerald-500',
-    badgeBg: 'bg-emerald-50 border-emerald-200/80',
-    badgeText: 'text-emerald-700',
-    cardBorder: 'border-emerald-200/70 hover:border-emerald-400/90',
-    cardBgGradient: 'from-emerald-500/8 via-teal-500/4 to-transparent',
-    iconBg: 'bg-emerald-100/80 border-emerald-200 text-emerald-600',
-    iconColor: 'text-emerald-600',
+    accentColor: 'text-slate-400',
+    badgeBg: 'bg-slate-100 border-slate-200/80',
+    badgeText: 'text-slate-600',
+    cardBorder: 'border-slate-200/80 hover:border-slate-300',
+    cardBgGradient: 'from-slate-500/5 via-slate-500/2 to-transparent',
+    iconBg: 'bg-slate-100 border-slate-200 text-slate-400',
+    iconColor: 'text-slate-400',
     buttonGradient: 'bg-slate-100 text-slate-400 border border-slate-200/80 cursor-not-allowed',
-    specs: ['Attribute Matrix', 'Daily Puzzle', 'Wordle Style'],
+    specs: [],
     rules: [
       'Guess the secret Pokémon within 6 attempts.',
       'Receive color-coded feedback on Type, Generation, Height, Weight, and Stage.',
@@ -113,6 +132,7 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
 export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
   const { currentUser } = useAuth();
   const [selectedGame, setSelectedGame] = useState<GameMetadata | null>(null);
+  const [activeGame, setActiveGame] = useState<ArenaGameType | null>(null);
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'row'>('grid');
   const [sessions, setSessions] = useState<ArenaSessionRecord[]>([]);
@@ -136,21 +156,40 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
     );
   }, [search]);
 
+  const handleLaunchGame = (gameId: ArenaGameType) => {
+    setSelectedGame(null);
+    if (gameId === 'whos_that_pokemon') {
+      setActiveGame('whos_that_pokemon');
+    }
+    if (onPlayGame) {
+      onPlayGame(gameId);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedGame) return;
       if (e.key === 'Escape') {
         setSelectedGame(null);
       } else if (e.key === 'Enter' && selectedGame.isAvailable) {
-        const id = selectedGame.id;
-        setSelectedGame(null);
-        if (onPlayGame) onPlayGame(id);
+        handleLaunchGame(selectedGame.id);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedGame, onPlayGame]);
+
+  if (activeGame === 'whos_that_pokemon') {
+    return (
+      <WhosThatPokemon
+        onBack={() => {
+          setActiveGame(null);
+          setSessions(storageService.getArenaSessions(currentUser?.id));
+        }}
+      />
+    );
+  }
 
   return (
     <div className="space-y-7 sm:space-y-8 pb-36 relative">
@@ -301,16 +340,23 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
                   </p>
 
                   {/* Feature / Specs Pills */}
-                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                    {theme.specs.map((spec, i) => (
-                      <span
-                        key={i}
-                        className="px-2.5 py-1 rounded-lg bg-white border border-slate-200/80 text-xs font-medium text-slate-600"
-                      >
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
+                  {theme.specs.length > 0 ? (
+                    <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                      {theme.specs.map((spec, i) => (
+                        <span
+                          key={i}
+                          className="px-2.5 py-1 rounded-lg bg-white border border-slate-200/80 text-xs font-medium text-slate-600"
+                        >
+                          {spec}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50/80 border border-dashed border-slate-200 text-xs text-slate-400 font-medium">
+                      <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span>Mode mechanics in development</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Card Footer: Reward info & Full-Width Styled Action Button */}
@@ -324,7 +370,7 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
                             <strong className="font-semibold text-slate-700">+1 Pokédex Entry</strong> on win
                           </>
                         ) : (
-                          'Coming Soon'
+                          'Dev is cooking'
                         )}
                       </span>
                     </div>
@@ -425,11 +471,13 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
                           {spec}
                         </span>
                       ))}
-                      <span className="text-slate-300 hidden sm:inline">|</span>
+                      {theme.specs.length > 0 && (
+                        <span className="text-slate-300 hidden sm:inline">|</span>
+                      )}
                       <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold bg-amber-50/80 px-2.5 py-1 rounded-lg border border-amber-200/60">
                         <Trophy className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                         <span>
-                          {game.isAvailable ? '+1 Pokédex Entry on win' : 'Coming Soon'}
+                          {game.isAvailable ? '+1 Pokédex Entry on win' : 'Dev is cooking'}
                         </span>
                       </div>
                     </div>
@@ -577,11 +625,7 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
                   {selectedGame.isAvailable && (
                     <button
                       type="button"
-                      onClick={() => {
-                        const id = selectedGame.id;
-                        setSelectedGame(null);
-                        if (onPlayGame) onPlayGame(id);
-                      }}
+                      onClick={() => handleLaunchGame(selectedGame.id)}
                       className={`px-5 py-2 rounded-xl text-white text-xs font-bold flex items-center gap-2 cursor-pointer transition-all active:scale-95 ${GAME_THEMES[selectedGame.id].buttonGradient}`}
                     >
                       <Play className="w-3.5 h-3.5 fill-white" />

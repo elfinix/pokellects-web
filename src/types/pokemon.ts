@@ -63,5 +63,12 @@ export interface Pokemon {
 export interface UnlockedPokemonEntry {
   pokemonId: number;
   unlockedAt: string; // ISO timestamp
-  discoveryMethod: 'manual_dex_input' | 'whos_that_pokemon' | 'hangmon' | 'identicry' | 'starter_grant';
+  discoveryMethod:
+    | 'manual_dex_input'
+    | 'whos_that_pokemon'
+    | 'hangmon'
+    | 'identicry'
+    | 'biologist'
+    | 'starter_grant';
 }
+

@@ -222,8 +222,6 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setUnlockedEntries(refreshedEntries);
       setAllPokemonList(getAllKnownPokemon());
 
-      openDetailModal(pokemon, isNew);
-
       return {
         success: true,
         registeredList: [pokemon],

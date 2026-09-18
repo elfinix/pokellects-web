@@ -49,6 +49,7 @@ export interface PokemonDetailModalProps {
   onNavigatePokemon?: (pokemon: Pokemon) => void;
   isNewlyRegistered?: boolean;
   isRegistered?: boolean;
+  showNavigation?: boolean;
 }
 
 
@@ -130,6 +131,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   onNavigatePokemon,
   isNewlyRegistered = false,
   isRegistered,
+  showNavigation = true,
 }) => {
   const [activeTab, setActiveTab] = useState<ModalTab>('overview');
   const [isPlayingCry, setIsPlayingCry] = useState(false);
@@ -1578,7 +1580,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                     <div className="space-y-1">
                       <h4 className="text-sm font-bold text-slate-900">{pokemon.displayName}</h4>
                       <p className="text-xs text-slate-500 leading-relaxed">
-                        This species does not evolve into or from any other Pokémon. It exists as a singular standalone taxonomy.
+                        This species does not evolve into or from any other Pokémon.
                       </p>
                     </div>
                   </div>
@@ -1604,69 +1606,76 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Modal Footer: Registered Previous & Next Navigation with Middle Chalk Registered Stamp */}
+      {/* Modal Footer: Registered Previous & Next Navigation OR Minigame Insignia & Stamp */}
       <div className="pt-3.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-3 relative z-10">
-        {/* Previous Registered Pokemon Button */}
-        <button
-          type="button"
-          disabled={!prevPokemon}
-          onClick={() => prevPokemon && onNavigatePokemon && onNavigatePokemon(prevPokemon)}
-          className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
-            prevPokemon
-              ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 cursor-pointer active:scale-95 shadow-2xs'
-              : 'opacity-30 border-dashed border-slate-200 bg-transparent text-slate-400 cursor-not-allowed'
-          }`}
-          title={prevPokemon ? `Previous: #${prevPokemon.id} ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
-          aria-label={prevPokemon ? `Previous Pokémon: ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
-        >
-          <ChevronLeft className="w-5 h-5 shrink-0 text-slate-600" />
-          {prevPokemon ? (
-            <img
-              src={prevPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(prevPokemon.id)}
-              alt={prevPokemon.displayName}
-              className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-12 h-12 sm:w-13 sm:h-13" />
-          )}
-        </button>
+        {showNavigation ? (
+          <>
+            {/* Previous Registered Pokemon Button */}
+            <button
+              type="button"
+              disabled={!prevPokemon}
+              onClick={() => prevPokemon && onNavigatePokemon && onNavigatePokemon(prevPokemon)}
+              className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
+                prevPokemon
+                  ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 cursor-pointer active:scale-95 shadow-2xs'
+                  : 'opacity-30 border-dashed border-slate-200 bg-transparent text-slate-400 cursor-not-allowed'
+              }`}
+              title={prevPokemon ? `Previous: #${prevPokemon.id} ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
+              aria-label={prevPokemon ? `Previous Pokémon: ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
+            >
+              <ChevronLeft className="w-5 h-5 shrink-0 text-slate-600" />
+              {prevPokemon ? (
+                <img
+                  src={prevPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(prevPokemon.id)}
+                  alt={prevPokemon.displayName}
+                  className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-12 h-12 sm:w-13 sm:h-13" />
+              )}
+            </button>
 
-        {/* Center: Chalk "REGISTERED" Stamp Banner (Only for Newly Registered) */}
-        {isNewlyRegistered ? (
-          <div className="flex items-center justify-center">
-            <ChalkRegisteredStamp isNew={true} />
-          </div>
+            {/* Center: Chalk "REGISTERED" Stamp Banner (Only for Newly Registered) */}
+            {isNewlyRegistered ? (
+              <div className="flex items-center justify-center">
+                <ChalkRegisteredStamp isNew={true} />
+              </div>
+            ) : (
+              <div className="flex-1" />
+            )}
+
+            {/* Next Registered Pokemon Button */}
+            <button
+              type="button"
+              disabled={!nextPokemon}
+              onClick={() => nextPokemon && onNavigatePokemon && onNavigatePokemon(nextPokemon)}
+              className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
+                nextPokemon
+                  ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 cursor-pointer active:scale-95 shadow-2xs'
+                  : 'opacity-30 border-dashed border-slate-200 bg-transparent text-slate-400 cursor-not-allowed'
+              }`}
+              title={nextPokemon ? `Next: #${nextPokemon.id} ${nextPokemon.displayName}` : 'No next registered Pokémon'}
+              aria-label={nextPokemon ? `Next Pokémon: ${nextPokemon.displayName}` : 'No next registered Pokémon'}
+            >
+              {nextPokemon ? (
+                <img
+                  src={nextPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(nextPokemon.id)}
+                  alt={nextPokemon.displayName}
+                  className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-12 h-12 sm:w-13 sm:h-13" />
+              )}
+              <ChevronRight className="w-5 h-5 shrink-0 text-slate-600" />
+            </button>
+          </>
         ) : (
-          <div className="flex-1" />
+          <div className="w-full flex items-center justify-center py-1">
+            <ChalkRegisteredStamp isNew={isNewlyRegistered} />
+          </div>
         )}
-
-
-        {/* Next Registered Pokemon Button */}
-        <button
-          type="button"
-          disabled={!nextPokemon}
-          onClick={() => nextPokemon && onNavigatePokemon && onNavigatePokemon(nextPokemon)}
-          className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
-            nextPokemon
-              ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 cursor-pointer active:scale-95 shadow-2xs'
-              : 'opacity-30 border-dashed border-slate-200 bg-transparent text-slate-400 cursor-not-allowed'
-          }`}
-          title={nextPokemon ? `Next: #${nextPokemon.id} ${nextPokemon.displayName}` : 'No next registered Pokémon'}
-          aria-label={nextPokemon ? `Next Pokémon: ${nextPokemon.displayName}` : 'No next registered Pokémon'}
-        >
-          {nextPokemon ? (
-            <img
-              src={nextPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(nextPokemon.id)}
-              alt={nextPokemon.displayName}
-              className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-12 h-12 sm:w-13 sm:h-13" />
-          )}
-          <ChevronRight className="w-5 h-5 shrink-0 text-slate-600" />
-        </button>
       </div>
 
     </motion.div>

@@ -1,4 +1,4 @@
-export type ArenaGameType = 'whos_that_pokemon' | 'hangmon' | 'identicry' | 'pokedle';
+export type ArenaGameType = 'whos_that_pokemon' | 'hangmon' | 'identicry' | 'biologist' | 'pokedle';
 
 export interface GameMetadata {
   id: ArenaGameType;
