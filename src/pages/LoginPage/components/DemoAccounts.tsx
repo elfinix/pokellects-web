@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react';
+import { KeyRound } from 'lucide-react';
 import { DEMO_CREDENTIALS } from '../../../services/mockdata';
 
 export interface DemoUser {
@@ -17,20 +17,6 @@ export const DEMO_USERS: DemoUser[] = [
     name: 'Ash Ketchum',
     role: 'Player',
     password: DEMO_CREDENTIALS.player.password,
-  },
-  {
-    id: 'serena',
-    username: 'serena_kalos',
-    name: 'Serena Yvonne',
-    role: 'Player',
-    password: 'PikachuPassword123!',
-  },
-  {
-    id: 'morgan',
-    username: 'morgan_dex',
-    name: 'Morgan Vale',
-    role: 'Player',
-    password: 'PikachuPassword123!',
   },
   {
     id: 'oak',
@@ -51,7 +37,7 @@ export const DemoAccounts: React.FC<DemoAccountsProps> = ({ activeUsername, onSe
     <div className="pt-4 border-t border-slate-100 space-y-2.5">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-rose-500" />
+          <KeyRound className="w-3.5 h-3.5 text-rose-500" />
           <span>Demo accounts</span>
         </span>
         <span className="text-[11px] text-slate-400 font-medium">

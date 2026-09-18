@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, BookOpen, HelpCircle, ChevronDown, Check, MapPin } from 'lucide-react';
+import { Search, BookOpen, HelpCircle, ChevronDown, Check, MapPin } from 'lucide-react';
 import { usePokedex } from '../../context/PokedexContext';
 import { Pokemon } from '../../types/pokemon';
 import { POKEMON_TYPE_THEMES } from '../../styles/theme';
@@ -182,10 +182,12 @@ export const PokedexPage: React.FC = () => {
     unlockedIds,
     selectedPokemon,
     isModalOpen,
+    isNewlyRegistered,
     openDetailModal,
     closeDetailModal,
     stats,
   } = usePokedex();
+
 
   const [selectedRegion, setSelectedRegion] = useState<RegionId>('national');
   const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false);
@@ -817,7 +819,7 @@ export const PokedexPage: React.FC = () => {
       {/* Empty State */}
       {filteredPokemon.length === 0 && (
         <div className="text-center py-16 bg-white rounded-3xl border border-slate-200/80 p-8 space-y-3">
-          <Sparkles className="w-8 h-8 text-rose-400 mx-auto" />
+          <Search className="w-8 h-8 text-rose-400 mx-auto" />
           <h3 className="text-base font-bold text-slate-900">No Pokémon found</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
             Try adjusting your search query, type filters, or regional category.
@@ -833,25 +835,23 @@ export const PokedexPage: React.FC = () => {
       )}
 
       {/* Floating Bottom Registration Omnibar */}
-      <FloatingRegistrationBar
-        isModalOpen={isModalOpen}
-        onRegisteredPokemon={(id) => {
-          const target = allPokemon.find((p) => p.id === id);
-          if (target) openDetailModal(target);
-        }}
-      />
+      <FloatingRegistrationBar isModalOpen={isModalOpen} />
+
 
       {/* Multi-Tab Pokémon Detail Modal */}
       <PokemonDetailModal
         pokemon={selectedPokemon}
         isOpen={isModalOpen}
+        isNewlyRegistered={isNewlyRegistered}
+        isRegistered={selectedPokemon ? unlockedSet.has(selectedPokemon.id) : false}
         onClose={closeDetailModal}
         registeredPokemonList={registeredPokemonList}
         unlockedIds={unlockedIds}
-        onNavigatePokemon={openDetailModal}
+        onNavigatePokemon={(p) => openDetailModal(p, false)}
       />
     </div>
   );
 };
+
 
 export default PokedexPage;

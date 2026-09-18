@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings, Volume2, Sparkles, Keyboard, Shield } from 'lucide-react';
+import { Settings, Volume2, Keyboard, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const SettingsPage: React.FC = () => {

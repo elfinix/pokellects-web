@@ -1,4 +1,4 @@
-import { AppUser, PlayerUser, AdminUser } from '../types/user';
+import { AppUser, PlayerUser, AdminUser, Gender, UserRole } from '../types/user';
 import { UnlockedPokemonEntry } from '../types/pokemon';
 import { GameConfiguration, FeatureFlags, ArenaGameType, Achievement } from '../types/game';
 import {
@@ -8,6 +8,12 @@ import {
   DEFAULT_FEATURE_FLAGS,
   MOCK_ACHIEVEMENTS,
 } from './mockdata';
+import {
+  getSqliteDatabase,
+  getMemoryState,
+  executeSql,
+  resetSqliteDatabase,
+} from './sqliteDatabase';
 
 export interface ArenaSessionRecord {
   id: string;
@@ -20,90 +26,147 @@ export interface ArenaSessionRecord {
   playedAt: string;
 }
 
-const STORAGE_KEYS = {
-  USERS: 'pokellects_users',
-  ACTIVE_USER_ID: 'pokellects_active_user_id',
-  POKEDEX_ENTRIES: 'pokellects_pokedex_entries',
-  ARENA_SESSIONS: 'pokellects_arena_sessions',
-  GAME_CONFIG: 'pokellects_game_config',
-  FEATURE_FLAGS: 'pokellects_feature_flags',
-  ACHIEVEMENTS: 'pokellects_achievements',
-};
-
 /**
- * SQLite-compatible Repository Storage Service.
- * Implements persistent CRUD operations conforming to our SQLite schema.sql,
- * currently backed by browser local storage, with zero friction for SQLite/Convex transition.
+ * SQLite Local File Database Repository.
+ * Powered by local SQLite database file (`data/pokellects.db`) on disk,
+ * designed for seamless transition to Convex database in the future.
  */
 class StorageService {
+  private isReady = false;
+  private readyPromise: Promise<void>;
+
   constructor() {
-    this.initializeIfEmpty();
+    this.readyPromise = this.initDatabase();
   }
 
-  private initializeIfEmpty(): void {
-    if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
-      const allUsers: AppUser[] = [...MOCK_PLAYERS, MOCK_ADMIN];
-      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(allUsers));
-    }
-
-    if (!localStorage.getItem(STORAGE_KEYS.ACTIVE_USER_ID)) {
-      // Default to Ash Ketchum for seamless out-of-the-box demo experience
-      localStorage.setItem(STORAGE_KEYS.ACTIVE_USER_ID, MOCK_PLAYERS[0].id);
-    }
-
-    if (!localStorage.getItem(STORAGE_KEYS.POKEDEX_ENTRIES)) {
-      // Seed default unlocked entries for mock players
-      const initialEntries: Record<string, UnlockedPokemonEntry[]> = {};
-      MOCK_PLAYERS.forEach((p) => {
-        initialEntries[p.id] = p.unlockedPokemonIds.map((id) => ({
-          pokemonId: id,
-          unlockedAt: p.createdAt,
-          discoveryMethod: 'starter_grant',
-        }));
-      });
-      localStorage.setItem(STORAGE_KEYS.POKEDEX_ENTRIES, JSON.stringify(initialEntries));
-    }
-
-    if (!localStorage.getItem(STORAGE_KEYS.GAME_CONFIG)) {
-      localStorage.setItem(STORAGE_KEYS.GAME_CONFIG, JSON.stringify(DEFAULT_GAME_CONFIG));
-    }
-
-    if (!localStorage.getItem(STORAGE_KEYS.FEATURE_FLAGS)) {
-      localStorage.setItem(STORAGE_KEYS.FEATURE_FLAGS, JSON.stringify(DEFAULT_FEATURE_FLAGS));
-    }
-
-    if (!localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS)) {
-      localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(MOCK_ACHIEVEMENTS));
-    }
+  private async initDatabase(): Promise<void> {
+    await getSqliteDatabase();
+    this.isReady = true;
   }
 
-  // --- USER OPERATIONS ---
+  public async whenReady(): Promise<void> {
+    return this.readyPromise;
+  }
+
+  // --- USER OPERATIONS (SQLite: users & session_state) ---
   public getUsers(): AppUser[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.USERS);
-    return raw ? JSON.parse(raw) : [...MOCK_PLAYERS, MOCK_ADMIN];
+    const { users } = getMemoryState();
+    if (!users || users.length === 0) {
+      return [...MOCK_PLAYERS, MOCK_ADMIN];
+    }
+
+    return users.map((r: any) => {
+      const unlockedIds: number[] = typeof r.unlocked_pokemon_ids === 'string'
+        ? JSON.parse(r.unlocked_pokemon_ids || '[]')
+        : (r.unlocked_pokemon_ids || []);
+      const stats = typeof r.stats_json === 'string'
+        ? JSON.parse(r.stats_json || '{"totalGuesses":0,"correctGuesses":0,"arenaWins":0}')
+        : (r.stats || { totalGuesses: 0, correctGuesses: 0, arenaWins: 0 });
+
+      if (r.role === 'admin') {
+        const admin: AdminUser = {
+          id: r.id,
+          username: r.username,
+          email: r.email,
+          role: 'admin',
+          firstName: r.first_name || r.firstName,
+          lastName: r.last_name || r.lastName || undefined,
+          gender: r.gender,
+          birthday: r.birthday,
+          department: r.department || 'Administration',
+          createdAt: r.created_at || r.createdAt,
+        };
+        return admin;
+      }
+
+      const player: PlayerUser = {
+        id: r.id,
+        username: r.username,
+        email: r.email,
+        role: 'player',
+        firstName: r.first_name || r.firstName,
+        lastName: r.last_name || r.lastName || undefined,
+        gender: r.gender,
+        birthday: r.birthday,
+        createdAt: r.created_at || r.createdAt,
+        unlockedPokemonIds: unlockedIds,
+        stats: {
+          totalGuesses: stats.totalGuesses || 0,
+          correctGuesses: stats.correctGuesses || 0,
+          arenaWins: stats.arenaWins || 0,
+        },
+      };
+      return player;
+    });
   }
 
   public getActiveUser(): AppUser | null {
-    const activeId = localStorage.getItem(STORAGE_KEYS.ACTIVE_USER_ID);
-    if (!activeId) return null;
+    const { sessionState } = getMemoryState();
+    const activeId = sessionState['active_user_id'] || MOCK_PLAYERS[0].id;
     const users = this.getUsers();
-    return users.find((u) => u.id === activeId) || null;
+    return users.find((u) => u.id === activeId) || users[0] || null;
   }
 
   public setActiveUserId(userId: string): void {
-    localStorage.setItem(STORAGE_KEYS.ACTIVE_USER_ID, userId);
+    getMemoryState().sessionState['active_user_id'] = userId;
+    executeSql('INSERT OR REPLACE INTO session_state (key, value) VALUES (?, ?)', ['active_user_id', userId]);
   }
 
   public updateUser(updated: AppUser): void {
-    const users = this.getUsers().map((u) => (u.id === updated.id ? updated : u));
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    const unlockedIds = updated.role === 'player' ? (updated as PlayerUser).unlockedPokemonIds : [];
+    const stats = updated.role === 'player' ? (updated as PlayerUser).stats : { totalGuesses: 0, correctGuesses: 0, arenaWins: 0 };
+    const department = updated.role === 'admin' ? (updated as AdminUser).department : null;
+
+    // Update in-memory copy
+    const users = getMemoryState().users;
+    const idx = users.findIndex((u) => u.id === updated.id);
+    if (idx >= 0) {
+      users[idx] = {
+        ...users[idx],
+        first_name: updated.firstName,
+        last_name: updated.lastName || null,
+        gender: updated.gender,
+        birthday: updated.birthday,
+        department,
+        unlocked_pokemon_ids: JSON.stringify(unlockedIds),
+        stats_json: JSON.stringify(stats),
+      };
+    }
+
+    executeSql(
+      'UPDATE users SET first_name = ?, last_name = ?, gender = ?, birthday = ?, department = ?, unlocked_pokemon_ids = ?, stats_json = ? WHERE id = ?',
+      [
+        updated.firstName,
+        updated.lastName || null,
+        updated.gender,
+        updated.birthday,
+        department,
+        JSON.stringify(unlockedIds),
+        JSON.stringify(stats),
+        updated.id,
+      ]
+    );
   }
 
   // --- POKEDEX ENTRIES (SQLite: pokedex_entries) ---
   public getPlayerUnlockedEntries(playerId: string): UnlockedPokemonEntry[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.POKEDEX_ENTRIES);
-    const allEntries: Record<string, UnlockedPokemonEntry[]> = raw ? JSON.parse(raw) : {};
-    return allEntries[playerId] || [];
+    const { pokedexEntries } = getMemoryState();
+    const userEntries = (pokedexEntries || []).filter((e: any) => e.user_id === playerId);
+
+    if (userEntries.length === 0) {
+      const mock = MOCK_PLAYERS.find((p) => p.id === playerId);
+      return (mock?.unlockedPokemonIds || []).map((id) => ({
+        pokemonId: id,
+        unlockedAt: mock?.createdAt || new Date().toISOString(),
+        discoveryMethod: 'starter_grant',
+      }));
+    }
+
+    return userEntries.map((r: any) => ({
+      pokemonId: r.pokemon_id,
+      unlockedAt: r.unlocked_at,
+      discoveryMethod: r.discovery_method,
+    }));
   }
 
   public registerPokemonToPlayer(
@@ -111,107 +174,181 @@ class StorageService {
     pokemonId: number,
     method: UnlockedPokemonEntry['discoveryMethod'] = 'manual_dex_input'
   ): { isNew: boolean; entry: UnlockedPokemonEntry } {
-    const raw = localStorage.getItem(STORAGE_KEYS.POKEDEX_ENTRIES);
-    const allEntries: Record<string, UnlockedPokemonEntry[]> = raw ? JSON.parse(raw) : {};
-    const playerList = allEntries[playerId] || [];
+    const { pokedexEntries } = getMemoryState();
+    const existing = pokedexEntries.find((e: any) => e.user_id === playerId && e.pokemon_id === pokemonId);
 
-    const existing = playerList.find((e) => e.pokemonId === pokemonId);
     if (existing) {
-      return { isNew: false, entry: existing };
+      return {
+        isNew: false,
+        entry: {
+          pokemonId: existing.pokemon_id,
+          unlockedAt: existing.unlocked_at,
+          discoveryMethod: existing.discovery_method as UnlockedPokemonEntry['discoveryMethod'],
+        },
+      };
     }
 
-    const newEntry: UnlockedPokemonEntry = {
-      pokemonId,
-      unlockedAt: new Date().toISOString(),
-      discoveryMethod: method,
-    };
+    const now = new Date().toISOString();
+    const entryId = `entry-${playerId}-${pokemonId}-${Date.now()}`;
 
-    allEntries[playerId] = [newEntry, ...playerList];
-    localStorage.setItem(STORAGE_KEYS.POKEDEX_ENTRIES, JSON.stringify(allEntries));
+    // Update in-memory list
+    pokedexEntries.unshift({
+      id: entryId,
+      user_id: playerId,
+      pokemon_id: pokemonId,
+      unlocked_at: now,
+      discovery_method: method,
+    });
 
-    // Also sync the player's quick lookup unlocked array
+    executeSql(
+      'INSERT OR IGNORE INTO pokedex_entries (id, user_id, pokemon_id, unlocked_at, discovery_method) VALUES (?, ?, ?, ?, ?)',
+      [entryId, playerId, pokemonId, now, method]
+    );
+
+    // Sync user's quick unlocked array in the users table
     const users = this.getUsers();
-    const userIndex = users.findIndex((u) => u.id === playerId);
-    if (userIndex !== -1 && users[userIndex].role === 'player') {
-      const player = users[userIndex] as PlayerUser;
+    const target = users.find((u) => u.id === playerId);
+    if (target && target.role === 'player') {
+      const player = target as PlayerUser;
       if (!player.unlockedPokemonIds.includes(pokemonId)) {
         player.unlockedPokemonIds = [...player.unlockedPokemonIds, pokemonId];
         this.updateUser(player);
       }
     }
 
-    return { isNew: true, entry: newEntry };
+    return {
+      isNew: true,
+      entry: {
+        pokemonId,
+        unlockedAt: now,
+        discoveryMethod: method,
+      },
+    };
   }
 
   // --- ARENA SESSIONS (SQLite: arena_sessions) ---
   public recordArenaSession(session: Omit<ArenaSessionRecord, 'id' | 'playedAt'>): ArenaSessionRecord {
-    const raw = localStorage.getItem(STORAGE_KEYS.ARENA_SESSIONS);
-    const sessions: ArenaSessionRecord[] = raw ? JSON.parse(raw) : [];
+    const id = `arena-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const playedAt = new Date().toISOString();
 
-    const newRecord: ArenaSessionRecord = {
-      ...session,
-      id: `arena-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-      playedAt: new Date().toISOString(),
+    const newRecord = {
+      id,
+      user_id: session.userId,
+      game_type: session.gameType,
+      pokemon_id: session.pokemonId,
+      is_won: session.isWon ? 1 : 0,
+      attempts_used: session.attemptsUsed,
+      time_taken_seconds: session.timeTakenSeconds,
+      played_at: playedAt,
     };
 
-    sessions.unshift(newRecord);
-    localStorage.setItem(STORAGE_KEYS.ARENA_SESSIONS, JSON.stringify(sessions));
-    return newRecord;
+    getMemoryState().arenaSessions.unshift(newRecord);
+
+    executeSql(
+      'INSERT INTO arena_sessions (id, user_id, game_type, pokemon_id, is_won, attempts_used, time_taken_seconds, played_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        id,
+        session.userId,
+        session.gameType,
+        session.pokemonId,
+        session.isWon ? 1 : 0,
+        session.attemptsUsed,
+        session.timeTakenSeconds,
+        playedAt,
+      ]
+    );
+
+    return {
+      ...session,
+      id,
+      playedAt,
+    };
   }
 
   public getArenaSessions(userId?: string): ArenaSessionRecord[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.ARENA_SESSIONS);
-    const sessions: ArenaSessionRecord[] = raw ? JSON.parse(raw) : [];
-    return userId ? sessions.filter((s) => s.userId === userId) : sessions;
+    const { arenaSessions } = getMemoryState();
+    const rows = userId
+      ? arenaSessions.filter((s: any) => s.user_id === userId)
+      : arenaSessions;
+
+    return rows.map((r: any) => ({
+      id: r.id,
+      userId: r.user_id,
+      gameType: r.game_type,
+      pokemonId: r.pokemon_id,
+      isWon: r.is_won === 1 || r.is_won === true,
+      attemptsUsed: r.attempts_used,
+      timeTakenSeconds: r.time_taken_seconds,
+      playedAt: r.played_at,
+    }));
   }
 
   // --- CONFIGURATIONS & FEATURE FLAGS (SQLite: system_configs) ---
   public getGameConfig(): GameConfiguration {
-    const raw = localStorage.getItem(STORAGE_KEYS.GAME_CONFIG);
-    return raw ? JSON.parse(raw) : DEFAULT_GAME_CONFIG;
+    const { systemConfigs } = getMemoryState();
+    return systemConfigs['game_config'] || DEFAULT_GAME_CONFIG;
   }
 
   public updateGameConfig(config: Partial<GameConfiguration>): GameConfiguration {
     const current = this.getGameConfig();
     const updated = { ...current, ...config };
-    localStorage.setItem(STORAGE_KEYS.GAME_CONFIG, JSON.stringify(updated));
+    getMemoryState().systemConfigs['game_config'] = updated;
+    executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
+      'game_config',
+      JSON.stringify(updated),
+      new Date().toISOString(),
+    ]);
     return updated;
   }
 
   public getFeatureFlags(): FeatureFlags {
-    const raw = localStorage.getItem(STORAGE_KEYS.FEATURE_FLAGS);
-    return raw ? JSON.parse(raw) : DEFAULT_FEATURE_FLAGS;
+    const { systemConfigs } = getMemoryState();
+    return systemConfigs['feature_flags'] || DEFAULT_FEATURE_FLAGS;
   }
 
   public updateFeatureFlags(flags: Partial<FeatureFlags>): FeatureFlags {
     const current = this.getFeatureFlags();
     const updated = { ...current, ...flags };
-    localStorage.setItem(STORAGE_KEYS.FEATURE_FLAGS, JSON.stringify(updated));
+    getMemoryState().systemConfigs['feature_flags'] = updated;
+    executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
+      'feature_flags',
+      JSON.stringify(updated),
+      new Date().toISOString(),
+    ]);
     return updated;
   }
 
-  // --- ACHIEVEMENTS (SQLite: user_achievements) ---
+  // --- ACHIEVEMENTS (SQLite: achievements) ---
   public getAchievements(): Achievement[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
-    return raw ? JSON.parse(raw) : MOCK_ACHIEVEMENTS;
+    const { achievements } = getMemoryState();
+    if (!achievements || achievements.length === 0) return MOCK_ACHIEVEMENTS;
+
+    return achievements.map((r: any) => ({
+      id: r.id,
+      title: r.title,
+      description: r.description,
+      icon: r.icon,
+      category: r.category,
+      targetCount: r.target_count || r.targetCount,
+      unlockedAt: r.unlocked_at || r.unlockedAt || undefined,
+    }));
   }
 
   public unlockAchievement(achievementId: string): void {
-    const list = this.getAchievements().map((ach) => {
-      if (ach.id === achievementId && !ach.unlockedAt) {
-        return { ...ach, unlockedAt: new Date().toISOString() };
-      }
-      return ach;
-    });
-    localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(list));
+    const now = new Date().toISOString();
+    const achs = getMemoryState().achievements;
+    const item = achs.find((a: any) => a.id === achievementId);
+    if (item && !item.unlocked_at) {
+      item.unlocked_at = now;
+    }
+    executeSql('UPDATE achievements SET unlocked_at = ? WHERE id = ? AND unlocked_at IS NULL', [now, achievementId]);
   }
 
   /**
-   * Resets progress for testing and clean slate
+   * Resets progress and restores SQLite database to factory defaults.
    */
-  public resetToDefaults(): void {
-    localStorage.clear();
-    this.initializeIfEmpty();
+  public async resetToDefaults(): Promise<void> {
+    await resetSqliteDatabase();
   }
 }
 

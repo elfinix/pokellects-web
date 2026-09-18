@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Swords, Trophy, Play, Clock, Sparkles, HelpCircle, Volume2, Shield, Search } from 'lucide-react';
+import { Swords, Trophy, Play, Clock, HelpCircle, Volume2, Shield, Search } from 'lucide-react';
 import { ARENA_GAMES_METADATA } from '../../services/mockdata';
 import { GameMetadata } from '../../types/game';
 
@@ -151,7 +151,7 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
             <p className="text-xs text-slate-600 leading-relaxed">{selectedGame.description}</p>
 
             <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200/80 text-xs text-amber-800 font-medium flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+              <Trophy className="w-4 h-4 text-amber-600 shrink-0" />
               <span>Victories in this trial will register an undiscovered Pokémon into your collection!</span>
             </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Shield, Flag, Check, RotateCcw, Sparkles } from 'lucide-react';
+import { Sliders, Shield, Flag, Check, RotateCcw } from 'lucide-react';
 import storageService from '../../services/storageService';
 import { GameConfiguration, FeatureFlags } from '../../types/game';
 

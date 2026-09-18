@@ -3,7 +3,6 @@ import {
   BookOpen,
   Keyboard,
   Trophy,
-  Sparkles,
   CheckCircle2,
   Lock,
 } from 'lucide-react';
@@ -387,7 +386,7 @@ export const AboutSection: React.FC = () => {
                 {/* Header: Victory Banner */}
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
                   <div className="flex items-center gap-2 text-amber-600 text-xs sm:text-sm font-bold font-mono">
-                    <Sparkles className="w-4 h-4 text-amber-500" />
+                    <Trophy className="w-4 h-4 text-amber-500" />
                     <span>ARENA VICTORY</span>
                   </div>
                   <span className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-semibold">

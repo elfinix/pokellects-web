@@ -6,7 +6,7 @@ import {
   Trophy,
   ArrowRight,
   Flame,
-  Sparkles,
+  Swords,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -535,7 +535,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                 className="w-16 h-16 rounded-3xl bg-gradient-to-b from-red-50 to-orange-50/60 border border-red-200/80 flex items-center justify-center text-red-500"
               >
-                <Sparkles className="w-8 h-8 animate-pulse" />
+                <Swords className="w-8 h-8" />
               </motion.div>
 
               <motion.div

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft, Flame } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { DEMO_CREDENTIALS } from '../../services/mockdata';
 import { useHotkeys } from '../../hooks/useHotkeys';
@@ -170,7 +170,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
             {/* Top Badge: "Gotta Name em All" */}
             <div className="relative z-10 flex items-center justify-center pt-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200/80 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-red-500" />
+                <Flame className="w-3.5 h-3.5 text-red-500" />
                 <span>Gotta Name 'em All</span>
               </div>
             </div>

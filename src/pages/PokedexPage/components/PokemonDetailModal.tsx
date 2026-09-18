@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
+import confetti from 'canvas-confetti';
 import {
   X,
   AudioWaveform,
@@ -26,13 +27,18 @@ import {
   Palette,
   Play,
   Volume2,
+  CheckCircle2,
 } from 'lucide-react';
 import { Pokemon, PokemonType, EvolutionNode } from '../../../types/pokemon';
 import { POKEMON_TYPE_THEMES } from '../../../styles/theme';
 import { useHotkeys } from '../../../hooks/useHotkeys';
 import { fetchSpeciesLore, fetchEvolutionChain, getFrontDefaultSpriteUrl } from '../../../services/pokeapi';
 import { getPokemonById } from '../../../services/pokemonIndex';
+import storageService from '../../../services/storageService';
 import { globalStopScroll, globalStartScroll } from '../../../context/SmoothScrollContext';
+import PokeballChalkMark from '../../../components/common/PokeballChalkMark';
+import ChalkRegisteredStamp from '../../../components/common/ChalkRegisteredStamp';
+
 
 export interface PokemonDetailModalProps {
   pokemon: Pokemon | null;
@@ -41,7 +47,10 @@ export interface PokemonDetailModalProps {
   registeredPokemonList?: Pokemon[];
   unlockedIds?: number[];
   onNavigatePokemon?: (pokemon: Pokemon) => void;
+  isNewlyRegistered?: boolean;
+  isRegistered?: boolean;
 }
+
 
 type ModalTab = 'overview' | 'stats' | 'matchups' | 'evolution';
 
@@ -119,6 +128,8 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   registeredPokemonList = [],
   unlockedIds = [],
   onNavigatePokemon,
+  isNewlyRegistered = false,
+  isRegistered,
 }) => {
   const [activeTab, setActiveTab] = useState<ModalTab>('overview');
   const [isPlayingCry, setIsPlayingCry] = useState(false);
@@ -126,12 +137,39 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   const [statViewMode, setStatViewMode] = useState<'line' | 'bar' | 'radar'>('line');
   const [statColorMode, setStatColorMode] = useState<'assorted' | 'conditional'>('assorted');
 
+  // Compute whether this Pokémon is registered in the player's Pokédex
+  const isEffectivelyRegistered =
+    isRegistered !== undefined
+      ? isRegistered
+      : pokemon
+      ? unlockedIds.length === 0 || unlockedIds.includes(pokemon.id)
+      : true;
+
   // Evolution chain data state
   const [evolutionTree, setEvolutionTree] = useState<EvolutionNode | null>(null);
   const [isLoadingEvolution, setIsLoadingEvolution] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
+
+  // Celebrate newly registered Pokémon with particle burst
+  useEffect(() => {
+    if (isOpen && isNewlyRegistered && typeof window !== 'undefined') {
+      try {
+        const flags = storageService.getFeatureFlags();
+        if (flags.enableConfetti) {
+          confetti({
+            particleCount: 75,
+            spread: 75,
+            origin: { y: 0.55 },
+            colors: ['#ef4444', '#ffffff', '#eab308', '#10b981', '#3b82f6'],
+          });
+        }
+      } catch {
+        // Safe fallback
+      }
+    }
+  }, [isOpen, isNewlyRegistered, pokemon?.id]);
 
   // Reset modal state to defaults on exit
   useEffect(() => {
@@ -155,6 +193,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   // Reset audio when pokemon changes
   useEffect(() => {
     if (audioRef.current) {
+
       audioRef.current.pause();
       audioRef.current = null;
     }
@@ -482,7 +521,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             {/* Modal Header */}
             <div className="flex items-start justify-between relative z-10 pb-1">
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-mono font-bold text-slate-400">
                     #{String(pokemon.id).padStart(4, '0')}
                   </span>
@@ -499,14 +538,38 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                       Mythical
                     </span>
                   )}
+
+                  {!isEffectivelyRegistered && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 border border-slate-200 text-[10px] font-semibold">
+                      <Lock className="w-3 h-3 text-slate-400" />
+                      <span>UNDISCOVERED</span>
+                    </span>
+                  )}
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight">
                   {pokemon.displayName}
                 </h2>
+
                 <p className="text-xs font-medium text-slate-500">{pokemon.genus}</p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
+                {/* Official Red Chalk Speed Pokéball Mark in Header */}
+                {isNewlyRegistered ? (
+                  <PokeballChalkMark
+                    status="newly-registered"
+                    size="sm"
+                    animateStamp={true}
+                    className="shrink-0"
+                  />
+                ) : isEffectivelyRegistered ? (
+                  <PokeballChalkMark
+                    status="registered"
+                    size="xs"
+                    className="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+                  />
+                ) : null}
+
                 {/* Close Button */}
                 <button
                   type="button"
@@ -519,6 +582,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </button>
               </div>
             </div>
+
 
             {/* Minimalist Tabs Navigation with Animated Sliding Tab Indicator */}
             <div className="relative z-10 pt-3 pb-1">
@@ -569,8 +633,10 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   >
               {/* LEFT COLUMN: Sprite on geometric shape platform + Height & Weight below */}
               <div className="flex flex-col items-center justify-between gap-3 w-full sm:w-56 shrink-0">
-                {/* Geometric 360° Rotating Platform Pedestal with Pokémon Sprite */}
+                {/* Geometric 360° Rotating Platform Pedestal with Pokémon Sprite (Unobstructed) */}
                 <div className="relative w-48 sm:w-56 h-48 sm:h-52 flex items-center justify-center shrink-0 group">
+
+
                   {/* 3D Tilted Rotating Platform System */}
                   <div
                     className="absolute bottom-1 w-44 sm:w-52 h-20 flex items-center justify-center pointer-events-none select-none"
@@ -645,6 +711,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                     className="w-38 h-38 sm:w-44 sm:h-44 object-contain drop-shadow-md select-none relative z-10 transition-transform duration-200 group-hover:scale-105 mb-2.5"
                   />
                 </div>
+
 
                 {/* Height & Weight below sprite */}
                 <div className="grid grid-cols-2 gap-2.5 w-full">
@@ -1537,8 +1604,8 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Modal Footer: Registered Previous & Next Navigation (Chevron + Sprite, No Close Button) */}
-      <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3 relative z-10">
+      {/* Modal Footer: Registered Previous & Next Navigation with Middle Chalk Registered Stamp */}
+      <div className="pt-3.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-3 relative z-10">
         {/* Previous Registered Pokemon Button */}
         <button
           type="button"
@@ -1564,6 +1631,16 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             <div className="w-12 h-12 sm:w-13 sm:h-13" />
           )}
         </button>
+
+        {/* Center: Chalk "REGISTERED" Stamp Banner (Only for Newly Registered) */}
+        {isNewlyRegistered ? (
+          <div className="flex items-center justify-center">
+            <ChalkRegisteredStamp isNew={true} />
+          </div>
+        ) : (
+          <div className="flex-1" />
+        )}
+
 
         {/* Next Registered Pokemon Button */}
         <button
@@ -1591,6 +1668,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           <ChevronRight className="w-5 h-5 shrink-0 text-slate-600" />
         </button>
       </div>
+
     </motion.div>
   </motion.div>
 )}

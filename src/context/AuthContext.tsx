@@ -21,9 +21,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [availableUsers, setAvailableUsers] = useState<AppUser[]>(() => storageService.getUsers());
 
   useEffect(() => {
-    const user = storageService.getActiveUser();
-    setCurrentUser(user);
-    setAvailableUsers(storageService.getUsers());
+    storageService.whenReady().then(() => {
+      const user = storageService.getActiveUser();
+      setCurrentUser(user);
+      setAvailableUsers(storageService.getUsers());
+    });
   }, []);
 
   const login = (username: string, _password?: string): boolean => {

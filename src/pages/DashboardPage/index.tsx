@@ -17,7 +17,6 @@ import {
   Swords,
   ArrowRight,
   TrendingUp,
-  Sparkles,
   Award,
   BarChart3,
   PieChart as PieChartIcon,
@@ -130,9 +129,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
         <div className="space-y-2 text-center md:text-left relative z-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs text-xs font-semibold text-white border border-white/10">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Award className="w-3.5 h-3.5" />
             <span>Trainer Progress Overview</span>
           </div>
+
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black font-display tracking-tight">
             Welcome, {currentUser?.firstName}!
           </h1>

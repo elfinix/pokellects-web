@@ -46,7 +46,8 @@ interface PokedexContextType {
   ) => Promise<RegisterResult>;
   selectedPokemon: Pokemon | null;
   isModalOpen: boolean;
-  openDetailModal: (pokemon: Pokemon) => void;
+  isNewlyRegistered: boolean;
+  openDetailModal: (pokemon: Pokemon, isNewlyRegistered?: boolean) => void;
   closeDetailModal: () => void;
   stats: PokedexStats;
   allPokemon: Pokemon[];
@@ -61,6 +62,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [unlockedEntries, setUnlockedEntries] = useState<UnlockedPokemonEntry[]>([]);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNewlyRegistered, setIsNewlyRegistered] = useState(false);
   const [allPokemonList, setAllPokemonList] = useState<Pokemon[]>(() => getAllKnownPokemon());
 
   // Sync unlocked entries whenever active user changes
@@ -114,8 +116,9 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
     [unlockedSet]
   );
 
-  const openDetailModal = useCallback(async (pokemon: Pokemon) => {
+  const openDetailModal = useCallback(async (pokemon: Pokemon, isNew = false) => {
     setSelectedPokemon(pokemon);
+    setIsNewlyRegistered(isNew);
     setIsModalOpen(true);
 
     // Fetch rich species details in background if not already fully fetched
@@ -130,6 +133,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const closeDetailModal = useCallback(() => {
     setIsModalOpen(false);
+    setIsNewlyRegistered(false);
   }, []);
 
   /**
@@ -170,8 +174,8 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setUnlockedEntries(refreshedEntries);
       setAllPokemonList(getAllKnownPokemon());
 
-      // Open detail modal for the primary/first match
-      openDetailModal(matches[0]);
+      // Open detail modal for the primary/first match with newly-registered status
+      openDetailModal(matches[0], newCount > 0);
 
       let message = '';
       if (matches.length > 1) {
@@ -218,7 +222,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setUnlockedEntries(refreshedEntries);
       setAllPokemonList(getAllKnownPokemon());
 
-      openDetailModal(pokemon);
+      openDetailModal(pokemon, isNew);
 
       return {
         success: true,
@@ -232,6 +236,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
     },
     [playerId, openDetailModal]
   );
+
 
   // Calculate comprehensive stats for Dashboard & Pokédex Toolbox
   const stats: PokedexStats = useMemo(() => {
@@ -283,11 +288,13 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
         registerById,
         selectedPokemon,
         isModalOpen,
+        isNewlyRegistered,
         openDetailModal,
         closeDetailModal,
         stats,
         allPokemon: allPokemonList,
       }}
+
     >
       {children}
     </PokedexContext.Provider>

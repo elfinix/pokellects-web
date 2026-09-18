@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Copy, Check, ExternalLink } from 'lucide-react';
+import { Code2, Copy, Check, ExternalLink } from 'lucide-react';
 
 interface BadgeItem {
   id: string;
@@ -256,7 +256,7 @@ export const DeveloperSection: React.FC = () => {
           className="text-center space-y-2.5"
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200 select-none">
-            <Sparkles className="w-3.5 h-3.5 text-red-500" />
+            <Code2 className="w-3.5 h-3.5 text-red-500" />
             <span>Behind the Project</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-display tracking-tight">
