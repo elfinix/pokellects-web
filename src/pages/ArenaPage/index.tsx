@@ -24,6 +24,7 @@ import { GameMetadata, ArenaGameType } from '../../types/game';
 import WhosThatPokemon from './WhosThatPokemon';
 import Hangmon from './Hangmon';
 import Identicry from './Identicry';
+import Biologist from './Biologist';
 
 interface ArenaPageProps {
   onPlayGame?: (gameId: ArenaGameType) => void;
@@ -54,7 +55,7 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-amber-100/80 border-amber-200 text-amber-600',
     iconColor: 'text-amber-600',
     buttonGradient: 'bg-amber-500 hover:bg-amber-600 text-white',
-    specs: ['Species Identification', 'Direct Input', 'Silhouette Scan'],
+    specs: ['Guessing Game', 'Identification', 'Silhouette Scan'],
     rules: [
       'A mystery silhouette appears on the scanner screen.',
       'Type the exact species name to identify the Pokémon, or skip to another.',
@@ -71,7 +72,7 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-blue-100/80 border-blue-200 text-blue-600',
     iconColor: 'text-blue-600',
     buttonGradient: 'bg-blue-600 hover:bg-blue-700 text-white',
-    specs: ['6 Strikes Max', 'Letter By Letter', 'Concealed Pokémon'],
+    specs: ['6 Strikes Max', 'Letter Guesser', 'Clues'],
     rules: [
       'Guess the hidden Pokémon name letter-by-letter before strikes run out.',
       'The Pokémon identity and sprite remain completely concealed throughout the challenge.',
@@ -88,11 +89,11 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-purple-100/80 border-purple-200 text-purple-600',
     iconColor: 'text-purple-600',
     buttonGradient: 'bg-purple-600 hover:bg-purple-700 text-white',
-    specs: ['Audio Cry Only', 'Zero Visual Hints', '4 Choices'],
+    specs: ['Audio Cry', 'Identififcation', 'Clues'],
     rules: [
       'Listen to the authentic audio cry of an unknown species without visual previews.',
-      'Select the corresponding Pokémon from the 4 multiple choice options.',
-      'Replay the cry if needed and lock in your answer for a guaranteed Pokédex entry.',
+      'Type the species name based solely on the audio — no multiple choice spoilers.',
+      'Replay the cry as many times as needed and lock in your guess for a Pokédex entry.',
     ],
   },
   biologist: {
@@ -105,7 +106,7 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
     iconBg: 'bg-teal-100/80 border-teal-200 text-teal-600',
     iconColor: 'text-teal-600',
     buttonGradient: 'bg-teal-600 hover:bg-teal-700 text-white',
-    specs: ['Bulbapedia Biology', 'Untimed / Skip', 'Text Deductions'],
+    specs: ['Bulbapedia', 'Identification', 'Familiarity'],
     rules: [
       'Read authentic physical traits and ecological lore scraped directly from Bulbapedia.',
       'Species names and explicit giveaways are redacted for maximum deduction fun.',
@@ -163,7 +164,8 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
     if (
       gameId === 'whos_that_pokemon' ||
       gameId === 'hangmon' ||
-      gameId === 'identicry'
+      gameId === 'identicry' ||
+      gameId === 'biologist'
     ) {
       setActiveGame(gameId);
     }
@@ -211,6 +213,17 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
   if (activeGame === 'identicry') {
     return (
       <Identicry
+        onBack={() => {
+          setActiveGame(null);
+          setSessions(storageService.getArenaSessions(currentUser?.id));
+        }}
+      />
+    );
+  }
+
+  if (activeGame === 'biologist') {
+    return (
+      <Biologist
         onBack={() => {
           setActiveGame(null);
           setSessions(storageService.getArenaSessions(currentUser?.id));

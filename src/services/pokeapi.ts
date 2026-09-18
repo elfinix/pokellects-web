@@ -1,7 +1,7 @@
 import { Pokemon, PokemonType, EvolutionNode, PokemonStat, PokemonAbility } from '../types/pokemon';
 
 // Base API endpoints
-const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
+export const POKEAPI_BASE_URL = 'https://pokeapi.co/api/v2';
 
 // In-memory caches to minimize network roundtrips
 const pokemonCache = new Map<number | string, Pokemon>();
