@@ -35,12 +35,14 @@ import {
 } from 'recharts';
 import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
+import { useTheme } from '../../context/ThemeContext';
 import { POKEMON_TYPE_THEMES } from '../../styles/theme';
 import { Pokemon } from '../../types/pokemon';
 
 export const ReportsPage: React.FC = () => {
   const { currentUser } = useAuth();
   const { stats, allPokemon, unlockedIds } = usePokedex();
+  const { isDark } = useTheme();
 
   // Unlocked Pokémon Array
   const unlockedList = useMemo(() => {
@@ -223,13 +225,13 @@ export const ReportsPage: React.FC = () => {
     <div className="space-y-7 sm:space-y-8 pb-6 w-full">
       {/* Header */}
       <div className="space-y-2 pb-1">
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-xs">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display tracking-tight flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-xs shadow-blue-500/20">
             <BarChart3 className="w-5 h-5" />
           </div>
           <span>Analytics</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-3xl leading-relaxed">
           In-depth empirical biometric reports, stat radar distributions, and regional discovery analytics.
         </p>
       </div>
@@ -237,24 +239,24 @@ export const ReportsPage: React.FC = () => {
       {/* 1. TOP METRICS CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Discovery Completion */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3">
+        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Registry Velocity
             </span>
-            <div className="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display">
               {stats.completionRatePercent}%
             </div>
-            <span className="text-xs text-slate-500 block mt-0.5">
+            <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
               {stats.totalUnlocked} of {stats.totalDexCount} species documented
             </span>
           </div>
-          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
             <div
               className="bg-red-600 h-full rounded-full transition-all duration-500"
               style={{ width: `${stats.completionRatePercent}%` }}
@@ -263,74 +265,74 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Metric 2: Average Base Stat Total */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3">
+        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Average Power (BST)
             </span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
               <Zap className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display">
               {metrics.avgBst || '---'}
             </div>
-            <span className="text-xs text-slate-500 block mt-0.5 truncate">
+            <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5 truncate">
               Peak: {metrics.highestBstPokemon?.displayName || 'None'}
             </span>
           </div>
-          <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between">
+          <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500 flex items-center justify-between">
             <span>Global Max: 780</span>
-            <span className="text-amber-600 font-semibold">Tier Average</span>
+            <span className="text-amber-600 dark:text-amber-400 font-semibold">Tier Average</span>
           </div>
         </div>
 
         {/* Metric 3: Physical Biometrics */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3">
+        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Biometric Apex
             </span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
               <Scale className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display truncate">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display truncate">
               {metrics.heaviestPokemon ? `${metrics.heaviestPokemon.weight / 10} kg` : '---'}
             </div>
-            <span className="text-xs text-slate-500 block mt-0.5 truncate">
+            <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5 truncate">
               Heaviest: {metrics.heaviestPokemon?.displayName || 'None'}
             </span>
           </div>
-          <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between truncate">
+          <div className="text-[11px] font-mono text-slate-400 dark:text-slate-500 flex items-center justify-between truncate">
             <span>Tallest: {metrics.tallestPokemon?.displayName || '---'}</span>
-            <span className="text-emerald-600 font-semibold">
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
               {metrics.tallestPokemon ? `${metrics.tallestPokemon.height / 10}m` : ''}
             </span>
           </div>
         </div>
 
         {/* Metric 4: Type Diversity */}
-        <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs space-y-3">
+        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Typing Diversity
             </span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center">
               <PieChartIcon className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display">
-              {metrics.typeCoverage} <span className="text-sm text-slate-400 font-normal">/ 18</span>
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display">
+              {metrics.typeCoverage} <span className="text-sm text-slate-400 dark:text-slate-500 font-normal">/ 18</span>
             </div>
-            <span className="text-xs text-slate-500 block mt-0.5">
-              Primary: <span className="font-bold text-slate-700">{metrics.dominantType}</span> ({metrics.dominantTypeCount})
+            <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
+              Primary: <span className="font-bold text-slate-700 dark:text-slate-200">{metrics.dominantType}</span> ({metrics.dominantTypeCount})
             </span>
           </div>
-          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
             <div
               className="bg-purple-600 h-full rounded-full transition-all duration-500"
               style={{ width: `${(metrics.typeCoverage / 18) * 100}%` }}
@@ -342,13 +344,13 @@ export const ReportsPage: React.FC = () => {
       {/* 2. GRAPHS LAYOUT: ROW 1 — [Base Stat Attribute Radar] & [Type Distribution] */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Chart 1: Base Stat Attribute Radar */}
-        <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Activity className="w-4 h-4 text-red-600" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Activity className="w-4 h-4 text-red-600 dark:text-red-400" />
               <span>Base Stat Attribute Radar</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
               Average attribute footprint across all registered species in your collection
             </p>
           </div>
@@ -357,9 +359,9 @@ export const ReportsPage: React.FC = () => {
             {unlockedList.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData}>
-                  <PolarGrid stroke="#e2e8f0" strokeDasharray="3 3" />
-                  <PolarAngleAxis dataKey="stat" tick={{ fontSize: 11, fill: '#475569', fontWeight: 600 }} />
-                  <PolarRadiusAxis angle={30} domain={[0, 140]} stroke="#cbd5e1" tick={{ fontSize: 9, fill: '#94a3b8' }} />
+                  <PolarGrid stroke={isDark ? '#334155' : '#e2e8f0'} strokeDasharray="3 3" />
+                  <PolarAngleAxis dataKey="stat" tick={{ fontSize: 11, fill: isDark ? '#cbd5e1' : '#475569', fontWeight: 600 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 140]} stroke={isDark ? '#475569' : '#cbd5e1'} tick={{ fontSize: 9, fill: isDark ? '#64748b' : '#94a3b8' }} />
                   <Radar
                     name="Trainer Average"
                     dataKey="avg"
@@ -375,36 +377,36 @@ export const ReportsPage: React.FC = () => {
                 </RadarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-xs text-slate-400 italic">
+              <div className="text-xs text-slate-400 dark:text-slate-500 italic">
                 Register Pokémon to compute your stat radar profile
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-center">
-            <div className="p-2 rounded-xl bg-slate-50">
-              <span className="text-[10px] text-slate-400 block font-semibold">Avg HP</span>
-              <span className="text-xs font-mono font-bold text-slate-800">{metrics.avgStats.hp}</span>
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-center">
+            <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Avg HP</span>
+              <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">{metrics.avgStats.hp}</span>
             </div>
-            <div className="p-2 rounded-xl bg-slate-50">
-              <span className="text-[10px] text-slate-400 block font-semibold">Avg Atk</span>
-              <span className="text-xs font-mono font-bold text-slate-800">{metrics.avgStats.attack}</span>
+            <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Avg Atk</span>
+              <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">{metrics.avgStats.attack}</span>
             </div>
-            <div className="p-2 rounded-xl bg-slate-50">
-              <span className="text-[10px] text-slate-400 block font-semibold">Avg Speed</span>
-              <span className="text-xs font-mono font-bold text-slate-800">{metrics.avgStats.speed}</span>
+            <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Avg Speed</span>
+              <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">{metrics.avgStats.speed}</span>
             </div>
           </div>
         </div>
 
         {/* Chart 2: Regional Distribution Donut Chart */}
-        <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Globe className="w-4 h-4 text-emerald-600" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Globe className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Regional Distribution</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
               Distribution of registered species unlocked across canonical regions
             </p>
           </div>
@@ -437,26 +439,26 @@ export const ReportsPage: React.FC = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-xs text-slate-400 italic">
+              <div className="text-xs text-slate-400 dark:text-slate-500 italic">
                 Register Pokémon to populate regional analytics
               </div>
             )}
           </div>
 
           {/* All 9 Regions Legend */}
-          <div className="pt-2 border-t border-slate-100">
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex flex-wrap gap-1.5 text-xs">
               {regionalPieData.map((item) => (
                 <div
                   key={item.name}
-                  className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg"
+                  className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 px-2 py-1 rounded-lg"
                 >
                   <span
                     className="w-2 h-2 rounded-full shrink-0 shadow-2xs"
                     style={{ backgroundColor: item.color }}
                   />
-                  <span className="font-semibold text-slate-700 text-[10px]">{item.name}</span>
-                  <span className="text-[10px] text-slate-400 font-mono font-medium">
+                  <span className="font-semibold text-slate-700 dark:text-slate-200 text-[10px]">{item.name}</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono font-medium">
                     ({item.value})
                   </span>
                 </div>
@@ -469,13 +471,13 @@ export const ReportsPage: React.FC = () => {
       {/* 3. GRAPHS LAYOUT: ROW 2 — [Competency Breakdown] & [Regional Discovery Trajectory] */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Chart 3: Minigame Competency Breakdown */}
-        <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Award className="w-4 h-4 text-amber-500" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Award className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               <span>Competency Breakdown</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
               Trophy win distribution across all four Pokémon memory and knowledge minigames
             </p>
           </div>
@@ -483,9 +485,9 @@ export const ReportsPage: React.FC = () => {
           <div className="h-64 sm:h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={minigamesData} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                <XAxis type="number" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: '#334155', fontWeight: 600 }} axisLine={false} tickLine={false} width={115} />
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={isDark ? '#334155' : '#f1f5f9'} />
+                <XAxis type="number" tick={{ fontSize: 11, fill: isDark ? '#94a3b8' : '#64748b' }} axisLine={false} tickLine={false} />
+                <YAxis dataKey="name" type="category" tick={{ fontSize: 10, fill: isDark ? '#cbd5e1' : '#334155', fontWeight: 600 }} axisLine={false} tickLine={false} width={115} />
                 <Tooltip
                   isAnimationActive={false}
                   wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
@@ -499,22 +501,22 @@ export const ReportsPage: React.FC = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
             <span>Total Minigame Victories:</span>
-            <span className="font-mono font-bold text-amber-600">
+            <span className="font-mono font-bold text-amber-600 dark:text-amber-400">
               {minigamesData.reduce((acc, m) => acc + m.wins, 0)} Wins
             </span>
           </div>
         </div>
 
         {/* Chart 4: Regional Discovery Trajectory */}
-        <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-blue-600" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>Regional Discovery Trajectory</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
               Cumulative species unlocked across canonical Pokémon Generations
             </p>
           </div>
@@ -528,9 +530,9 @@ export const ReportsPage: React.FC = () => {
                     <stop offset="95%" stopColor="#2563eb" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="gen" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#334155' : '#f1f5f9'} />
+                <XAxis dataKey="gen" tick={{ fontSize: 11, fill: isDark ? '#94a3b8' : '#64748b' }} axisLine={{ stroke: isDark ? '#334155' : '#e2e8f0' }} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: isDark ? '#94a3b8' : '#64748b' }} axisLine={false} tickLine={false} />
                 <Tooltip
                   isAnimationActive={false}
                   wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
@@ -549,26 +551,26 @@ export const ReportsPage: React.FC = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
             <span>Kanto (Gen 1) $\rightarrow$ Paldea (Gen 9)</span>
-            <span className="font-mono font-bold text-slate-900">{stats.totalUnlocked} Total Species</span>
+            <span className="font-mono font-bold text-slate-900 dark:text-white">{stats.totalUnlocked} Total Species</span>
           </div>
         </div>
       </div>
 
       {/* 4. GRAPHS LAYOUT: ROW 3 (Full Width) — [Biometric Clustering (Height vs Weight)] */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Ruler className="w-4 h-4 text-emerald-600" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Ruler className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Biometric Clustering (Height vs Weight)</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
               Physical scale distribution across all registered species (Height in meters vs Weight in kg)
             </p>
           </div>
-          <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-xl shrink-0">
+          <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-xl shrink-0">
             {unlockedList.length} Sample Points
           </span>
         </div>
@@ -577,22 +579,22 @@ export const ReportsPage: React.FC = () => {
           {scatterData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 15, right: 25, bottom: 15, left: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#f1f5f9'} />
                 <XAxis
                   type="number"
                   dataKey="weight"
                   name="Weight"
                   unit="kg"
-                  tick={{ fontSize: 11, fill: '#64748b' }}
-                  label={{ value: 'Weight (kg)', position: 'insideBottomRight', offset: -10, fontSize: 11, fill: '#94a3b8' }}
+                  tick={{ fontSize: 11, fill: isDark ? '#94a3b8' : '#64748b' }}
+                  label={{ value: 'Weight (kg)', position: 'insideBottomRight', offset: -10, fontSize: 11, fill: isDark ? '#64748b' : '#94a3b8' }}
                 />
                 <YAxis
                   type="number"
                   dataKey="height"
                   name="Height"
                   unit="m"
-                  tick={{ fontSize: 11, fill: '#64748b' }}
-                  label={{ value: 'Height (m)', angle: -90, position: 'insideLeft', offset: 0, fontSize: 11, fill: '#94a3b8' }}
+                  tick={{ fontSize: 11, fill: isDark ? '#94a3b8' : '#64748b' }}
+                  label={{ value: 'Height (m)', angle: -90, position: 'insideLeft', offset: 0, fontSize: 11, fill: isDark ? '#64748b' : '#94a3b8' }}
                 />
                 <ZAxis range={[60, 60]} />
                 <Tooltip
@@ -608,7 +610,7 @@ export const ReportsPage: React.FC = () => {
               </ScatterChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-xs text-slate-400 italic">
+            <div className="h-full flex items-center justify-center text-xs text-slate-400 dark:text-slate-500 italic">
               Register Pokémon to visualize physical height and weight distributions
             </div>
           )}
@@ -619,3 +621,4 @@ export const ReportsPage: React.FC = () => {
 };
 
 export default ReportsPage;
+

@@ -279,39 +279,39 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
   return (
     <div className="w-full flex flex-col justify-between h-[calc(100vh-theme(spacing.20))] max-h-[860px] min-h-[580px] select-none">
       {/* Top Header Bar */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-200/90">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200/90 dark:border-slate-800">
         {/* Back Button + Game Icon + Title */}
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onBack}
-            className="p-2 rounded-xl bg-white border border-slate-200/90 hover:border-slate-300 hover:bg-slate-50 text-slate-700 transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
             title="Back to Minigames"
           >
-            <ArrowLeft className="w-5 h-5 text-slate-700" />
+            <ArrowLeft className="w-5 h-5 text-slate-700 dark:text-slate-300" />
           </button>
 
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <Type className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 font-display tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
             Hangmon
           </h1>
         </div>
 
         {/* Streak & Solved Counts */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-bold font-mono">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 text-blue-800 dark:text-blue-300 text-xs font-bold font-mono">
             <Flame
               className={`w-3.5 h-3.5 ${
-                streak > 0 ? 'text-blue-600 fill-blue-600 animate-pulse' : 'text-slate-400'
+                streak > 0 ? 'text-blue-600 fill-blue-600 animate-pulse' : 'text-slate-400 dark:text-slate-500'
               }`}
             />
             <span>{streak} Streak</span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 text-slate-700 text-xs font-bold font-mono">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold font-mono">
             <Trophy className="w-3.5 h-3.5 text-blue-600" />
             <span>{solvedCount} Solved</span>
           </div>
@@ -319,10 +319,10 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
       </div>
 
       {/* Main Full-Screen Stage Area */}
-      <div className="flex-1 min-h-0 my-4 relative rounded-3xl bg-slate-50/80 border border-slate-200/90 overflow-hidden flex flex-col justify-between p-6 sm:p-8">
+      <div className="flex-1 min-h-0 my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-6 sm:p-8">
         {/* Subtle Grid Pattern Overlay */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
           style={{
             backgroundImage: 'radial-gradient(circle, #94a3b8 0.8px, transparent 0.8px)',
             backgroundSize: '24px 24px',
@@ -330,10 +330,10 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
         />
 
         {/* Decorative Scanner Corner Brackets */}
-        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-slate-300 rounded-tl-sm pointer-events-none" />
-        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-slate-300 rounded-tr-sm pointer-events-none" />
-        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-slate-300 rounded-bl-sm pointer-events-none" />
-        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-slate-300 rounded-br-sm pointer-events-none" />
+        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-tl-sm pointer-events-none" />
+        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-tr-sm pointer-events-none" />
+        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-bl-sm pointer-events-none" />
+        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-br-sm pointer-events-none" />
 
         {/* Registered Stamp (Positioned in top-right of canvas upon victory) */}
         <AnimatePresence>
@@ -352,7 +352,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
         {/* Top Stage Bar: Strikes / Lives Tracker & Hints */}
         <div className="relative z-10 flex flex-col items-start gap-2 pl-4 sm:pl-6">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Chances:
             </span>
             <div className="flex items-center gap-1.5">
@@ -363,7 +363,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                     key={idx}
                     className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
                       isLost
-                        ? 'bg-rose-100 border-rose-300 text-rose-500 scale-90'
+                        ? 'bg-rose-100 dark:bg-rose-950/40 border-rose-300 dark:border-rose-900/60 text-rose-500 dark:text-rose-400 scale-90'
                         : 'bg-blue-600 border-blue-700 text-white'
                     }`}
                   >
@@ -380,15 +380,15 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
 
           {isLoading || !targetPokemon ? (
             <div className="flex items-center gap-2">
-              <div className="w-14 h-6 rounded-lg bg-slate-200/70 animate-pulse border border-slate-200/80" />
-              <div className="w-32 h-6 rounded-lg bg-slate-200/70 animate-pulse border border-slate-200/80" />
+              <div className="w-14 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700" />
+              <div className="w-32 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700" />
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600">
+              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
                 Gen {targetPokemon.generation}
               </span>
-              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600">
+              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
                 {requiredLettersSet.size} Unique Letters
               </span>
             </div>
@@ -436,12 +436,12 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
           ) : isRevealed && !isWon ? (
             /* Concealed Identity State on Loss */
             <div className="flex flex-col items-center justify-center gap-3 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500 shadow-2xs">
+              <div className="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 flex items-center justify-center text-rose-500 shadow-2xs">
                 <HeartCrack className="w-8 h-8 text-rose-500" />
               </div>
               <div className="space-y-1">
-                <p className="text-base font-bold text-slate-800">Chances Depleted</p>
-                <p className="text-xs text-slate-500 font-medium max-w-xs">
+                <p className="text-base font-bold text-slate-800 dark:text-slate-200">Chances Depleted</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xs">
                   Identity concealed to preserve the mystery for Pokédex recall!
                 </p>
               </div>
@@ -458,7 +458,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                   return (
                     <div
                       key={idx}
-                      className="w-5 sm:w-6 h-10 sm:h-12 flex items-center justify-center font-mono font-black text-xl text-slate-600"
+                      className="w-5 sm:w-6 h-10 sm:h-12 flex items-center justify-center font-mono font-black text-xl text-slate-600 dark:text-slate-300"
                     >
                       {char}
                     </div>
@@ -470,8 +470,8 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                     key={idx}
                     className={`w-9 h-11 sm:w-11 sm:h-13 rounded-xl border flex items-center justify-center font-mono font-black text-lg sm:text-2xl transition-all ${
                       isGuessed
-                        ? 'bg-white border-blue-500 text-blue-900 ring-2 ring-blue-500/20 shadow-2xs'
-                        : 'bg-white/80 border-slate-300 text-transparent border-dashed'
+                        ? 'bg-white dark:bg-slate-800 border-blue-500 text-blue-900 dark:text-blue-300 ring-2 ring-blue-500/20 shadow-2xs'
+                        : 'bg-white/80 dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-transparent border-dashed'
                     }`}
                   >
                     {isGuessed ? char : '_'}
@@ -495,7 +495,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                 className="w-full space-y-2.5"
               >
                 {/* Virtual Alphabet Keyboard */}
-                <div className="p-2 sm:p-3 bg-white rounded-2xl border border-slate-200/90 space-y-1.5 shadow-2xs">
+                <div className="p-2 sm:p-3 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 space-y-1.5 shadow-2xs">
                   {KEYBOARD_ROWS.map((row, rowIdx) => (
                     <div key={rowIdx} className="flex items-center justify-center gap-1 sm:gap-1.5">
                       {row.map((letter) => {
@@ -504,14 +504,14 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                         const isWrong = isGuessed && !requiredLettersSet.has(letter);
 
                         let buttonClasses =
-                          'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800 hover:border-blue-400';
+                          'bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-blue-400 dark:hover:border-blue-500';
 
                         if (isCorrect) {
                           buttonClasses =
                             'bg-blue-600 border-blue-700 text-white font-black cursor-default';
                         } else if (isWrong) {
                           buttonClasses =
-                            'bg-slate-100 border-slate-200 text-slate-300 opacity-40 line-through cursor-default';
+                            'bg-slate-100 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-600 opacity-40 line-through cursor-default';
                         }
 
                         return (
@@ -532,7 +532,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
 
                 {/* Skip Control */}
                 <div className="flex items-center justify-between px-2 text-xs">
-                  <span className="text-slate-400 text-[11px]">
+                  <span className="text-slate-400 dark:text-slate-500 text-[11px]">
                     Click or type any letter A–Z on your keyboard.
                   </span>
 
@@ -540,7 +540,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                     type="button"
                     onClick={loadNextRound}
                     disabled={isLoading}
-                    className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95 disabled:opacity-50"
+                    className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95 disabled:opacity-50"
                   >
                     <SkipForward className="w-3.5 h-3.5" />
                     <span>Skip</span>
@@ -555,16 +555,16 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="w-full flex flex-wrap items-center justify-between gap-4 p-3.5 sm:p-4 bg-white rounded-2xl border border-slate-200/90"
+                className="w-full flex flex-wrap items-center justify-between gap-4 p-3.5 sm:p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-md"
               >
                 {isWon && targetPokemon ? (
                   <>
                     {/* Pokémon Info: Dex #, Name, Types */}
                     <div className="flex items-center gap-3">
-                      <span className="font-mono text-xs font-bold text-blue-600">
+                      <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">
                         #{String(targetPokemon.id).padStart(4, '0')}
                       </span>
-                      <span className="text-base sm:text-lg font-black text-slate-900 font-display tracking-tight">
+                      <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
                         {targetPokemon.displayName}
                       </span>
 
@@ -576,8 +576,8 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                             <span
                               key={t}
                               className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                                theme ? theme.border : 'border-slate-200'
-                              } ${theme ? theme.badgeBg : 'bg-slate-100 text-slate-700'}`}
+                                theme ? theme.border : 'border-slate-200 dark:border-slate-700'
+                              } ${theme ? theme.badgeBg : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
                             >
                               {theme ? theme.name : t}
                             </span>
@@ -591,16 +591,16 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                       <button
                         type="button"
                         onClick={() => openDetailModal(targetPokemon, false)}
-                        className="px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
+                        className="px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
                       >
-                        <BookOpen className="w-3.5 h-3.5 text-slate-500" />
+                        <BookOpen className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                         <span>View Dex</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={loadNextRound}
-                        className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                        className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-xs"
                       >
                         <span>Next Pokémon</span>
                         <ArrowRight className="w-4 h-4" />
@@ -610,9 +610,9 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                 ) : (
                   <>
                     {/* Concealed Loss Notice */}
-                    <div className="flex items-center gap-2 text-slate-600">
+                    <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                       <HeartCrack className="w-4 h-4 text-rose-500 shrink-0" />
-                      <span className="text-xs sm:text-sm font-semibold text-slate-700">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">
                         Try again on the next round!
                       </span>
                     </div>
@@ -621,7 +621,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                       <button
                         type="button"
                         onClick={loadNextRound}
-                        className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                        className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-xs"
                       >
                         <span>Try Next Pokémon</span>
                         <ArrowRight className="w-4 h-4" />

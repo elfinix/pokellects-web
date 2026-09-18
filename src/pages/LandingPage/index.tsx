@@ -66,7 +66,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) =
 
   return (
     <SmoothScrollProvider>
-      <div className="min-h-screen bg-slate-50/40 relative text-slate-900 flex flex-col selection:bg-red-600 selection:text-white">
+      <div className="min-h-screen bg-slate-50/40 dark:bg-slate-950 relative text-slate-900 dark:text-white flex flex-col selection:bg-red-600 selection:text-white">
         {/* Dynamic Interactive Background System */}
         <BackgroundSystem />
 

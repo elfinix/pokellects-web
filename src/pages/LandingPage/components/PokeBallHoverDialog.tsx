@@ -18,10 +18,10 @@ export const PokeBallHoverDialog: React.FC<PokeBallHoverDialogProps> = ({
           transition={{ type: 'spring', stiffness: 450, damping: 25 }}
           className="absolute bottom-5 sm:bottom-7 left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none"
         >
-          {/* Light-colored small dialog pill */}
-          <div className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md text-slate-700 text-xs font-semibold whitespace-nowrap">
+          {/* Light/Dark-colored small dialog pill */}
+          <div className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-md text-slate-700 dark:text-slate-200 text-xs font-semibold whitespace-nowrap">
             {/* Upward pointer caret towards Pokéball */}
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white border-t border-l border-slate-200/90 rotate-45" />
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white dark:bg-slate-900 border-t border-l border-slate-200/90 dark:border-slate-800 rotate-45" />
 
             {/* Red live pulse dot */}
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />

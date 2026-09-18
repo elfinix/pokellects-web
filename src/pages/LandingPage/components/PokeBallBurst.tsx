@@ -101,16 +101,16 @@ const HolographicCard: React.FC<CardItemProps> = ({ poke, index, revealCount }) 
         rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className="relative bg-white/95 backdrop-blur-xl p-3 rounded-2xl border border-slate-200/90 shadow-2xl flex flex-col items-center text-center flex-1 max-w-[128px] sm:max-w-[138px] pointer-events-auto cursor-pointer select-none group transition-shadow hover:shadow-red-500/10"
+      className="relative bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl p-3 rounded-2xl border border-slate-200/90 dark:border-slate-700/80 shadow-2xl dark:shadow-[0_10px_30px_-5px_rgba(0,0,0,0.6),0_1px_0_rgba(255,255,255,0.08)_inset] flex flex-col items-center text-center flex-1 max-w-[128px] sm:max-w-[138px] pointer-events-auto cursor-pointer select-none group transition-shadow hover:shadow-red-500/10"
       title={`Click speaker to hear ${poke.displayName}'s cry!`}
     >
       {/* Holographic light sheen overlay */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/30 dark:via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
       {/* Top Bar: National Dex # & Generation Pill */}
-      <div className="w-full flex items-center justify-between text-[9px] font-mono font-bold text-slate-400">
+      <div className="w-full flex items-center justify-between text-[9px] font-mono font-bold text-slate-400 dark:text-slate-400">
         <span>#{String(poke.id).padStart(4, '0')}</span>
-        <span className="text-[8px] font-sans px-1 py-0.2 rounded bg-slate-100 text-slate-500 uppercase tracking-tighter">
+        <span className="text-[8px] font-sans px-1 py-0.2 rounded bg-slate-100 dark:bg-slate-700/80 text-slate-500 dark:text-slate-300 uppercase tracking-tighter">
           G{poke.generation}
         </span>
       </div>
@@ -129,7 +129,7 @@ const HolographicCard: React.FC<CardItemProps> = ({ poke, index, revealCount }) 
           type="button"
           onClick={playCry}
           title="Play cry"
-          className="absolute -right-1.5 bottom-0 w-5 h-5 rounded-full bg-slate-900/90 hover:bg-red-600 text-white flex items-center justify-center shadow-xs transition-colors cursor-pointer"
+          className="absolute -right-1.5 bottom-0 w-5 h-5 rounded-full bg-slate-900/90 dark:bg-slate-700 hover:bg-red-600 dark:hover:bg-red-600 text-white flex items-center justify-center shadow-xs transition-colors cursor-pointer"
         >
           <Volume2 className="w-2.5 h-2.5" />
         </button>
@@ -137,7 +137,7 @@ const HolographicCard: React.FC<CardItemProps> = ({ poke, index, revealCount }) 
 
       {/* Pokemon Name & Element Tags */}
       <div className="w-full space-y-1">
-        <div className="text-xs font-extrabold text-slate-900 font-display truncate">
+        <div className="text-xs font-extrabold text-slate-900 dark:text-white font-display truncate">
           {poke.displayName}
         </div>
         <div className="flex items-center justify-center gap-1 flex-wrap">

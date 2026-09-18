@@ -54,7 +54,7 @@ function RedactedText({ text }: { text?: string }) {
         part === '▢▢▢▢▢▢▢▢' ? (
           <span
             key={i}
-            className="inline-block bg-teal-900 text-teal-900 rounded-sm select-none mx-0.5 px-[0.35em] leading-tight"
+            className="inline-block bg-teal-900 dark:bg-teal-700 text-teal-900 dark:text-teal-700 rounded-sm select-none mx-0.5 px-[0.35em] leading-tight"
             title="Redacted"
             style={{ minWidth: '4rem' }}
           >
@@ -383,49 +383,49 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
   return (
     <div className="w-full flex flex-col justify-between h-[calc(100vh-theme(spacing.20))] max-h-[860px] min-h-[580px] select-none">
       {/* Top Header Bar */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-200/90">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-200/90 dark:border-slate-800">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onBack}
-            className="p-2 rounded-xl bg-white border border-slate-200/90 hover:border-slate-300 hover:bg-slate-50 text-slate-700 transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
             title="Back to Minigames"
           >
-            <ArrowLeft className="w-5 h-5 text-slate-700" />
+            <ArrowLeft className="w-5 h-5 text-slate-700 dark:text-slate-200" />
           </button>
 
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-teal-600 text-white flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-teal-500/20">
             <ScrollText className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 font-display tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-display tracking-tight">
             Biolo-gist
           </h1>
         </div>
 
         {/* Streak & Solved */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-bold font-mono">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/40 border border-teal-200/80 dark:border-teal-800/60 text-teal-800 dark:text-teal-300 text-xs font-bold font-mono">
             <Flame
               className={`w-3.5 h-3.5 ${
-                streak > 0 ? 'text-teal-600 fill-teal-600 animate-pulse' : 'text-slate-400'
+                streak > 0 ? 'text-teal-600 dark:text-teal-400 fill-teal-600 dark:fill-teal-400 animate-pulse' : 'text-slate-400 dark:text-slate-500'
               }`}
             />
             <span>{streak} Streak</span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 text-slate-700 text-xs font-bold font-mono">
-            <Trophy className="w-3.5 h-3.5 text-teal-600" />
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold font-mono">
+            <Trophy className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
             <span>{solvedCount} Solved</span>
           </div>
         </div>
       </div>
 
       {/* Main Canvas Area */}
-      <div className="flex-1 min-h-0 my-4 relative rounded-3xl bg-slate-50/80 border border-slate-200/90 overflow-hidden flex flex-col justify-between p-6 sm:p-8">
+      <div className="flex-1 min-h-0 my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-6 sm:p-8">
         {/* Dot Grid Overlay */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
           style={{
             backgroundImage: 'radial-gradient(circle, #94a3b8 0.8px, transparent 0.8px)',
             backgroundSize: '24px 24px',
@@ -433,10 +433,10 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
         />
 
         {/* Corner Brackets */}
-        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-slate-300 rounded-tl-sm pointer-events-none" />
-        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-slate-300 rounded-tr-sm pointer-events-none" />
-        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-slate-300 rounded-bl-sm pointer-events-none" />
-        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-slate-300 rounded-br-sm pointer-events-none" />
+        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-tl-sm pointer-events-none" />
+        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-tr-sm pointer-events-none" />
+        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-bl-sm pointer-events-none" />
+        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-br-sm pointer-events-none" />
 
         {/* Registered Stamp */}
         <AnimatePresence>
@@ -456,26 +456,26 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
         <div className="flex-1 flex flex-col relative z-10 overflow-hidden">
           {loadState === 'loading' && (
             <div className="flex-1 flex flex-col items-center justify-center gap-3">
-              <Loader2 className="w-7 h-7 animate-spin text-teal-600" />
-              <p className="text-xs text-slate-400 font-medium">Fetching Bulbapedia entry...</p>
+              <Loader2 className="w-7 h-7 animate-spin text-teal-600 dark:text-teal-400" />
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Fetching Bulbapedia entry...</p>
             </div>
           )}
 
           {loadState === 'error' && (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
-                <AlertTriangle className="w-7 h-7 text-amber-500" />
+              <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-center">
+                <AlertTriangle className="w-7 h-7 text-amber-500 dark:text-amber-400" />
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-bold text-slate-700">Couldn't fetch Biology entry</p>
-                <p className="text-xs text-slate-400 max-w-xs">
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Couldn't fetch Biology entry</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 max-w-xs">
                   This could be a network issue or a missing Bulbapedia page.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={loadNextRound}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 cursor-pointer transition-colors active:scale-95"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors active:scale-95"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Try Another Pokémon</span>
@@ -495,15 +495,15 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      className="p-5 sm:p-6 bg-white rounded-2xl border border-slate-200/90 h-full flex flex-col"
+                      className="p-5 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 h-full flex flex-col"
                     >
                       {/* Source Attribution — fixed height */}
                       <div className="flex items-center gap-1.5 mb-4 shrink-0">
-                        <Lock className="w-3 h-3 text-teal-600 shrink-0" />
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-teal-600">
+                        <Lock className="w-3 h-3 text-teal-600 dark:text-teal-400 shrink-0" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-teal-600 dark:text-teal-400">
                           Pokémon Biology
                         </span>
-                        <span className="ml-auto text-[10px] text-slate-400 font-mono">
+                        <span className="ml-auto text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                           {redactionCount}× redacted
                         </span>
                       </div>
@@ -514,7 +514,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                         className="flex-1 min-h-0 overflow-y-auto"
                       >
                         <p
-                          className="leading-relaxed text-slate-700 font-[Georgia,_serif]"
+                          className="leading-relaxed text-slate-700 dark:text-slate-200 font-[Georgia,_serif]"
                           style={{ fontSize: `${bioFontSize}px` }}
                         >
                           <RedactedText text={maskedText} />
@@ -549,7 +549,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                           />
                         ) : (
                           <div className="w-40 h-40 flex items-center justify-center">
-                            <Loader2 className="w-7 h-7 animate-spin text-teal-600" />
+                            <Loader2 className="w-7 h-7 animate-spin text-teal-600 dark:text-teal-400" />
                           </div>
                         )}
 
@@ -573,10 +573,10 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
               {/* Hints Row (Gen, Types) — shown while guessing */}
               {!isRevealed && targetPokemon && (
                 <div className="relative z-10 flex flex-wrap items-center gap-1.5 pl-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">
                     Hints:
                   </span>
-                  <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600">
+                  <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
                     Gen {targetPokemon.generation}
                   </span>
                   {targetPokemon.types.map((t) => {
@@ -585,8 +585,8 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                       <span
                         key={t}
                         className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                          theme ? theme.border : 'border-slate-200'
-                        } ${theme ? theme.badgeBg : 'bg-slate-100 text-slate-700'}`}
+                          theme ? theme.border : 'border-slate-200 dark:border-slate-700'
+                        } ${theme ? theme.badgeBg : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
                       >
                         {theme ? theme.name : t}
                       </span>
@@ -613,14 +613,14 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                 {/* Input Form */}
                 <form
                   onSubmit={handleSubmit}
-                  className={`w-full flex items-center gap-2 p-1.5 sm:p-2 bg-white rounded-2xl border transition-all ${
+                  className={`w-full flex items-center gap-2 p-1.5 sm:p-2 bg-white dark:bg-slate-900 rounded-2xl border transition-all ${
                     hasError
-                      ? 'border-rose-400 ring-2 ring-rose-500/20'
-                      : 'border-slate-200/90 focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/20'
+                      ? 'border-rose-400 dark:border-rose-500 ring-2 ring-rose-500/20'
+                      : 'border-slate-200/90 dark:border-slate-800 focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/20'
                   }`}
                 >
                   <div className="relative flex-1 flex items-center pl-3">
-                    <Crosshair className="w-4 h-4 text-slate-400 shrink-0 pointer-events-none" />
+                    <Crosshair className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0 pointer-events-none" />
                     <input
                       ref={inputRef}
                       type="text"
@@ -633,7 +633,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                       placeholder="Identify the Pokémon..."
                       autoComplete="off"
                       spellCheck="false"
-                      className="w-full py-2.5 pl-2.5 pr-8 bg-transparent text-slate-900 font-semibold placeholder:text-slate-400 placeholder:font-normal text-sm sm:text-base focus:outline-none"
+                      className="w-full py-2.5 pl-2.5 pr-8 bg-transparent text-slate-900 dark:text-white font-semibold placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:font-normal text-sm sm:text-base focus:outline-none"
                     />
 
                     {query && (
@@ -643,7 +643,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                           setQuery('');
                           inputRef.current?.focus();
                         }}
-                        className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
+                        className="p-1 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -655,7 +655,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                       type="button"
                       onClick={loadNextRound}
                       disabled={loadState === 'loading'}
-                      className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95 disabled:opacity-50"
+                      className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95 disabled:opacity-50"
                       title="Skip to another Pokémon"
                     >
                       <SkipForward className="w-3.5 h-3.5" />
@@ -665,7 +665,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                     <button
                       type="submit"
                       disabled={loadState !== 'ready' || !query.trim()}
-                      className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                      className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:cursor-not-allowed text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-teal-600/20"
                     >
                       <span>Guess</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -676,21 +676,21 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                 {/* Feedback Row */}
                 <div className="min-h-[20px] flex items-center justify-between px-2 text-xs">
                   {hasError ? (
-                    <span className="text-rose-600 font-semibold flex items-center gap-1">
+                    <span className="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1">
                       <XCircle className="w-3.5 h-3.5 text-rose-500" />
                       Not quite! Read the biology again and try another name.
                     </span>
                   ) : incorrectAttempts.length > 0 ? (
-                    <div className="flex items-center gap-1 text-slate-400 text-[11px]">
+                    <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-[11px]">
                       <span>Tried:</span>
                       {incorrectAttempts.slice(0, 4).map((item, i) => (
-                        <span key={i} className="line-through text-slate-500 font-medium">
+                        <span key={i} className="line-through text-slate-500 dark:text-slate-400 font-medium">
                           {item}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <span className="text-slate-400 text-[11px]">
+                    <span className="text-slate-400 dark:text-slate-500 text-[11px]">
                       Read the biology passage and identify the mystery Pokémon.
                     </span>
                   )}
@@ -704,14 +704,14 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="w-full flex flex-wrap items-center justify-between gap-4 p-3.5 sm:p-4 bg-white rounded-2xl border border-slate-200/90"
+                className="w-full flex flex-wrap items-center justify-between gap-4 p-3.5 sm:p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800"
               >
                 {/* Pokémon Info */}
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="font-mono text-xs font-bold text-teal-600 shrink-0">
+                  <span className="font-mono text-xs font-bold text-teal-600 dark:text-teal-400 shrink-0">
                     #{String(targetPokemon?.id || 0).padStart(4, '0')}
                   </span>
-                  <span className="text-base sm:text-lg font-black text-slate-900 font-display tracking-tight truncate">
+                  <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display tracking-tight truncate">
                     {targetPokemon?.displayName}
                   </span>
 
@@ -722,8 +722,8 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                         <span
                           key={t}
                           className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                            theme ? theme.border : 'border-slate-200'
-                          } ${theme ? theme.badgeBg : 'bg-slate-100 text-slate-700'}`}
+                            theme ? theme.border : 'border-slate-200 dark:border-slate-700'
+                          } ${theme ? theme.badgeBg : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
                         >
                           {theme ? theme.name : t}
                         </span>
@@ -739,16 +739,16 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
                     onClick={() => {
                       if (targetPokemon) openDetailModal(targetPokemon, false);
                     }}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
                   >
-                    <BookOpen className="w-3.5 h-3.5 text-slate-500" />
+                    <BookOpen className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     <span>View Dex</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={loadNextRound}
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95"
+                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-teal-600/20"
                   >
                     <span>Next Pokémon</span>
                     <ArrowRight className="w-4 h-4" />

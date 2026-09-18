@@ -60,33 +60,33 @@ const PokemonCardSkeleton: React.FC = React.memo(() => (
 const UndiscoveredPokemonCard: React.FC<{ poke: Pokemon }> = React.memo(({ poke }) => (
   <div
     style={{ contentVisibility: 'auto', containIntrinsicSize: '0 195px' } as React.CSSProperties}
-    className="group relative p-4 rounded-2xl border border-dashed border-slate-200/90 bg-gradient-to-b from-white/70 via-slate-50/50 to-slate-100/40 hover:border-slate-300 flex flex-col items-center justify-between text-center select-none transition-all duration-150 ease-out  hover: min-h-[195px]"
+    className="group relative p-4 rounded-2xl border border-dashed border-slate-200/90 dark:border-slate-800/80 bg-gradient-to-b from-white/70 via-slate-50/50 to-slate-100/40 dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/80 hover:border-slate-300 dark:hover:border-slate-700 flex flex-col items-center justify-between text-center select-none transition-all duration-150 ease-out min-h-[195px]"
   >
     {/* Dex ID Header */}
     <div className="w-full flex items-center justify-between">
-      <span className="px-2 py-0.5 rounded-md bg-slate-100 text-[10px] font-mono font-bold text-slate-400">
+      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/80 text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500">
         #{String(poke.id).padStart(4, '0')}
       </span>
-      <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-300">
+      <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-300 dark:text-slate-600">
         Gen {poke.generation}
       </span>
     </div>
 
     {/* Customized Question Mark Icon (No silhouette) */}
     <div className="my-3 relative flex items-center justify-center">
-      <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/60 border border-slate-200/70  flex items-center justify-center group-hover:scale-105 group-hover:border-slate-300 transition-all duration-150 ease-out">
-        <HelpCircle className="w-8 h-8 sm:w-9 sm:h-9 text-slate-300 group-hover:text-slate-400 transition-colors" />
+      <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/60 dark:from-slate-800/90 dark:via-slate-800/40 dark:to-slate-900/90 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center group-hover:scale-105 group-hover:border-slate-300 dark:group-hover:border-slate-600 transition-all duration-150 ease-out shadow-xs dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+        <HelpCircle className="w-8 h-8 sm:w-9 sm:h-9 text-slate-300 dark:text-slate-500 group-hover:text-slate-400 dark:group-hover:text-slate-400 transition-colors" />
       </div>
       {/* Subtle Radar Pulse */}
-      <div className="absolute inset-0 rounded-2xl border border-slate-200/50 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200 pointer-events-none" />
+      <div className="absolute inset-0 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200 pointer-events-none" />
     </div>
 
     {/* Mystery Metadata - displays "???" instead of "Unknown Species" */}
     <div className="w-full space-y-1">
-      <div className="text-sm font-black text-slate-400 font-display tracking-tight">
+      <div className="text-sm font-black text-slate-400 dark:text-slate-500 font-display tracking-tight">
         ???
       </div>
-      <div className="inline-block px-2 py-0.5 rounded-full bg-slate-100/80 text-[9px] font-semibold text-slate-400 tracking-wide">
+      <div className="inline-block px-2 py-0.5 rounded-full bg-slate-100/80 dark:bg-slate-800/80 text-[9px] font-semibold text-slate-400 dark:text-slate-500 tracking-wide">
         Undiscovered
       </div>
     </div>
@@ -113,7 +113,7 @@ const RegisteredPokemonCard: React.FC<{
           containIntrinsicSize: '0 195px',
         } as React.CSSProperties
       }
-      className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 bg-white hover:border-slate-300/90   hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-150 ease-out flex flex-col items-center justify-between text-center cursor-pointer overflow-hidden min-h-[195px]"
+      className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300/90 dark:hover:border-slate-700 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-150 ease-out flex flex-col items-center justify-between text-center cursor-pointer overflow-hidden min-h-[195px]"
     >
       {/* Type Accent Top Highlight Line */}
       <div
@@ -128,26 +128,26 @@ const RegisteredPokemonCard: React.FC<{
       />
 
       {/* Top Header: Dex ID + Gen */}
-      <div className="w-full flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 relative z-10">
-        <span className="px-2 py-0.5 rounded-md bg-slate-100/80 text-slate-600 transition-colors duration-150 font-bold group-hover:text-[var(--type-color)] group-hover:bg-[var(--type-bg)]">
+      <div className="w-full flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 relative z-10">
+        <span className="px-2 py-0.5 rounded-md bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 transition-colors duration-150 font-bold group-hover:text-[var(--type-color)] group-hover:bg-[var(--type-bg)]">
           #{String(poke.id).padStart(4, '0')}
         </span>
-        <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-400">
+        <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-400 dark:text-slate-500">
           Gen {poke.generation}
         </span>
       </div>
 
       {/* High-res Sprite with Synchronized 150ms Scale + Loading Skeleton Shimmer */}
       <div className="relative w-20 h-20 sm:w-22 sm:h-22 flex items-center justify-center my-1.5">
-        <div className="absolute inset-0 rounded-full bg-slate-50/80 group-hover:bg-slate-100/60 scale-75 group-hover:scale-95 transition-all duration-150" />
+        <div className="absolute inset-0 rounded-full bg-slate-50/80 dark:bg-slate-800/60 group-hover:bg-slate-100/60 dark:group-hover:bg-slate-800/90 scale-75 group-hover:scale-95 transition-all duration-150" />
         {!imageLoaded && (
-          <div className="absolute w-14 h-14 rounded-full bg-slate-200/70 animate-pulse z-0" />
+          <div className="absolute w-14 h-14 rounded-full bg-slate-200/70 dark:bg-slate-700/70 animate-pulse z-0" />
         )}
         <img
           src={poke.spriteUrl}
           alt={poke.displayName}
           onLoad={() => setImageLoaded(true)}
-          className={`w-18 h-18 sm:w-20 sm:h-20 object-contain  group-hover:scale-115 transition-all duration-150 ease-out relative z-10 ${
+          className={`w-18 h-18 sm:w-20 sm:h-20 object-contain group-hover:scale-115 transition-all duration-150 ease-out relative z-10 ${
             imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
           }`}
           loading="lazy"
@@ -157,14 +157,14 @@ const RegisteredPokemonCard: React.FC<{
 
       {/* Species Name and Type Badges */}
       <div className="w-full space-y-2 relative z-10">
-        <div className="text-xs sm:text-sm font-black text-slate-900 font-display truncate transition-colors duration-150 group-hover:text-[var(--type-color)]">
+        <div className="text-xs sm:text-sm font-black text-slate-900 dark:text-white font-display truncate transition-colors duration-150 group-hover:text-[var(--type-color)]">
           {poke.displayName}
         </div>
         <div className="flex items-center justify-center gap-1.5 flex-wrap">
           {poke.types.map((t) => (
             <span
               key={t}
-              className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider text-white  transition-transform duration-150 group-hover:scale-105"
+              className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider text-white transition-transform duration-150 group-hover:scale-105"
               style={{ backgroundColor: POKEMON_TYPE_THEMES[t].accentHex }}
             >
               {t}
@@ -374,19 +374,19 @@ export const PokedexPage: React.FC = () => {
       {/* Page Header (Consistent positioning, non-sticky Dex completion widget) */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-1">
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white  shrink-0">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display tracking-tight flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center text-white shrink-0">
               <BookOpen className="w-5 h-5" />
             </div>
             <span>Pokédex</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
             Browse, inspect, and identify species to complete your permanent trainer ledger.
           </p>
         </div>
 
         {/* Dex Completion Status Badge (Overhauled Precision Optical Gauge) */}
-        <div className="relative flex items-center gap-3.5 sm:gap-4 bg-white/95 backdrop-blur-md px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl border border-slate-200/90   hover:border-red-200/80 transition-all duration-300 group shrink-0 self-start sm:self-auto overflow-hidden">
+        <div className="relative flex items-center gap-3.5 sm:gap-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-red-200/80 dark:hover:border-red-800/80 transition-all duration-300 group shrink-0 self-start sm:self-auto overflow-hidden">
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-bl from-red-500/10 via-rose-500/5 to-transparent rounded-full blur-xl pointer-events-none group-hover:from-red-500/15 transition-all duration-500" />
 
@@ -399,7 +399,6 @@ export const PokedexPage: React.FC = () => {
                   <stop offset="60%" stopColor="#f43f5e" />
                   <stop offset="100%" stopColor="#fb7185" />
                 </linearGradient>
-                
               </defs>
 
               {/* Faint Outer Tech Guide Ring */}
@@ -408,10 +407,10 @@ export const PokedexPage: React.FC = () => {
                 cy="24"
                 r={22}
                 fill="none"
-                stroke="#e2e8f0"
+                stroke="#94a3b8"
                 strokeWidth="0.75"
                 strokeDasharray="2 3"
-                opacity="0.6"
+                opacity="0.3"
               />
 
               {/* Background Track */}
@@ -420,7 +419,8 @@ export const PokedexPage: React.FC = () => {
                 cy="24"
                 r={ringRadius}
                 fill="none"
-                stroke="#f1f5f9"
+                stroke="currentColor"
+                className="text-slate-100 dark:text-slate-800"
                 strokeWidth="3.5"
               />
 
@@ -435,15 +435,14 @@ export const PokedexPage: React.FC = () => {
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                
                 className="transition-all duration-700 ease-out"
               />
             </svg>
 
             {/* Inner Frosted Lens Core */}
-            <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-50/90 via-white to-slate-100/70  border border-slate-100/90 flex items-center justify-center">
+            <div className="absolute inset-2 rounded-full bg-gradient-to-br from-slate-50/90 via-white to-slate-100/70 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 border border-slate-100/90 dark:border-slate-700/60 shadow-inner dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.6)] flex items-center justify-center">
               <div className="flex items-baseline leading-none">
-                <span className="text-[11px] sm:text-xs font-black text-slate-900 font-mono tracking-tight">
+                <span className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white font-mono tracking-tight">
                   {stats.completionRatePercent}
                 </span>
                 <span className="text-[8px] font-bold text-red-500 font-mono ml-0.5">%</span>
@@ -458,15 +457,15 @@ export const PokedexPage: React.FC = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+              <span className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
                 Dex Completion
               </span>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="text-xl sm:text-2xl font-black text-slate-900 font-mono tracking-tight">
+              <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight">
                 {stats.totalUnlocked}
               </span>
-              <span className="text-xs font-semibold text-slate-400 font-mono">
+              <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 font-mono">
                 / 1,025
               </span>
             </div>
@@ -476,10 +475,10 @@ export const PokedexPage: React.FC = () => {
 
       {/* Full-Blown Atmospheric Regional Spotlight Card with Integrated Region Switcher Dropdown & Liquid Tide Hover Effect */}
       <div
-        className={`relative z-30 p-5 sm:p-6 pl-6 sm:pl-8 rounded-3xl bg-white/95 backdrop-blur-md border transition-all duration-500 cursor-default select-none group isolate ${
+        className={`relative z-30 p-5 sm:p-6 pl-6 sm:pl-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border transition-all duration-500 cursor-default select-none group isolate ${
           isBannerHovered
-            ? 'border-transparent '
-            : 'border-slate-200/90 '
+            ? 'border-transparent'
+            : 'border-slate-200/90 dark:border-slate-800'
         }`}
       >
         {/* Inner container strictly confining left-side ambient glow and the rising liquid tide */}
@@ -566,7 +565,7 @@ export const PokedexPage: React.FC = () => {
               <div
                 onMouseEnter={() => setIsBannerHovered(true)}
                 onMouseLeave={() => setIsBannerHovered(false)}
-                className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0  cursor-pointer hover:scale-105 active:scale-95 transition-all duration-500 select-none"
+                className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-500 select-none"
                 style={{
                   backgroundColor: isBannerHovered
                     ? 'rgba(255, 255, 255, 0.22)'
@@ -587,7 +586,7 @@ export const PokedexPage: React.FC = () => {
                     className={`group inline-flex items-center gap-2 px-2.5 py-1 -ml-2 rounded-xl text-lg sm:text-xl font-black font-display tracking-tight active:scale-[0.98] transition-all duration-500 cursor-pointer select-none ${
                       isBannerHovered
                         ? 'text-white hover:bg-white/20'
-                        : 'text-slate-900 hover:bg-slate-100/90'
+                        : 'text-slate-900 dark:text-white hover:bg-slate-100/90 dark:hover:bg-slate-800'
                     }`}
                     title="Switch Regional Pokédex Archive"
                   >
@@ -603,8 +602,8 @@ export const PokedexPage: React.FC = () => {
                         isBannerHovered
                           ? 'text-white/80 group-hover:text-white'
                           : isRegionDropdownOpen
-                          ? 'text-red-600'
-                          : 'text-slate-400 group-hover:text-slate-700'
+                          ? 'text-red-600 dark:text-red-400'
+                          : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-200'
                       }`}
                     />
                   </button>
@@ -612,8 +611,8 @@ export const PokedexPage: React.FC = () => {
                   <span
                     className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-lg transition-all duration-700 ${
                       isBannerHovered
-                        ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs '
-                        : 'bg-slate-100 text-slate-600 border border-slate-200/60'
+                        ? 'bg-white/20 text-white border border-white/30 backdrop-blur-xs'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700'
                     }`}
                   >
                     {currentRegionInfo.badgeRange}
@@ -631,15 +630,15 @@ export const PokedexPage: React.FC = () => {
 
                 {/* Regional Leagues Popover Dropdown Menu (Comfortable 3-column, static high z-index) */}
                 {isRegionDropdownOpen && (
-                  <div className="absolute top-full mt-2.5 left-0 z-50 bg-white/98 backdrop-blur-xl rounded-2xl border border-slate-200/90  p-3 sm:p-3.5 w-[calc(100vw-3rem)] sm:w-[580px] md:w-[660px] max-h-[320px] sm:max-h-[340px] overflow-y-auto animate-in fade-in zoom-in-95 duration-150 text-slate-900">
-                    <div className="flex items-center justify-between px-2 py-1 mb-2 border-b border-slate-100">
+                  <div className="absolute top-full mt-2.5 left-0 z-50 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl rounded-2xl border border-slate-200/90 dark:border-slate-800 p-3 sm:p-3.5 w-[calc(100vw-3rem)] sm:w-[580px] md:w-[660px] max-h-[320px] sm:max-h-[340px] overflow-y-auto animate-in fade-in zoom-in-95 duration-150 text-slate-900 dark:text-white shadow-2xl">
+                    <div className="flex items-center justify-between px-2 py-1 mb-2 border-b border-slate-100 dark:border-slate-800">
                       <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-red-600" />
-                        <span className="text-xs font-bold text-slate-800 font-display">
+                        <MapPin className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200 font-display">
                           Select Regional League
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono font-semibold text-slate-400">
+                      <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">
                         12 Archives
                       </span>
                     </div>
@@ -664,8 +663,8 @@ export const PokedexPage: React.FC = () => {
                             }}
                             className={`relative overflow-hidden flex items-center justify-between p-2 sm:p-2.5 pl-3.5 sm:pl-4 rounded-xl text-left transition-all cursor-pointer group isolate ${
                               isSelected
-                                ? 'bg-red-50/90 border border-red-200/80 '
-                                : 'hover:bg-slate-50 border border-transparent'
+                                ? 'bg-red-50/90 dark:bg-red-950/60 border border-red-200/80 dark:border-red-800/80'
+                                : 'hover:bg-slate-50 dark:hover:bg-slate-800/80 border border-transparent'
                             }`}
                           >
                             {/* Left Line Wave Accent */}
@@ -695,22 +694,22 @@ export const PokedexPage: React.FC = () => {
                             <div className="flex items-center gap-2.5 min-w-0 relative z-10">
                               <div
                                 className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                                  isSelected ? 'bg-red-100 text-red-600' : region.iconBg
+                                  isSelected ? 'bg-red-100 dark:bg-red-900/60 text-red-600 dark:text-red-300' : region.iconBg
                                 }`}
                               >
                                 {region.renderIcon(false)}
                               </div>
                               <div className="min-w-0 leading-tight">
                                 <div className="flex items-center gap-1.5">
-                                  <span className="text-xs sm:text-sm font-black font-display text-slate-900 truncate">
+                                  <span className="text-xs sm:text-sm font-black font-display text-slate-900 dark:text-white truncate">
                                     {region.name}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 mt-1">
-                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 font-mono">
+                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-mono">
                                     {region.era}
                                   </span>
-                                  <span className="text-[10px] font-mono text-slate-400 truncate">
+                                  <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 truncate">
                                     {count}/{total}
                                   </span>
                                 </div>
@@ -718,7 +717,7 @@ export const PokedexPage: React.FC = () => {
                             </div>
 
                             {isSelected && (
-                              <Check className="w-4 h-4 text-red-600 shrink-0 ml-1.5 relative z-10" />
+                              <Check className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0 ml-1.5 relative z-10" />
                             )}
                           </button>
                         );
@@ -732,7 +731,7 @@ export const PokedexPage: React.FC = () => {
             {/* Atmospheric Subtitle & Blurb capturing the feels & mood of the region */}
             <p
               className={`text-xs sm:text-sm leading-relaxed pl-0 sm:pl-13 font-normal transition-colors duration-700 ${
-                isBannerHovered ? 'text-white/90' : 'text-slate-500'
+                isBannerHovered ? 'text-white/90' : 'text-slate-500 dark:text-slate-400'
               }`}
             >
               {currentRegionInfo.blurb}
@@ -742,13 +741,13 @@ export const PokedexPage: React.FC = () => {
           {/* Right: Regional Mastery Meter & Percentage */}
           <div
             className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 transition-colors duration-700 ${
-              isBannerHovered ? 'border-white/20' : 'border-slate-100'
+              isBannerHovered ? 'border-white/20' : 'border-slate-100 dark:border-slate-800'
             }`}
           >
             <div className="space-y-1.5 sm:text-right">
               <span
                 className={`text-[10px] uppercase font-bold tracking-wider block transition-colors duration-700 ${
-                  isBannerHovered ? 'text-white/80' : 'text-slate-400'
+                  isBannerHovered ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'
                 }`}
               >
                 Regional Mastery
@@ -758,7 +757,7 @@ export const PokedexPage: React.FC = () => {
                   className={`w-32 sm:w-44 h-2.5 rounded-full overflow-hidden shrink-0 border transition-all duration-700 ${
                     isBannerHovered
                       ? 'bg-black/25 border-white/20'
-                      : 'bg-slate-100 border-slate-200/60'
+                      : 'bg-slate-100 dark:bg-slate-800 border-slate-200/60 dark:border-slate-700'
                   }`}
                 >
                   <div
@@ -770,7 +769,7 @@ export const PokedexPage: React.FC = () => {
                   />
                 </div>
                 <span
-                  className="text-xs font-black font-mono px-2 py-0.5 rounded-lg shrink-0  transition-all duration-700"
+                  className="text-xs font-black font-mono px-2 py-0.5 rounded-lg shrink-0 transition-all duration-700"
                   style={{
                     backgroundColor: isBannerHovered ? '#ffffff' : currentRegionInfo.accentHex,
                     color: isBannerHovered ? '#0f172a' : '#ffffff',
@@ -840,16 +839,16 @@ export const PokedexPage: React.FC = () => {
 
       {/* Empty State */}
       {filteredPokemon.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-3xl border border-slate-200/80 p-8 space-y-3">
+        <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8 space-y-3">
           <Search className="w-8 h-8 text-rose-400 mx-auto" />
-          <h3 className="text-base font-bold text-slate-900">No Pokémon found</h3>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+          <h3 className="text-base font-bold text-slate-900 dark:text-white">No Pokémon found</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
             Try adjusting your search query, type filters, or regional category.
           </p>
           <button
             type="button"
             onClick={handleResetFilters}
-            className="px-4 py-2 rounded-xl bg-slate-900 text-white font-semibold text-xs cursor-pointer hover:bg-slate-800 transition-colors"
+            className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-slate-800 text-white font-semibold text-xs cursor-pointer hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
           >
             Reset Filters
           </button>
@@ -858,7 +857,6 @@ export const PokedexPage: React.FC = () => {
 
       {/* Floating Bottom Registration Omnibar */}
       <FloatingRegistrationBar isModalOpen={isModalOpen} />
-
 
       {/* Multi-Tab Pokémon Detail Modal */}
       <PokemonDetailModal

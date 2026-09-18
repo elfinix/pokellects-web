@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PokedexProvider } from './context/PokedexContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { SmoothScrollProvider, globalScrollToTop } from './context/SmoothScrollContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
@@ -79,61 +80,65 @@ function MainApp() {
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {currentView === 'landing' && (
-        <motion.div
-          key="landing"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full"
-        >
-          <LandingPage onNavigateToLogin={handleNavigateToLogin} />
-        </motion.div>
-      )}
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-0">
+      <AnimatePresence mode="wait">
+        {currentView === 'landing' && (
+          <motion.div
+            key="landing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full"
+          >
+            <LandingPage onNavigateToLogin={handleNavigateToLogin} />
+          </motion.div>
+        )}
 
-      {currentView === 'login' && (
-        <motion.div
-          key="login"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full"
-        >
-          <LoginPage
-            onBackToLanding={handleBackToLanding}
-            onLoginSuccess={handleLoginSuccess}
-          />
-        </motion.div>
-      )}
+        {currentView === 'login' && (
+          <motion.div
+            key="login"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full"
+          >
+            <LoginPage
+              onBackToLanding={handleBackToLanding}
+              onLoginSuccess={handleLoginSuccess}
+            />
+          </motion.div>
+        )}
 
-      {currentView === 'app' && (
-        <motion.div
-          key="app"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full"
-        >
-          <AuthenticatedWorkspace onReturnToLanding={handleBackToLanding} />
-        </motion.div>
-      )}
-    </AnimatePresence>
+        {currentView === 'app' && (
+          <motion.div
+            key="app"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full"
+          >
+            <AuthenticatedWorkspace onReturnToLanding={handleBackToLanding} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
 function App() {
   return (
-    <SmoothScrollProvider>
-      <AuthProvider>
-        <PokedexProvider>
-          <MainApp />
-        </PokedexProvider>
-      </AuthProvider>
-    </SmoothScrollProvider>
+    <ThemeProvider>
+      <SmoothScrollProvider>
+        <AuthProvider>
+          <PokedexProvider>
+            <MainApp />
+          </PokedexProvider>
+        </AuthProvider>
+      </SmoothScrollProvider>
+    </ThemeProvider>
   );
 }
 

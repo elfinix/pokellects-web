@@ -276,13 +276,13 @@ export const ProfilePage: React.FC = () => {
     <div className="space-y-7 sm:space-y-8 pb-6 w-full">
       {/* Header */}
       <div className="space-y-2 pb-1">
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display tracking-tight flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-red-600 flex items-center justify-center text-white shadow-xs shrink-0">
             <User className="w-5 h-5" />
           </div>
           <span>Trainer Profile</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-3xl leading-relaxed">
           Official Pokémon League Trainer Card, regional certifications, and personal custom preferences.
         </p>
       </div>
@@ -423,18 +423,18 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Regional Exploration Badges Matrix */}
-      <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-2xs space-y-5">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <CompassIcon className="w-4 h-4 text-red-600" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <CompassIcon className="w-4 h-4 text-red-600 dark:text-red-400" />
               <span>Regional Discovery Progress</span>
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Live species unlocked across all 9 canonical Pokémon regions
             </p>
           </div>
-          <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
+          <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-xl">
             {stats.totalUnlocked} / 1,025 Total
           </span>
         </div>
@@ -448,7 +448,7 @@ export const ProfilePage: React.FC = () => {
             return (
               <div
                 key={r.id}
-                className="relative overflow-hidden p-4 pl-4.5 sm:pl-5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:bg-white hover:border-slate-300 shadow-2xs hover:shadow-xs transition-all space-y-3 group isolate"
+                className="relative overflow-hidden p-4 pl-4.5 sm:pl-5 rounded-2xl bg-slate-50/70 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs hover:shadow-xs transition-all space-y-3 group isolate"
               >
                 {/* Left Line Wave Accent (Signature Regional Contour) */}
                 <div className="absolute inset-y-0 left-0 w-8 pointer-events-none overflow-hidden select-none z-0">
@@ -483,11 +483,11 @@ export const ProfilePage: React.FC = () => {
                       {r.renderIcon()}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
                         <span>{r.name}</span>
-                        <span className="text-[10px] font-mono font-semibold text-slate-400">Gen {r.gen}</span>
+                        <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">Gen {r.gen}</span>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400 block">{r.badgeRange}</span>
+                      <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 block">{r.badgeRange}</span>
                     </div>
                   </div>
 
@@ -500,13 +500,13 @@ export const ProfilePage: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5 relative z-10">
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                     <span>
-                      <strong className="text-slate-800">{count}</strong> registered
+                      <strong className="text-slate-800 dark:text-slate-200">{count}</strong> registered
                     </span>
                     <span>{total} total</span>
                   </div>
-                  <div className="w-full bg-slate-200/80 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-200/80 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{
@@ -523,44 +523,44 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Trainer Profile Information Edit Form */}
-      <form onSubmit={handleSave} className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-2xs space-y-5">
+      <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
         <div>
-          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <UserCog className="w-4 h-4 text-red-600" />
+          <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <UserCog className="w-4 h-4 text-red-600 dark:text-red-400" />
             <span>Edit Trainer Information</span>
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Update your public trainer card details, featured partner, and preference affinities.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block">First Name</label>
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">First Name</label>
             <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-red-500 focus:bg-white transition-all font-medium"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block">Last Name</label>
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Last Name</label>
             <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-red-500 focus:bg-white transition-all font-medium"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium"
             />
           </div>
 
           {/* Lead Partner Pokémon Autocomplete Search Input */}
           <div className="space-y-1.5 sm:col-span-2 relative" ref={partnerInputRef}>
-            <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
               <span>Lead Partner Pokémon</span>
-              <span className="text-[10px] text-slate-400 font-mono font-medium">
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono font-medium">
                 {unlockedPokemonList.length > 0
                   ? `${unlockedPokemonList.length} registered in Pokédex`
                   : 'Type to search species'}
@@ -568,7 +568,7 @@ export const ProfilePage: React.FC = () => {
             </label>
 
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={partnerSearchInput}
@@ -578,7 +578,7 @@ export const ProfilePage: React.FC = () => {
                   setIsPartnerDropdownOpen(true);
                 }}
                 placeholder="Type a Pokémon name or #ID..."
-                className="w-full pl-10 pr-24 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-red-500 focus:bg-white transition-all font-medium"
+                className="w-full pl-10 pr-24 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium"
               />
               {partnerPokemon && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none">
@@ -599,7 +599,7 @@ export const ProfilePage: React.FC = () => {
 
             {/* Autocomplete Dropdown Popup */}
             {isPartnerDropdownOpen && (
-              <div className="absolute z-50 left-0 right-0 top-full mt-1.5 max-h-60 overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-xl divide-y divide-slate-100 p-1">
+              <div className="absolute z-50 left-0 right-0 top-full mt-1.5 max-h-60 overflow-y-auto rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xl divide-y divide-slate-100 dark:divide-slate-800 p-1">
                 {partnerOptions.length > 0 ? (
                   partnerOptions.map((p) => {
                     const isSelected = p.id === selectedPartnerId;
@@ -615,7 +615,7 @@ export const ProfilePage: React.FC = () => {
                           setIsPartnerDropdownOpen(false);
                         }}
                         className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
-                          isSelected ? 'bg-red-50/80 text-red-900 font-bold' : 'hover:bg-slate-50 text-slate-800'
+                          isSelected ? 'bg-red-50/80 dark:bg-red-950/40 text-red-900 dark:text-red-200 font-bold' : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -626,7 +626,7 @@ export const ProfilePage: React.FC = () => {
                           />
                           <div>
                             <div className="text-xs font-bold">{p.displayName}</div>
-                            <div className="text-[10px] font-mono text-slate-400">
+                            <div className="text-[10px] font-mono text-slate-400 dark:text-slate-500">
                               #{String(p.id).padStart(4, '0')}
                             </div>
                           </div>
@@ -647,7 +647,7 @@ export const ProfilePage: React.FC = () => {
                     );
                   })
                 ) : (
-                  <div className="p-4 text-center text-xs text-slate-400">
+                  <div className="p-4 text-center text-xs text-slate-400 dark:text-slate-500">
                     No species match "{partnerSearchInput}"
                   </div>
                 )}
@@ -656,62 +656,62 @@ export const ProfilePage: React.FC = () => {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block">Favorite Region</label>
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Favorite Region</label>
             <div className="relative">
               <select
                 value={favoriteRegion}
                 onChange={(e) => setFavoriteRegion(e.target.value)}
-                className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-red-500 focus:bg-white transition-all font-medium cursor-pointer appearance-none"
+                className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium cursor-pointer appearance-none"
               >
                 {REGIONS.map((r) => (
-                  <option key={r.name} value={r.name}>
+                  <option key={r.name} value={r.name} className="dark:bg-slate-800">
                     {r.name} (Gen {r.gen})
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block">Favorite Type Specialty</label>
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Favorite Type Specialty</label>
             <div className="relative">
               <select
                 value={favoriteType}
                 onChange={(e) => setFavoriteType(e.target.value as PokemonType)}
-                className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-red-500 focus:bg-white transition-all font-medium cursor-pointer appearance-none capitalize"
+                className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium cursor-pointer appearance-none capitalize"
               >
                 {Object.keys(POKEMON_TYPE_THEMES).map((type) => (
-                  <option key={type} value={type} className="capitalize">
+                  <option key={type} value={type} className="capitalize dark:bg-slate-800">
                     {type.charAt(0).toUpperCase() + type.slice(1)}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
           <div className="sm:col-span-2 space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block">Trainer Bio / Motto</label>
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Trainer Bio / Motto</label>
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={3}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-hidden focus:border-red-500 focus:bg-white transition-all font-medium resize-none leading-relaxed"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium resize-none leading-relaxed"
               placeholder="Write a brief motto about your Pokémon journey..."
             />
           </div>
         </div>
 
         <div className="pt-2 flex items-center justify-between">
-          <span className={`text-xs font-semibold text-emerald-600 flex items-center gap-1.5 transition-opacity ${isSaved ? 'opacity-100' : 'opacity-0'}`}>
+          <span className={`text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 transition-opacity ${isSaved ? 'opacity-100' : 'opacity-0'}`}>
             <Check className="w-4 h-4" />
             <span>Trainer Card details updated successfully!</span>
           </span>
 
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95"
+            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 shadow-red-600/20"
           >
             <Save className="w-4 h-4" />
             <span>Save Profile</span>

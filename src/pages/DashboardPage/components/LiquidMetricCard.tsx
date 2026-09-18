@@ -30,10 +30,10 @@ export const LiquidMetricCard: React.FC<LiquidMetricCardProps> = ({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden rounded-2xl bg-white p-5 border transition-all duration-500 cursor-default select-none group isolate ${
+      className={`relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-5 border transition-all duration-500 cursor-default select-none group isolate ${
         isHovered
           ? `border-transparent shadow-xl ${shadowColor} -translate-y-1`
-          : 'border-slate-200/80 shadow-xs hover:border-slate-300/80'
+          : 'border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300/80 dark:hover:border-slate-700'
       } ${className}`}
       style={{
         WebkitMaskImage: '-webkit-radial-gradient(white, black)',

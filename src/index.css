@@ -9,6 +9,8 @@
   font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     /* Dynamic Pokémon Type Accent Defaults (light-first modern theme) */
@@ -32,11 +34,27 @@
     --type-dark: #334155;
   }
 
+  html {
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  html.dark {
+    background-color: #090d16;
+    color: #f8fafc;
+  }
+
   body {
     font-family: var(--font-sans);
     background-color: #f8fafc;
     color: #0f172a;
     overflow-x: hidden;
+  }
+
+  .dark body,
+  html.dark body {
+    background-color: #090d16;
+    color: #f8fafc;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -55,21 +73,43 @@
   background: #f1f5f9;
 }
 
+.dark ::-webkit-scrollbar-track,
+html.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-/* Glassmorphism helpers for light modern UI */
+.dark ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Glassmorphism helpers for light and dark modern UI */
 .glass-panel {
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.dark .glass-panel,
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.82);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
 .glass-card {
@@ -80,8 +120,20 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.dark .glass-card,
+html.dark .glass-card {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(51, 65, 85, 0.9);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
 .glass-card:hover {
   box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+}
+
+.dark .glass-card:hover,
+html.dark .glass-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
 /* Emergence pop-out animations with fan-out spread */
