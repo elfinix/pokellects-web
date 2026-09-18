@@ -1,6 +1,18 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { Pokemon, UnlockedPokemonEntry } from '../types/pokemon';
-import { POKEMON_DATABASE, resolvePokemonByQuery, getPokemonById } from '../services/pokemonIndex';
+import {
+  resolvePokemonByQuery,
+  resolvePokemonByQueryAsync,
+  getPokemonById,
+  getPokemonByIdAsync,
+  getAllKnownPokemon,
+} from '../services/pokemonIndex';
+import {
+  GENERATION_TOTALS,
+  fetchAllPokemonList,
+  fetchPokemon,
+  getGenerationFromId,
+} from '../services/pokeapi';
 import storageService from '../services/storageService';
 import { useAuth } from './AuthContext';
 
@@ -27,11 +39,11 @@ interface PokedexContextType {
   registerByQuery: (
     query: string,
     method?: UnlockedPokemonEntry['discoveryMethod']
-  ) => RegisterResult;
+  ) => Promise<RegisterResult>;
   registerById: (
     id: number,
     method?: UnlockedPokemonEntry['discoveryMethod']
-  ) => RegisterResult;
+  ) => Promise<RegisterResult>;
   selectedPokemon: Pokemon | null;
   isModalOpen: boolean;
   openDetailModal: (pokemon: Pokemon) => void;
@@ -49,6 +61,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [unlockedEntries, setUnlockedEntries] = useState<UnlockedPokemonEntry[]>([]);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [allPokemonList, setAllPokemonList] = useState<Pokemon[]>(() => getAllKnownPokemon());
 
   // Sync unlocked entries whenever active user changes
   useEffect(() => {
@@ -65,14 +78,54 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const unlockedSet = useMemo(() => new Set(unlockedIds), [unlockedIds]);
 
+  // Initial load: Fetch the list of all 1,025 Pokémon names from PokeAPI v2
+  useEffect(() => {
+    fetchAllPokemonList().then(() => {
+      setAllPokemonList(getAllKnownPokemon());
+    });
+  }, []);
+
+  // Hydrate full Pokémon details from PokeAPI v2 for all unlocked Pokémon
+  useEffect(() => {
+    if (unlockedIds.length > 0) {
+      let mounted = true;
+      const promises = unlockedIds.map(async (id) => {
+        const existing = getPokemonById(id);
+        if (!existing || existing.abilities.length === 0) {
+          return getPokemonByIdAsync(id);
+        }
+        return existing;
+      });
+
+      Promise.all(promises).then(() => {
+        if (mounted) {
+          setAllPokemonList(getAllKnownPokemon());
+        }
+      });
+
+      return () => {
+        mounted = false;
+      };
+    }
+  }, [unlockedIds]);
+
   const isPokemonUnlocked = useCallback(
     (id: number) => unlockedSet.has(id),
     [unlockedSet]
   );
 
-  const openDetailModal = useCallback((pokemon: Pokemon) => {
+  const openDetailModal = useCallback(async (pokemon: Pokemon) => {
     setSelectedPokemon(pokemon);
     setIsModalOpen(true);
+
+    // Fetch rich species details in background if not already fully fetched
+    if (pokemon.abilities.length === 0) {
+      const full = await getPokemonByIdAsync(pokemon.id);
+      if (full) {
+        setSelectedPokemon(full);
+        setAllPokemonList(getAllKnownPokemon());
+      }
+    }
   }, []);
 
   const closeDetailModal = useCallback(() => {
@@ -80,16 +133,15 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   /**
-   * Registers a Pokémon using user search input.
-   * Implements OPTION A: If the query matches multiple variants (e.g. "Nidoran" or "Tauros"),
-   * all canonical matching variants are registered simultaneously.
+   * Registers a Pokémon using user search input via PokéAPI v2.
+   * Implements Option A multi-matching for variants (e.g. "Nidoran").
    */
   const registerByQuery = useCallback(
-    (
+    async (
       query: string,
       method: UnlockedPokemonEntry['discoveryMethod'] = 'manual_dex_input'
-    ): RegisterResult => {
-      const matches = resolvePokemonByQuery(query);
+    ): Promise<RegisterResult> => {
+      let matches = await resolvePokemonByQueryAsync(query);
 
       if (matches.length === 0) {
         return {
@@ -113,14 +165,15 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
       });
 
-      // Update state with newly refreshed entries
+      // Update state with newly refreshed entries and updated list
       const refreshedEntries = storageService.getPlayerUnlockedEntries(playerId);
       setUnlockedEntries(refreshedEntries);
+      setAllPokemonList(getAllKnownPokemon());
 
-      // Open detail modal for the primary/first match as requested in the spec
+      // Open detail modal for the primary/first match
       openDetailModal(matches[0]);
 
-      let message = "";
+      let message = '';
       if (matches.length > 1) {
         message = `Registered all ${matches.length} matching variants for "${matches[0].displayName}"! (${newCount} new, ${alreadyCount} already known)`;
       } else if (newCount > 0) {
@@ -144,11 +197,12 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
    * Direct registration by ID (e.g. from Arena mini-games)
    */
   const registerById = useCallback(
-    (
+    async (
       id: number,
       method: UnlockedPokemonEntry['discoveryMethod'] = 'whos_that_pokemon'
-    ): RegisterResult => {
-      const pokemon = getPokemonById(id);
+    ): Promise<RegisterResult> => {
+      let pokemon = await getPokemonByIdAsync(id);
+
       if (!pokemon) {
         return {
           success: false,
@@ -162,6 +216,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const { isNew } = storageService.registerPokemonToPlayer(playerId, id, method);
       const refreshedEntries = storageService.getPlayerUnlockedEntries(playerId);
       setUnlockedEntries(refreshedEntries);
+      setAllPokemonList(getAllKnownPokemon());
 
       openDetailModal(pokemon);
 
@@ -189,10 +244,13 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const byGeneration: Record<number, { unlocked: number; total: number }> = {};
     for (let g = 1; g <= 9; g += 1) {
-      const totalInGen = POKEMON_DATABASE.filter((p) => p.generation === g).length;
-      const unlockedInGen = POKEMON_DATABASE.filter(
-        (p) => p.generation === g && unlockedSet.has(p.id)
-      ).length;
+      const totalInGen = GENERATION_TOTALS[g] || 100;
+      let unlockedInGen = 0;
+      for (const id of unlockedIds) {
+        if (getGenerationFromId(id) === g) {
+          unlockedInGen += 1;
+        }
+      }
       byGeneration[g] = { unlocked: unlockedInGen, total: totalInGen };
     }
 
@@ -213,7 +271,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
       byGeneration,
       byType,
     };
-  }, [unlockedEntries, unlockedSet]);
+  }, [unlockedEntries, unlockedIds]);
 
   return (
     <PokedexContext.Provider
@@ -228,7 +286,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
         openDetailModal,
         closeDetailModal,
         stats,
-        allPokemon: POKEMON_DATABASE,
+        allPokemon: allPokemonList,
       }}
     >
       {children}

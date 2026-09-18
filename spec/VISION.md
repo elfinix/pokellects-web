@@ -10,5 +10,5 @@ To try:
 3. Arena:
    1. Web scraping biology
 4. Playground:
-   1. 5. Vercel:
-   1. Canary Deployment
+   1. 5\. Vercel:
+      1. Canary Deployment

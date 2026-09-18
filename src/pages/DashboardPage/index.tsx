@@ -94,13 +94,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
   // 1. Generation Breakdown Data for Recharts Bar Chart
   const genData = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((gen) => {
-    const totalInGen = allPokemon.filter((p) => p.generation === gen).length;
-    const unlockedInGen = unlockedPokemonList.filter((p) => p.generation === gen).length;
+    const genStat = stats.byGeneration[gen] || { unlocked: 0, total: 100 };
     return {
       name: `Gen ${gen}`,
-      unlocked: unlockedInGen,
-      undiscovered: Math.max(0, totalInGen - unlockedInGen),
-      total: totalInGen,
+      unlocked: genStat.unlocked,
+      undiscovered: Math.max(0, genStat.total - genStat.unlocked),
+      total: genStat.total,
     };
   });
 

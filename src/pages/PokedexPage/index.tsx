@@ -25,37 +25,80 @@ const REGION_ID_RANGES: Record<RegionId, [number, number]> = {
   lumiose: [650, 721],
 };
 
-// Shimmer Skeleton Placeholder for lazily loading cards
-const PokemonCardSkeleton: React.FC = () => (
-  <div className="relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 bg-white/90 shadow-2xs flex flex-col items-center justify-between text-center overflow-hidden animate-pulse select-none min-h-[195px]">
+// Dynamic loading skeleton card for initial load & progressive batch loading
+const PokemonCardSkeleton: React.FC = React.memo(() => (
+  <div
+    style={{ contentVisibility: 'auto', containIntrinsicSize: '0 195px' } as React.CSSProperties}
+    className="relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 bg-white/95 shadow-2xs flex flex-col items-center justify-between text-center overflow-hidden select-none min-h-[195px]"
+  >
+    {/* Shimmer Wave Effect */}
+    <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-slate-100/80 to-transparent pointer-events-none z-10" />
+
     {/* Header skeleton */}
-    <div className="w-full flex items-center justify-between">
-      <div className="w-12 h-3.5 rounded-md bg-slate-100" />
-      <div className="w-8 h-3 rounded-md bg-slate-100" />
+    <div className="w-full flex items-center justify-between relative z-0">
+      <div className="w-12 h-3.5 rounded-md bg-slate-100 animate-pulse" />
+      <div className="w-8 h-3 rounded-md bg-slate-100 animate-pulse" />
     </div>
 
     {/* Center Sprite Pedestal Shimmer */}
-    <div className="relative w-20 h-20 sm:w-22 sm:h-22 flex items-center justify-center my-2">
-      <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-100/90" />
+    <div className="relative w-20 h-20 sm:w-22 sm:h-22 flex items-center justify-center my-2 relative z-0">
+      <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-100/90 animate-pulse" />
     </div>
 
     {/* Bottom: Name & Badges Placeholder */}
-    <div className="w-full space-y-1.5 flex flex-col items-center">
-      <div className="w-20 h-3.5 rounded-md bg-slate-100" />
-      <div className="flex items-center gap-1 justify-center">
-        <div className="w-10 h-3 rounded-md bg-slate-100" />
-        <div className="w-10 h-3 rounded-md bg-slate-100" />
+    <div className="w-full space-y-1.5 flex flex-col items-center relative z-0">
+      <div className="w-20 h-3.5 rounded-md bg-slate-100 animate-pulse" />
+      <div className="flex items-center gap-1.5 justify-center">
+        <div className="w-10 h-3.5 rounded-md bg-slate-100 animate-pulse" />
+        <div className="w-10 h-3.5 rounded-md bg-slate-100 animate-pulse" />
       </div>
     </div>
   </div>
-);
+));
 
-// Registered Pokémon Card with image lazy loading and skeleton shimmer
+// Undiscovered Pokémon Card (Memoized)
+const UndiscoveredPokemonCard: React.FC<{ poke: Pokemon }> = React.memo(({ poke }) => (
+  <div
+    style={{ contentVisibility: 'auto', containIntrinsicSize: '0 195px' } as React.CSSProperties}
+    className="group relative p-4 rounded-2xl border border-dashed border-slate-200/90 bg-gradient-to-b from-white/70 via-slate-50/50 to-slate-100/40 hover:border-slate-300 flex flex-col items-center justify-between text-center select-none transition-all duration-150 ease-out shadow-2xs hover:shadow-xs min-h-[195px]"
+  >
+    {/* Dex ID Header */}
+    <div className="w-full flex items-center justify-between">
+      <span className="px-2 py-0.5 rounded-md bg-slate-100 text-[10px] font-mono font-bold text-slate-400">
+        #{String(poke.id).padStart(4, '0')}
+      </span>
+      <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-300">
+        Gen {poke.generation}
+      </span>
+    </div>
+
+    {/* Customized Question Mark Icon (No silhouette) */}
+    <div className="my-3 relative flex items-center justify-center">
+      <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/60 border border-slate-200/70 shadow-inner flex items-center justify-center group-hover:scale-105 group-hover:border-slate-300 transition-all duration-150 ease-out">
+        <HelpCircle className="w-8 h-8 sm:w-9 sm:h-9 text-slate-300 group-hover:text-slate-400 transition-colors" />
+      </div>
+      {/* Subtle Radar Pulse */}
+      <div className="absolute inset-0 rounded-2xl border border-slate-200/50 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200 pointer-events-none" />
+    </div>
+
+    {/* Mystery Metadata - displays "???" instead of "Unknown Species" */}
+    <div className="w-full space-y-1">
+      <div className="text-sm font-black text-slate-400 font-display tracking-tight">
+        ???
+      </div>
+      <div className="inline-block px-2 py-0.5 rounded-full bg-slate-100/80 text-[9px] font-semibold text-slate-400 tracking-wide">
+        Undiscovered
+      </div>
+    </div>
+  </div>
+));
+
+// Registered Pokémon Card with image lazy loading and skeleton shimmer (Memoized)
 const RegisteredPokemonCard: React.FC<{
   poke: Pokemon;
   theme: (typeof POKEMON_TYPE_THEMES)[keyof typeof POKEMON_TYPE_THEMES];
   onOpenModal: (p: Pokemon) => void;
-}> = ({ poke, theme, onOpenModal }) => {
+}> = React.memo(({ poke, theme, onOpenModal }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
@@ -66,6 +109,8 @@ const RegisteredPokemonCard: React.FC<{
         {
           '--type-color': theme.accentHex,
           '--type-bg': `${theme.accentHex}18`,
+          contentVisibility: 'auto',
+          containIntrinsicSize: '0 195px',
         } as React.CSSProperties
       }
       className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 bg-white hover:border-slate-300/90 shadow-2xs hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-150 ease-out flex flex-col items-center justify-between text-center cursor-pointer overflow-hidden min-h-[195px]"
@@ -129,7 +174,7 @@ const RegisteredPokemonCard: React.FC<{
       </div>
     </button>
   );
-};
+});
 
 export const PokedexPage: React.FC = () => {
   const {
@@ -147,39 +192,6 @@ export const PokedexPage: React.FC = () => {
   const [isBannerHovered, setIsBannerHovered] = useState(false);
   const regionDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Progressive batch loading constants
-  const INITIAL_BATCH_SIZE = 36;
-  const BATCH_INCREMENT = 24;
-
-  const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH_SIZE);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown on outside click or Escape key
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        regionDropdownRef.current &&
-        !regionDropdownRef.current.contains(e.target as Node)
-      ) {
-        setIsRegionDropdownOpen(false);
-      }
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsRegionDropdownOpen(false);
-      }
-    };
-    if (isRegionDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isRegionDropdownOpen]);
-
   const [filters, setFilters] = useState<ToolboxFilters>({
     searchQuery: '',
     selectedType: 'all',
@@ -187,6 +199,12 @@ export const PokedexPage: React.FC = () => {
     sortCriteria: 'id',
     sortOrder: 'asc',
   });
+
+  // Fast O(1) unlocked set for instant lookups
+  const unlockedSet = useMemo(() => new Set(unlockedIds), [unlockedIds]);
+
+  // Deferred search string for non-blocking concurrent UI updates
+  const deferredSearchQuery = React.useDeferredValue(filters.searchQuery);
 
   const handleResetFilters = () => {
     setSelectedRegion('national');
@@ -199,7 +217,7 @@ export const PokedexPage: React.FC = () => {
     });
   };
 
-  // Compute registered counts for each region
+  // Regional unlocked counts calculation (Memoized)
   const unlockedCountByRegion = useMemo(() => {
     const counts: Record<RegionId, number> = {
       national: unlockedIds.length,
@@ -247,9 +265,8 @@ export const PokedexPage: React.FC = () => {
 
   // Filter and sort the complete 1,025 Pokémon list
   const filteredPokemon = useMemo(() => {
-    // Toolbar search and type filters only filter among registered Pokémon
-    const hasActiveToolbarFilter =
-      filters.searchQuery.trim().length > 0 || filters.selectedType !== 'all';
+    const query = deferredSearchQuery.trim().toLowerCase();
+    const hasActiveToolbarFilter = query.length > 0 || filters.selectedType !== 'all';
 
     return allPokemon
       .filter((p) => {
@@ -260,15 +277,14 @@ export const PokedexPage: React.FC = () => {
         }
 
         // When toolbar filters are active, only registered species are shown
-        if (hasActiveToolbarFilter && !unlockedIds.includes(p.id)) {
+        if (hasActiveToolbarFilter && !unlockedSet.has(p.id)) {
           return false;
         }
 
         // Search query
-        if (filters.searchQuery.trim()) {
-          const q = filters.searchQuery.toLowerCase().trim();
-          const matchesName = p.displayName.toLowerCase().includes(q) || p.name.toLowerCase().includes(q);
-          const matchesId = String(p.id).padStart(4, '0').includes(q) || String(p.id) === q;
+        if (query) {
+          const matchesName = p.displayName.toLowerCase().includes(query) || p.name.toLowerCase().includes(query);
+          const matchesId = String(p.id).padStart(4, '0').includes(query) || String(p.id) === query;
           if (!matchesName && !matchesId) return false;
         }
 
@@ -293,14 +309,57 @@ export const PokedexPage: React.FC = () => {
 
         return filters.sortOrder === 'asc' ? comp : -comp;
       });
-  }, [allPokemon, filters, unlockedIds, selectedRegion]);
+  }, [allPokemon, deferredSearchQuery, filters.selectedType, filters.sortCriteria, filters.sortOrder, unlockedSet, selectedRegion]);
 
-  // List of registered Pokémon sorted by Pokédex # for modal navigation
+  // List of registered Pokémon within active region scope sorted by Pokédex # for modal navigation
   const registeredPokemonList = useMemo(() => {
     return allPokemon
-      .filter((p) => unlockedIds.includes(p.id))
+      .filter((p) => {
+        if (!unlockedSet.has(p.id)) return false;
+        if (selectedRegion !== 'national') {
+          const [minId, maxId] = REGION_ID_RANGES[selectedRegion];
+          if (p.id < minId || p.id > maxId) return false;
+        }
+        return true;
+      })
       .sort((a, b) => a.id - b.id);
-  }, [allPokemon, unlockedIds]);
+  }, [allPokemon, unlockedSet, selectedRegion]);
+
+  // Progressive batch loading constants
+  const INITIAL_BATCH_SIZE = 48;
+  const BATCH_INCREMENT = 36;
+
+  const [visibleCount, setVisibleCount] = useState(INITIAL_BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Reset pagination whenever filters or region change
+  useEffect(() => {
+    setVisibleCount(INITIAL_BATCH_SIZE);
+  }, [filters, selectedRegion]);
+
+  // Infinite scroll intersection observer for seamless lazy batch loading
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && visibleCount < filteredPokemon.length) {
+          setVisibleCount((prev) => Math.min(filteredPokemon.length, prev + BATCH_INCREMENT));
+        }
+      },
+      { rootMargin: '400px' }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [visibleCount, filteredPokemon.length]);
+
+  const visiblePokemon = useMemo(
+    () => filteredPokemon.slice(0, visibleCount),
+    [filteredPokemon, visibleCount]
+  );
 
   // Circular progress math (radius 19, circumference ~119.38)
   const ringRadius = 19;
@@ -721,118 +780,39 @@ export const PokedexPage: React.FC = () => {
           transition={{ duration: 0.18, ease: 'easeOut' }}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4"
         >
-          {filteredPokemon.map((poke) => {
-            const isUnlocked = unlockedIds.includes(poke.id);
+          {visiblePokemon.map((poke) => {
+            const isUnlocked = unlockedSet.has(poke.id);
             const primaryType = poke.types[0];
             const theme = POKEMON_TYPE_THEMES[primaryType];
 
-            // Unfound Pokémon: Customized question mark, NO silhouette, shows "???"
+            // Unfound Pokémon: Customized question mark (Memoized)
             if (!isUnlocked) {
-              return (
-                <div
-                  key={poke.id}
-                  className="group relative p-4 rounded-2xl border border-dashed border-slate-200/90 bg-gradient-to-b from-white/70 via-slate-50/50 to-slate-100/40 hover:border-slate-300 flex flex-col items-center justify-between text-center select-none transition-all duration-150 ease-out shadow-2xs hover:shadow-xs"
-                >
-                  {/* Dex ID Header */}
-                  <div className="w-full flex items-center justify-between">
-                    <span className="px-2 py-0.5 rounded-md bg-slate-100 text-[10px] font-mono font-bold text-slate-400">
-                      #{String(poke.id).padStart(4, '0')}
-                    </span>
-                    <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-300">
-                      Gen {poke.generation}
-                    </span>
-                  </div>
-
-                  {/* Customized Question Mark Icon (No silhouette) */}
-                  <div className="my-3 relative flex items-center justify-center">
-                    <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/60 border border-slate-200/70 shadow-inner flex items-center justify-center group-hover:scale-105 group-hover:border-slate-300 transition-all duration-150 ease-out">
-                      <HelpCircle className="w-8 h-8 sm:w-9 sm:h-9 text-slate-300 group-hover:text-slate-400 transition-colors" />
-                    </div>
-                    {/* Subtle Radar Pulse */}
-                    <div className="absolute inset-0 rounded-2xl border border-slate-200/50 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200 pointer-events-none" />
-                  </div>
-
-                  {/* Mystery Metadata - displays "???" instead of "Unknown Species" */}
-                  <div className="w-full space-y-1">
-                    <div className="text-sm font-black text-slate-400 font-display tracking-tight">
-                      ???
-                    </div>
-                    <div className="inline-block px-2 py-0.5 rounded-full bg-slate-100/80 text-[9px] font-semibold text-slate-400 tracking-wide">
-                      Undiscovered
-                    </div>
-                  </div>
-                </div>
-              );
+              return <UndiscoveredPokemonCard key={poke.id} poke={poke} />;
             }
 
-            // Registered Pokémon: Holographic collector card with instantaneous 150ms hover lift & scale
+            // Registered Pokémon: Holographic collector card with skeleton shimmer (Memoized)
             return (
-              <button
+              <RegisteredPokemonCard
                 key={poke.id}
-                type="button"
-                onClick={() => openDetailModal(poke)}
-                style={{
-                  '--type-color': theme.accentHex,
-                  '--type-bg': `${theme.accentHex}18`,
-                } as React.CSSProperties}
-                className="group relative p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 bg-white hover:border-slate-300/90 shadow-2xs hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-150 ease-out flex flex-col items-center justify-between text-center cursor-pointer overflow-hidden"
-              >
-                {/* Type Accent Top Highlight Line */}
-                <div
-                  className="absolute top-0 inset-x-0 h-1 rounded-t-2xl transition-all duration-150 group-hover:h-1.5"
-                  style={{ backgroundColor: theme.accentHex }}
-                />
-
-                {/* Ambient Type Radial Glow */}
-                <div
-                  className="absolute -top-6 -right-6 w-24 h-24 rounded-full blur-2xl opacity-20 pointer-events-none transition-opacity duration-150 group-hover:opacity-50"
-                  style={{ backgroundColor: theme.accentHex }}
-                />
-
-                {/* Top Header: Dex ID (changes color based on type, not constant red) + Gen */}
-                <div className="w-full flex items-center justify-between text-[10px] font-mono font-bold text-slate-400 relative z-10">
-                  <span className="px-2 py-0.5 rounded-md bg-slate-100/80 text-slate-600 transition-colors duration-150 font-bold group-hover:text-[var(--type-color)] group-hover:bg-[var(--type-bg)]">
-                    #{String(poke.id).padStart(4, '0')}
-                  </span>
-                  <span className="text-[9px] uppercase tracking-wider font-semibold text-slate-400">
-                    Gen {poke.generation}
-                  </span>
-                </div>
-
-                {/* High-res Sprite with Synchronized 150ms Scale */}
-                <div className="relative w-20 h-20 sm:w-22 sm:h-22 flex items-center justify-center my-1.5">
-                  {/* Soft backdrop radial pedestal */}
-                  <div className="absolute inset-0 rounded-full bg-slate-50/80 group-hover:bg-slate-100/60 scale-75 group-hover:scale-95 transition-all duration-150" />
-                  <img
-                    src={poke.spriteUrl}
-                    alt={poke.displayName}
-                    className="w-18 h-18 sm:w-20 sm:h-20 object-contain drop-shadow-sm group-hover:drop-shadow-lg group-hover:scale-115 transition-transform duration-150 ease-out relative z-10"
-                    loading="lazy"
-                  />
-                </div>
-
-                {/* Species Name (accent-colored on hover) and Type Badges */}
-                <div className="w-full space-y-2 relative z-10">
-                  <div className="text-xs sm:text-sm font-black text-slate-900 font-display truncate transition-colors duration-150 group-hover:text-[var(--type-color)]">
-                    {poke.displayName}
-                  </div>
-                  <div className="flex items-center justify-center gap-1.5 flex-wrap">
-                    {poke.types.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider text-white shadow-2xs transition-transform duration-150 group-hover:scale-105"
-                        style={{ backgroundColor: POKEMON_TYPE_THEMES[t].accentHex }}
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </button>
+                poke={poke}
+                theme={theme}
+                onOpenModal={openDetailModal}
+              />
             );
           })}
+
+          {/* Seamless skeleton placeholders rendered in the grid while more batches are fetching/loading on scroll */}
+          {visibleCount < filteredPokemon.length &&
+            Array.from({ length: Math.min(12, filteredPokemon.length - visibleCount) }).map((_, idx) => (
+              <PokemonCardSkeleton key={`skeleton-load-batch-${idx}`} />
+            ))}
         </motion.div>
       </AnimatePresence>
+
+      {/* Progressive Batch Loading Intersection Sentinel */}
+      {visibleCount < filteredPokemon.length && (
+        <div ref={sentinelRef} className="h-6 w-full pointer-events-none -mt-3" />
+      )}
 
       {/* Empty State */}
       {filteredPokemon.length === 0 && (

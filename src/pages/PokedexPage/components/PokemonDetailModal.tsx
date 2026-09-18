@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   X,
@@ -29,8 +30,9 @@ import {
 import { Pokemon, PokemonType, EvolutionNode } from '../../../types/pokemon';
 import { POKEMON_TYPE_THEMES } from '../../../styles/theme';
 import { useHotkeys } from '../../../hooks/useHotkeys';
-import { fetchSpeciesLore, fetchEvolutionChain } from '../../../services/pokeapi';
+import { fetchSpeciesLore, fetchEvolutionChain, getFrontDefaultSpriteUrl } from '../../../services/pokeapi';
 import { getPokemonById } from '../../../services/pokemonIndex';
+import { globalStopScroll, globalStartScroll } from '../../../context/SmoothScrollContext';
 
 export interface PokemonDetailModalProps {
   pokemon: Pokemon | null;
@@ -232,6 +234,19 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
     if (isOpen) onClose();
   });
 
+  // Lock document body scroll and pause Lenis smooth scroll when modal is open
+  useEffect(() => {
+    if (isOpen && typeof document !== 'undefined') {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      globalStopScroll();
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        globalStartScroll();
+      };
+    }
+  }, [isOpen]);
+
   if (!pokemon) return null;
 
   const primaryType = pokemon.types[0];
@@ -420,7 +435,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   const weightKg = pokemon.weight ? pokemon.weight / 10 : null;
   const weightImperial = weightKg ? `${(weightKg * 2.20462).toFixed(1)} lbs` : null;
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -430,16 +445,17 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/65 backdrop-blur-xs"
+          transition={{ duration: 0.12, ease: 'easeOut' }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 backdrop-blur-xs"
           onClick={onClose}
         >
           <motion.div
             key="pokemon-detail-modal-card"
-            initial={{ opacity: 0, scale: 0.93, y: 16 }}
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 12 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 320 }}
+            exit={{ opacity: 0, scale: 0.97, y: 8 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            style={{ willChange: 'transform, opacity' }}
             className="bg-white rounded-3xl max-w-2xl sm:max-w-3xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200/90 relative overflow-hidden flex flex-col justify-between h-[620px] sm:h-[610px] max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1528,7 +1544,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           type="button"
           disabled={!prevPokemon}
           onClick={() => prevPokemon && onNavigatePokemon && onNavigatePokemon(prevPokemon)}
-          className={`flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-2xl border transition-all duration-150 ${
+          className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
             prevPokemon
               ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 cursor-pointer active:scale-95 shadow-2xs'
               : 'opacity-30 border-dashed border-slate-200 bg-transparent text-slate-400 cursor-not-allowed'
@@ -1539,13 +1555,13 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           <ChevronLeft className="w-5 h-5 shrink-0 text-slate-600" />
           {prevPokemon ? (
             <img
-              src={prevPokemon.spriteUrl}
+              src={prevPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(prevPokemon.id)}
               alt={prevPokemon.displayName}
-              className="w-8 h-8 object-contain drop-shadow-xs"
+              className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
               loading="lazy"
             />
           ) : (
-            <div className="w-8 h-8" />
+            <div className="w-12 h-12 sm:w-13 sm:h-13" />
           )}
         </button>
 
@@ -1554,7 +1570,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           type="button"
           disabled={!nextPokemon}
           onClick={() => nextPokemon && onNavigatePokemon && onNavigatePokemon(nextPokemon)}
-          className={`flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-2xl border transition-all duration-150 ${
+          className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
             nextPokemon
               ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 cursor-pointer active:scale-95 shadow-2xs'
               : 'opacity-30 border-dashed border-slate-200 bg-transparent text-slate-400 cursor-not-allowed'
@@ -1564,13 +1580,13 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
         >
           {nextPokemon ? (
             <img
-              src={nextPokemon.spriteUrl}
+              src={nextPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(nextPokemon.id)}
               alt={nextPokemon.displayName}
-              className="w-8 h-8 object-contain drop-shadow-xs"
+              className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
               loading="lazy"
             />
           ) : (
-            <div className="w-8 h-8" />
+            <div className="w-12 h-12 sm:w-13 sm:h-13" />
           )}
           <ChevronRight className="w-5 h-5 shrink-0 text-slate-600" />
         </button>
@@ -1579,7 +1595,10 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   </motion.div>
 )}
 </AnimatePresence>
-);
+  );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(modalContent, document.body);
 };
 
 // ==========================================

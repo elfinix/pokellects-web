@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PokedexProvider } from './context/PokedexContext';
+import { SmoothScrollProvider, globalScrollToTop } from './context/SmoothScrollContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import AppShell, { WorkspaceTab } from './components/common/AppShell';
@@ -19,13 +20,23 @@ type ViewMode = 'landing' | 'login' | 'app';
 function AuthenticatedWorkspace({ onReturnToLanding }: { onReturnToLanding: () => void }) {
   const [activeTab, setActiveTab] = useState<WorkspaceTab>('dashboard');
 
+  const handleTabChange = (tab: WorkspaceTab) => {
+    setActiveTab(tab);
+    globalScrollToTop(true);
+  };
+
+  // Scroll to top whenever active tab changes
+  useEffect(() => {
+    globalScrollToTop(true);
+  }, [activeTab]);
+
   return (
     <AppShell
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       onReturnToLanding={onReturnToLanding}
     >
-      {activeTab === 'dashboard' && <DashboardPage onNavigate={setActiveTab} />}
+      {activeTab === 'dashboard' && <DashboardPage onNavigate={handleTabChange} />}
       {activeTab === 'pokedex' && <PokedexPage />}
       {activeTab === 'arena' && <ArenaPage />}
       {activeTab === 'reports' && <ReportsPage />}
@@ -50,7 +61,7 @@ function MainApp() {
 
   // Reset scroll whenever view changes
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    globalScrollToTop(true);
   }, [currentView]);
 
   const handleNavigateToLogin = () => {
@@ -72,8 +83,8 @@ function MainApp() {
           key="landing"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -12, scale: 0.995 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
           className="w-full"
         >
           <LandingPage onNavigateToLogin={handleNavigateToLogin} />
@@ -83,10 +94,10 @@ function MainApp() {
       {currentView === 'login' && (
         <motion.div
           key="login"
-          initial={{ opacity: 0, y: 16, scale: 0.99 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -12, scale: 0.995 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
           className="w-full"
         >
           <LoginPage
@@ -99,10 +110,10 @@ function MainApp() {
       {currentView === 'app' && (
         <motion.div
           key="app"
-          initial={{ opacity: 0, y: 16, scale: 0.99 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -12, scale: 0.995 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
           className="w-full"
         >
           <AuthenticatedWorkspace onReturnToLanding={handleBackToLanding} />
@@ -114,11 +125,13 @@ function MainApp() {
 
 function App() {
   return (
-    <AuthProvider>
-      <PokedexProvider>
-        <MainApp />
-      </PokedexProvider>
-    </AuthProvider>
+    <SmoothScrollProvider>
+      <AuthProvider>
+        <PokedexProvider>
+          <MainApp />
+        </PokedexProvider>
+      </AuthProvider>
+    </SmoothScrollProvider>
   );
 }
 

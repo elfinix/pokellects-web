@@ -114,16 +114,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const success = login(identifier, password);
-      setIsSubmitting(false);
+    const success = login(identifier, password);
+    setIsSubmitting(false);
 
-      if (success) {
-        onLoginSuccess();
-      } else {
-        setErrorMessage('Invalid credentials. You can select a demo account below.');
-      }
-    }, 150);
+    if (success) {
+      onLoginSuccess();
+    } else {
+      setErrorMessage('Invalid credentials. You can select a demo account below.');
+    }
   };
 
   const handleDemoSelect = (username: string, pass: string) => {

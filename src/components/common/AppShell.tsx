@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
+import { globalScrollToTop } from '../../context/SmoothScrollContext';
 
 export type WorkspaceTab =
   | 'dashboard'
@@ -54,7 +55,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       id: 'pokedex' as WorkspaceTab,
       label: 'Pokédex',
       icon: BookOpen,
-      badge: `${stats.totalUnlocked}/1025`,
+      badge: `${stats.totalUnlocked}/${stats.totalDexCount}`,
     },
     { id: 'arena' as WorkspaceTab, label: 'Arena Games', icon: Swords },
     { id: 'reports' as WorkspaceTab, label: 'Reports', icon: BarChart3 },
@@ -70,6 +71,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   const handleNavClick = (tab: WorkspaceTab) => {
     onTabChange(tab);
     setIsMobileMenuOpen(false);
+    globalScrollToTop(true);
   };
 
   const userInitials = React.useMemo(() => {
@@ -491,7 +493,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         </AnimatePresence>
 
         {/* Main Content Viewport */}
-        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto overflow-y-auto">
+        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
           {children}
         </main>
       </div>

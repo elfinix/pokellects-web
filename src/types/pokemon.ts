@@ -47,6 +47,7 @@ export interface Pokemon {
   types: PokemonType[];
   spriteUrl: string; // official-artwork
   shinySpriteUrl?: string;
+  frontDefaultUrl?: string; // in-game pixel sprite (sprites > front_default)
   cryUrl?: string; // latest pokemon cry audio mp3/ogg
   height: number; // in decimeters
   weight: number; // in hectograms

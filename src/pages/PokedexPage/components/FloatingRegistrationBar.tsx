@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Crosshair, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { Crosshair, CheckCircle2, AlertCircle, X, Loader2 } from 'lucide-react';
 import { usePokedex } from '../../../context/PokedexContext';
 
 interface FloatingRegistrationBarProps {
@@ -13,6 +13,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
 }) => {
   const { registerByQuery } = usePokedex();
   const [query, setQuery] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ message: string; isError: boolean } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -33,10 +34,10 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
     }
   }, [feedback]);
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const cleanQuery = query.trim();
-    if (!cleanQuery) return;
+    if (!cleanQuery || isSubmitting) return;
 
     // We accept Pokémon names only - reject if numeric or "#"
     if (/^\s*#?\d+\s*$/.test(cleanQuery)) {
@@ -47,15 +48,25 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
       return;
     }
 
-    const result = registerByQuery(cleanQuery);
-    if (result.success) {
-      setFeedback({ message: result.message, isError: false });
-      setQuery('');
-      if (result.registeredList && result.registeredList.length > 0 && onRegisteredPokemon) {
-        onRegisteredPokemon(result.registeredList[0].id);
+    setIsSubmitting(true);
+    try {
+      const result = await registerByQuery(cleanQuery);
+      if (result.success) {
+        setFeedback({ message: result.message, isError: false });
+        setQuery('');
+        if (result.registeredList && result.registeredList.length > 0 && onRegisteredPokemon) {
+          onRegisteredPokemon(result.registeredList[0].id);
+        }
+      } else {
+        setFeedback({ message: result.message, isError: true });
       }
-    } else {
-      setFeedback({ message: result.message, isError: true });
+    } catch {
+      setFeedback({
+        message: `Could not reach National Pokédex service for "${cleanQuery}".`,
+        isError: true,
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -122,14 +133,15 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
               ref={inputRef}
               type="text"
               value={query}
+              disabled={isSubmitting}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Register Pokémon by name..."
-              className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 text-slate-900 text-xs sm:text-sm focus:outline-hidden focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all shadow-2xs font-medium placeholder:text-slate-400"
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 text-slate-900 text-xs sm:text-sm focus:outline-hidden focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all shadow-2xs font-medium placeholder:text-slate-400 disabled:opacity-60"
             />
 
             {/* Clear Input Button (when text is typed) */}
-            {query && (
+            {query && !isSubmitting && (
               <button
                 type="button"
                 onClick={() => {
@@ -146,10 +158,15 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
 
           <button
             type="submit"
-            className="px-4 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-600/20 active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+            disabled={isSubmitting}
+            className="px-4 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-600/20 active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
           >
-            <Crosshair className="w-4 h-4" />
-            <span>Register</span>
+            {isSubmitting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Crosshair className="w-4 h-4" />
+            )}
+            <span>{isSubmitting ? 'Registering...' : 'Register'}</span>
           </button>
         </form>
       </div>
