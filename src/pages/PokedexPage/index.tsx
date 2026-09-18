@@ -662,13 +662,37 @@ export const PokedexPage: React.FC = () => {
                               setSelectedRegion(region.id);
                               setIsRegionDropdownOpen(false);
                             }}
-                            className={`flex items-center justify-between p-2 sm:p-2.5 rounded-xl text-left transition-all cursor-pointer group ${
+                            className={`relative overflow-hidden flex items-center justify-between p-2 sm:p-2.5 pl-3.5 sm:pl-4 rounded-xl text-left transition-all cursor-pointer group isolate ${
                               isSelected
                                 ? 'bg-red-50/90 border border-red-200/80 '
                                 : 'hover:bg-slate-50 border border-transparent'
                             }`}
                           >
-                            <div className="flex items-center gap-2.5 min-w-0">
+                            {/* Left Line Wave Accent */}
+                            <div className="absolute inset-y-0 left-0 w-6 pointer-events-none overflow-hidden select-none z-0">
+                              <svg
+                                className="absolute inset-y-0 left-0 h-full w-5 opacity-30 pointer-events-none transition-transform duration-300 group-hover:scale-x-120 origin-left"
+                                viewBox="0 0 30 100"
+                                preserveAspectRatio="none"
+                              >
+                                <path
+                                  d="M 0,0 C 16,20 22,45 14,70 C 8,85 15,95 0,100 Z"
+                                  fill={region.accentHex}
+                                />
+                              </svg>
+                              <svg
+                                className="absolute inset-y-0 left-0 h-full w-2.5 opacity-80 pointer-events-none transition-transform duration-300 group-hover:scale-x-120 origin-left"
+                                viewBox="0 0 20 100"
+                                preserveAspectRatio="none"
+                              >
+                                <path
+                                  d="M 0,0 C 12,18 15,45 7,72 C 4,86 10,96 0,100 Z"
+                                  fill={region.accentHex}
+                                />
+                              </svg>
+                            </div>
+
+                            <div className="flex items-center gap-2.5 min-w-0 relative z-10">
                               <div
                                 className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                                   isSelected ? 'bg-red-100 text-red-600' : region.iconBg
@@ -694,7 +718,7 @@ export const PokedexPage: React.FC = () => {
                             </div>
 
                             {isSelected && (
-                              <Check className="w-4 h-4 text-red-600 shrink-0 ml-1.5" />
+                              <Check className="w-4 h-4 text-red-600 shrink-0 ml-1.5 relative z-10" />
                             )}
                           </button>
                         );

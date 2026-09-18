@@ -47,14 +47,14 @@ interface GameCustomTheme {
 const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
   whos_that_pokemon: {
     icon: Eye,
-    accentColor: 'text-amber-500',
-    badgeBg: 'bg-amber-50 border-amber-200/80',
-    badgeText: 'text-amber-700',
-    cardBorder: 'border-amber-200/70 hover:border-amber-400/90',
-    cardBgGradient: 'from-amber-500/8 via-rose-500/4 to-transparent',
-    iconBg: 'bg-amber-100/80 border-amber-200 text-amber-600',
-    iconColor: 'text-amber-600',
-    buttonGradient: 'bg-amber-500 hover:bg-amber-600 text-white',
+    accentColor: 'text-purple-500',
+    badgeBg: 'bg-purple-50 border-purple-200/80',
+    badgeText: 'text-purple-700',
+    cardBorder: 'border-purple-200/70 hover:border-purple-400/90',
+    cardBgGradient: 'from-purple-500/8 via-pink-500/4 to-transparent',
+    iconBg: 'bg-purple-100/80 border-purple-200 text-purple-600',
+    iconColor: 'text-purple-600',
+    buttonGradient: 'bg-purple-600 hover:bg-purple-700 text-white',
     specs: ['Guessing Game', 'Identification', 'Silhouette Scan'],
     rules: [
       'A mystery silhouette appears on the scanner screen.',
@@ -81,15 +81,15 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
   },
   identicry: {
     icon: Volume2,
-    accentColor: 'text-purple-500',
-    badgeBg: 'bg-purple-50 border-purple-200/80',
-    badgeText: 'text-purple-700',
-    cardBorder: 'border-purple-200/70 hover:border-purple-400/90',
-    cardBgGradient: 'from-purple-500/8 via-pink-500/4 to-transparent',
-    iconBg: 'bg-purple-100/80 border-purple-200 text-purple-600',
-    iconColor: 'text-purple-600',
-    buttonGradient: 'bg-purple-600 hover:bg-purple-700 text-white',
-    specs: ['Audio Cry', 'Identififcation', 'Clues'],
+    accentColor: 'text-amber-500',
+    badgeBg: 'bg-amber-50 border-amber-200/80',
+    badgeText: 'text-amber-700',
+    cardBorder: 'border-amber-200/70 hover:border-amber-400/90',
+    cardBgGradient: 'from-amber-500/8 via-rose-500/4 to-transparent',
+    iconBg: 'bg-amber-100/80 border-amber-200 text-amber-600',
+    iconColor: 'text-amber-600',
+    buttonGradient: 'bg-amber-500 hover:bg-amber-600 text-white',
+    specs: ['Audio Cry', 'Identification', 'Clues'],
     rules: [
       'Listen to the authentic audio cry of an unknown species without visual previews.',
       'Type the species name based solely on the audio — no multiple choice spoilers.',
@@ -137,8 +137,15 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
   const [selectedGame, setSelectedGame] = useState<GameMetadata | null>(null);
   const [activeGame, setActiveGame] = useState<ArenaGameType | null>(null);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'row'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'row'>(() => {
+    return (localStorage.getItem('pokellects_minigames_view') as 'grid' | 'row') || 'grid';
+  });
   const [sessions, setSessions] = useState<ArenaSessionRecord[]>([]);
+
+  const handleViewModeChange = (mode: 'grid' | 'row') => {
+    setViewMode(mode);
+    localStorage.setItem('pokellects_minigames_view', mode);
+  };
 
   useEffect(() => {
     const records = storageService.getArenaSessions(currentUser?.id);
@@ -233,12 +240,12 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
   }
 
   return (
-    <div className="space-y-7 sm:space-y-8 pb-36 relative">
+    <div className="space-y-7 sm:space-y-8 pb-6 relative">
       {/* Top Header & Overview Bar */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-1">
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 font-display tracking-tight flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-white shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-purple-600 flex items-center justify-center text-white shrink-0 shadow-xs">
               <Gamepad2 className="w-5 h-5" />
             </div>
             <span>Minigames</span>
@@ -301,7 +308,7 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
           <button
             type="button"
-            onClick={() => setViewMode('grid')}
+            onClick={() => handleViewModeChange('grid')}
             className={`h-10 flex items-center gap-2 px-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
               viewMode === 'grid'
                 ? 'bg-slate-100 border-slate-300 text-slate-900'
@@ -313,7 +320,7 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
           </button>
           <button
             type="button"
-            onClick={() => setViewMode('row')}
+            onClick={() => handleViewModeChange('row')}
             className={`h-10 flex items-center gap-2 px-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
               viewMode === 'row'
                 ? 'bg-slate-100 border-slate-300 text-slate-900'

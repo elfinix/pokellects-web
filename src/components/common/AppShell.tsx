@@ -28,6 +28,7 @@ export type WorkspaceTab =
   | 'reports'
   | 'achievements'
   | 'settings'
+  | 'profile'
   | 'admin-config'
   | 'admin-users';
 
@@ -59,7 +60,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       badge: `${stats.totalUnlocked}/${stats.totalDexCount}`,
     },
     { id: 'arena' as WorkspaceTab, label: 'Minigames', icon: Gamepad2 },
-    { id: 'reports' as WorkspaceTab, label: 'Reports', icon: BarChart3 },
+    { id: 'reports' as WorkspaceTab, label: 'Analytics', icon: BarChart3 },
     { id: 'achievements' as WorkspaceTab, label: 'Achievements', icon: Trophy },
     { id: 'settings' as WorkspaceTab, label: 'Settings', icon: Settings },
   ];
@@ -270,33 +271,51 @@ export const AppShell: React.FC<AppShellProps> = ({
         {/* BOTTOM OF SIDEBAR: Single Logged-in User Profile & Logout Button           */}
         {/* ========================================================================= */}
         <div className="border-t border-slate-200/80 p-3 space-y-2 bg-slate-50/50 overflow-hidden">
-          {/* Active Single User Card with Initials */}
+          {/* Active Single User Card with Initials (Clickable -> Profile Page) */}
           {isSidebarCollapsed ? (
             <div className="flex justify-center py-1">
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black bg-red-50 border border-red-200 text-red-600 shadow-2xs tracking-wider font-mono cursor-default select-none shrink-0"
-                title={`${currentUser?.firstName} ${currentUser?.lastName || ''} (@${currentUser?.username})`}
+              <button
+                type="button"
+                onClick={() => handleNavClick('profile')}
+                className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all cursor-pointer select-none shrink-0 ${
+                  activeTab === 'profile'
+                    ? 'bg-red-600 text-white ring-2 ring-red-400 ring-offset-2 shadow-sm'
+                    : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 shadow-2xs hover:scale-105'
+                }`}
+                title={`Trainer Profile: ${currentUser?.firstName} ${currentUser?.lastName || ''} (@${currentUser?.username})`}
               >
                 {userInitials}
-              </div>
+              </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200/80 shadow-2xs overflow-hidden">
+            <button
+              type="button"
+              onClick={() => handleNavClick('profile')}
+              className={`w-full flex items-center gap-2.5 p-2 rounded-xl border transition-all text-left cursor-pointer group shadow-2xs overflow-hidden ${
+                activeTab === 'profile'
+                  ? 'bg-red-50/80 border-red-300 ring-1 ring-red-400'
+                  : 'bg-white hover:bg-slate-50 border-slate-200/80 hover:border-slate-300'
+              }`}
+              title="View & Edit Trainer Profile"
+            >
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-red-50 border border-red-200 text-red-600 shrink-0 tracking-wider font-mono select-none"
-                title={currentUser?.username}
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 tracking-wider font-mono transition-transform group-hover:scale-105 select-none ${
+                  activeTab === 'profile'
+                    ? 'bg-red-600 text-white shadow-xs'
+                    : 'bg-red-50 border border-red-200 text-red-600'
+                }`}
               >
                 {userInitials}
               </div>
               <div className="min-w-0 flex-1 text-left leading-tight overflow-hidden">
-                <div className="text-xs font-bold text-slate-900 truncate whitespace-nowrap">
+                <div className="text-xs font-bold text-slate-900 group-hover:text-red-700 transition-colors truncate whitespace-nowrap">
                   {currentUser?.firstName} {currentUser?.lastName || ''}
                 </div>
                 <div className="text-[10px] text-slate-400 font-mono truncate whitespace-nowrap">
-                  @{currentUser?.username}
+                  @{currentUser?.username} • <span className="text-red-500 font-medium">Profile</span>
                 </div>
               </div>
-            </div>
+            </button>
           )}
 
           {/* Logout button situated at the bottom of the sidebar */}
@@ -352,12 +371,18 @@ export const AppShell: React.FC<AppShellProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-red-50 border border-red-200 text-red-600 shadow-2xs font-mono select-none"
+            <button
+              type="button"
+              onClick={() => handleNavClick('profile')}
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black transition-all cursor-pointer font-mono select-none ${
+                activeTab === 'profile'
+                  ? 'bg-red-600 text-white ring-2 ring-red-400'
+                  : 'bg-red-50 border border-red-200 text-red-600 shadow-2xs'
+              }`}
               title={currentUser?.username}
             >
               {userInitials}
-            </div>
+            </button>
           </div>
         </header>
 
@@ -456,7 +481,15 @@ export const AppShell: React.FC<AppShellProps> = ({
 
                 {/* Mobile Drawer Bottom: Single User & Logout */}
                 <div className="pt-4 border-t border-slate-100 space-y-3">
-                  <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <button
+                    type="button"
+                    onClick={() => handleNavClick('profile')}
+                    className={`w-full flex items-center gap-2.5 p-2 rounded-xl border text-left transition-colors cursor-pointer ${
+                      activeTab === 'profile'
+                        ? 'bg-red-50 border-red-200 ring-1 ring-red-300'
+                        : 'bg-slate-50 hover:bg-slate-100 border-slate-200/80'
+                    }`}
+                  >
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-red-50 border border-red-200 text-red-600 font-mono select-none">
                       {userInitials}
                     </div>
@@ -465,10 +498,10 @@ export const AppShell: React.FC<AppShellProps> = ({
                         {currentUser?.firstName} {currentUser?.lastName || ''}
                       </div>
                       <div className="text-[10px] text-slate-400 font-mono">
-                        @{currentUser?.username}
+                        @{currentUser?.username} • <span className="text-red-500 font-medium">Profile</span>
                       </div>
                     </div>
-                  </div>
+                  </button>
 
                   <button
                     type="button"

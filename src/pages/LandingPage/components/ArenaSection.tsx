@@ -130,14 +130,14 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             onMouseLeave={() => setHoveredCard(null)}
             whileHover={{ y: -4 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-amber-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-purple-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
           >
             {/* Top Accent Gradient Line */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-transparent" />
 
             {/* Glowing Aura on Hover */}
             <div
-              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-amber-400/20 via-orange-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-purple-400/20 via-pink-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
                 hoveredCard === 'silhouette' ? 'opacity-100' : 'opacity-30'
               }`}
             />
@@ -145,7 +145,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             {/* Header */}
             <div className="flex items-center justify-between gap-3 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-600 flex items-center justify-center shadow-2xs shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-200/80 text-purple-600 flex items-center justify-center shadow-2xs shrink-0">
                   <Eye className="w-5 h-5" />
                 </div>
                 <div>
@@ -158,7 +158,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                 </div>
               </div>
 
-              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-amber-50 border-amber-200 text-amber-800">
+              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-purple-50 border-purple-200 text-purple-800">
                 Untimed / Skip
               </span>
             </div>
@@ -167,10 +167,10 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             <div className="my-auto py-2 relative z-10 flex items-center justify-center">
               <div className="flex flex-col sm:flex-row items-center gap-6 w-full">
                 {/* Radar Circle Container */}
-                <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-gradient-to-b from-amber-50/80 to-orange-50/50 border border-amber-200/80 flex items-center justify-center shadow-inner overflow-hidden shrink-0">
+                <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full bg-gradient-to-b from-purple-50/80 to-pink-50/50 border border-purple-200/80 flex items-center justify-center shadow-inner overflow-hidden shrink-0">
                   {/* Rotating Radar Ring */}
                   <div
-                    className={`absolute inset-2 rounded-full border border-dashed border-amber-300/60 transition-all ${
+                    className={`absolute inset-2 rounded-full border border-dashed border-purple-300/60 transition-all ${
                       hoveredCard === 'silhouette' ? 'animate-spin' : ''
                     }`}
                     style={{ animationDuration: '6s' }}
@@ -183,7 +183,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                     animate={{
                       filter:
                         hoveredCard === 'silhouette'
-                          ? 'brightness(1) drop-shadow(0 12px 20px rgba(245,158,11,0.45))'
+                          ? 'brightness(1) drop-shadow(0 12px 20px rgba(168,85,247,0.45))'
                           : 'brightness(0) drop-shadow(0 6px 12px rgba(0,0,0,0.25))',
                       scale: hoveredCard === 'silhouette' ? [1, 1.08, 1.04] : 1,
                     }}
@@ -195,7 +195,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                 {/* Info & Action Feed */}
                 <div className="space-y-2.5 text-left flex-1">
                   <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-amber-700 block">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-purple-700 block">
                       {hoveredCard === 'silhouette' ? 'Recognition Verified' : 'Mystery Silhouette'}
                     </span>
                     <h4 className="text-lg sm:text-xl font-bold font-display text-slate-900 mt-0.5">
@@ -213,7 +213,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                     <span
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                         hoveredCard === 'silhouette'
-                          ? 'bg-amber-100 text-amber-900 border border-amber-300 font-semibold'
+                          ? 'bg-purple-100 text-purple-900 border border-purple-300 font-semibold'
                           : 'bg-slate-100 text-slate-600 border border-slate-200'
                       }`}
                     >
@@ -222,7 +222,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                     <span
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                         hoveredCard === 'silhouette'
-                          ? 'bg-amber-100 text-amber-900 border border-amber-300 font-semibold'
+                          ? 'bg-purple-100 text-purple-900 border border-purple-300 font-semibold'
                           : 'bg-slate-100 text-slate-600 border border-slate-200'
                       }`}
                     >
@@ -383,14 +383,14 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             onMouseLeave={handleIdenticryLeave}
             whileHover={{ y: -4 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-purple-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
+            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white border border-slate-200/90 hover:border-amber-300 shadow-sm hover:shadow-xl transition-all duration-500 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
           >
             {/* Top Accent Gradient Line */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
 
             {/* Glowing Aura on Hover */}
             <div
-              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-purple-400/20 via-pink-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
+              className={`absolute -right-12 -top-12 w-64 h-64 rounded-full bg-gradient-to-br from-amber-400/20 via-orange-400/10 to-transparent blur-2xl pointer-events-none transition-opacity duration-500 ${
                 hoveredCard === 'identicry' ? 'opacity-100' : 'opacity-30'
               }`}
             />
@@ -398,7 +398,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
             {/* Header */}
             <div className="flex items-center justify-between gap-3 relative z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-200/80 text-purple-600 flex items-center justify-center shadow-2xs shrink-0">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-600 flex items-center justify-center shadow-2xs shrink-0">
                   <Volume2 className="w-5 h-5" />
                 </div>
                 <div>
@@ -411,7 +411,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                 </div>
               </div>
 
-              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-purple-50 border-purple-200 text-purple-800 flex items-center gap-1.5">
+              <span className="text-xs font-semibold px-3 py-1 rounded-full border bg-amber-50 border-amber-200 text-amber-800 flex items-center gap-1.5">
                 <span>Audio Cry</span>
               </span>
             </div>
@@ -422,10 +422,10 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               <div className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-2.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-600 font-semibold flex items-center gap-1.5">
-                    <Volume2 className={`w-3.5 h-3.5 ${isPlayingCry ? 'text-purple-600 animate-pulse' : 'text-slate-400'}`} />
+                    <Volume2 className={`w-3.5 h-3.5 ${isPlayingCry ? 'text-amber-600 animate-pulse' : 'text-slate-400'}`} />
                     <span>Acoustic Frequency Profile</span>
                   </span>
-                  <span className="text-purple-700 font-semibold text-xs">
+                  <span className="text-amber-700 font-semibold text-xs">
                     {isPlayingCry
                       ? 'Playing 8-bit Cry...'
                       : 'Authentic Cry Audio'}
@@ -462,7 +462,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                       }
                       className={`w-full max-w-[5px] rounded-t-full transition-colors duration-500 ${
                         isPlayingCry
-                          ? 'bg-gradient-to-t from-purple-600 via-fuchsia-500 to-indigo-400'
+                          ? 'bg-gradient-to-t from-amber-600 via-orange-500 to-yellow-400'
                           : 'bg-slate-300'
                       }`}
                     />
@@ -471,19 +471,19 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               </div>
 
               {/* Deduction Clues Pill Feed (No multiple choice spoilers) */}
-              <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-purple-50/70 border border-purple-200/60 text-xs">
+              <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-amber-50/70 border border-amber-200/60 text-xs">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-purple-700 font-mono px-2 py-0.5 rounded bg-white border border-purple-200">
+                  <span className="text-[10px] font-bold text-amber-700 font-mono px-2 py-0.5 rounded bg-white border border-amber-200">
                     Gen 1
                   </span>
-                  <span className="text-[10px] font-bold text-purple-700 font-mono px-2 py-0.5 rounded bg-white border border-purple-200">
+                  <span className="text-[10px] font-bold text-amber-700 font-mono px-2 py-0.5 rounded bg-white border border-amber-200">
                     Ghost / Poison
                   </span>
-                  <span className="text-[10px] font-bold text-purple-700 font-mono px-2 py-0.5 rounded bg-white border border-purple-200">
+                  <span className="text-[10px] font-bold text-amber-700 font-mono px-2 py-0.5 rounded bg-white border border-amber-200">
                     6 Letters (G•••••)
                   </span>
                 </div>
-                <span className="text-[11px] font-bold text-purple-800 font-mono shrink-0">
+                <span className="text-[11px] font-bold text-amber-800 font-mono shrink-0">
                   {hoveredCard === 'identicry' ? '→ Gengar ✓' : 'Type to solve'}
                 </span>
               </div>
@@ -496,7 +496,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
                   ? '🔊 Sound cry & clue analysis'
                   : 'Hover card to play sound cry'}
               </span>
-              <span className="text-purple-700 font-semibold text-xs flex items-center gap-1">
+              <span className="text-amber-700 font-semibold text-xs flex items-center gap-1">
                 <span>+1 Guaranteed Entry</span>
               </span>
             </div>

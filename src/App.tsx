@@ -12,6 +12,7 @@ import ArenaPage from './pages/ArenaPage';
 import ReportsPage from './pages/ReportsPage';
 import AchievementsPage from './pages/AchievementsPage';
 import SettingsPage from './pages/SettingsPage';
+import ProfilePage from './pages/ProfilePage';
 import AdminConfigPage from './pages/Admin/AdminConfigPage';
 import AdminUsersPage from './pages/Admin/AdminUsersPage';
 
@@ -42,6 +43,7 @@ function AuthenticatedWorkspace({ onReturnToLanding }: { onReturnToLanding: () =
       {activeTab === 'reports' && <ReportsPage />}
       {activeTab === 'achievements' && <AchievementsPage />}
       {activeTab === 'settings' && <SettingsPage />}
+      {activeTab === 'profile' && <ProfilePage />}
       {activeTab === 'admin-config' && <AdminConfigPage />}
       {activeTab === 'admin-users' && <AdminUsersPage />}
     </AppShell>
