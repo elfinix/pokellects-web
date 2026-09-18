@@ -26,7 +26,7 @@ import Hangmon from './Hangmon';
 import Identicry from './Identicry';
 import Biologist from './Biologist';
 
-interface ArenaPageProps {
+interface MinigamesPageProps {
   onPlayGame?: (gameId: ArenaGameType) => void;
 }
 
@@ -132,7 +132,7 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
   },
 };
 
-export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
+export const MinigamesPage: React.FC<MinigamesPageProps> = ({ onPlayGame }) => {
   const { currentUser } = useAuth();
   const [selectedGame, setSelectedGame] = useState<GameMetadata | null>(null);
   const [activeGame, setActiveGame] = useState<ArenaGameType | null>(null);
@@ -690,4 +690,4 @@ export const ArenaPage: React.FC<ArenaPageProps> = ({ onPlayGame }) => {
   );
 };
 
-export default ArenaPage;
+export default MinigamesPage;

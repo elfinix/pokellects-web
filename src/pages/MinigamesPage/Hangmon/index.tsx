@@ -471,7 +471,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                     className={`w-9 h-11 sm:w-11 sm:h-13 rounded-xl border flex items-center justify-center font-mono font-black text-lg sm:text-2xl transition-all ${
                       isGuessed
                         ? 'bg-white dark:bg-slate-800 border-blue-500 text-blue-900 dark:text-blue-300 ring-2 ring-blue-500/20 shadow-2xs'
-                        : 'bg-white/80 dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-transparent border-dashed'
+                        : 'bg-white/80 dark:bg-slate-800/50 border-slate-300 dark:border-slate-600 text-transparent border-dashed'
                     }`}
                   >
                     {isGuessed ? char : '_'}

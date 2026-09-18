@@ -9,7 +9,7 @@ import LoginPage from './pages/LoginPage';
 import AppShell, { WorkspaceTab } from './components/common/AppShell';
 import DashboardPage from './pages/DashboardPage';
 import PokedexPage from './pages/PokedexPage';
-import ArenaPage from './pages/ArenaPage';
+import MinigamesPage from './pages/MinigamesPage';
 import ReportsPage from './pages/ReportsPage';
 import AchievementsPage from './pages/AchievementsPage';
 import SettingsPage from './pages/SettingsPage';
@@ -40,7 +40,7 @@ function AuthenticatedWorkspace({ onReturnToLanding }: { onReturnToLanding: () =
     >
       {activeTab === 'dashboard' && <DashboardPage onNavigate={handleTabChange} />}
       {activeTab === 'pokedex' && <PokedexPage />}
-      {activeTab === 'arena' && <ArenaPage />}
+      {activeTab === 'arena' && <MinigamesPage />}
       {activeTab === 'reports' && <ReportsPage />}
       {activeTab === 'achievements' && <AchievementsPage />}
       {activeTab === 'settings' && <SettingsPage />}

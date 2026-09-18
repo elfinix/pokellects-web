@@ -50,7 +50,7 @@ export const SilhouetteDisplay: React.FC<SilhouetteDisplayProps> = ({
               } ${
                 isRevealed
                   ? 'filter-none scale-100 drop-shadow-md'
-                  : 'brightness-0 opacity-90 scale-95 contrast-200 dark:brightness-0 dark:invert-[0.35] dark:opacity-90 dark:drop-shadow-[0_8px_20px_rgba(0,0,0,0.6)]'
+                  : 'brightness-0 opacity-85 scale-95 dark:invert dark:opacity-70'
               }`}
             />
 

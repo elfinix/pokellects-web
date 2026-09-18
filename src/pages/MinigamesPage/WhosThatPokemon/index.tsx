@@ -255,7 +255,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
             <ArrowLeft className="w-5 h-5 text-slate-700 dark:text-slate-300" />
           </button>
 
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-sm shadow-purple-500/20">
             <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
 
@@ -266,17 +266,17 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
 
         {/* Streak & Caught Counts */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 text-amber-800 dark:text-amber-300 text-xs font-bold font-mono">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200/80 dark:border-purple-800/60 text-purple-800 dark:text-purple-300 text-xs font-bold font-mono">
             <Flame
               className={`w-3.5 h-3.5 ${
-                streak > 0 ? 'text-amber-500 fill-amber-500 animate-pulse' : 'text-slate-400 dark:text-slate-500'
+                streak > 0 ? 'text-purple-600 dark:text-purple-400 fill-purple-600 dark:fill-purple-400 animate-pulse' : 'text-slate-400 dark:text-slate-500'
               }`}
             />
             <span>{streak} Streak</span>
           </div>
 
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold font-mono">
-            <Trophy className="w-3.5 h-3.5 text-amber-500" />
+            <Trophy className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
             <span>{solvedCount} Caught</span>
           </div>
         </div>
@@ -316,8 +316,8 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
         {/* Central Pokémon Display (Cleanly loaded with zero flicker) */}
         <div className="flex-1 flex items-center justify-center relative w-full h-full min-h-[260px]">
           {isLoading || !targetPokemon || !imageLoaded ? (
-            <div className="flex flex-col items-center justify-center gap-2 text-amber-500">
-              <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+            <div className="flex flex-col items-center justify-center gap-2 text-purple-600 dark:text-purple-400">
+              <Loader2 className="w-8 h-8 animate-spin text-purple-600 dark:text-purple-400" />
             </div>
           ) : (
             <div className="relative inline-flex items-center justify-center pointer-events-none select-none">
@@ -331,7 +331,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                 className={`max-h-[200px] sm:max-h-[240px] md:max-h-[270px] w-auto object-contain transition-all duration-500 select-none pointer-events-none ${
                   isRevealed
                     ? 'filter-none scale-100'
-                    : 'brightness-0 opacity-95 contrast-200 scale-95 dark:invert-0'
+                    : 'brightness-0 opacity-85 scale-95 dark:invert dark:opacity-75'
                 }`}
                 style={{
                   userSelect: 'none',
@@ -378,7 +378,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                   className={`w-full flex items-center gap-2 p-1.5 sm:p-2 bg-white dark:bg-slate-900 rounded-2xl border transition-all ${
                     hasError
                       ? 'border-rose-400 dark:border-rose-600 ring-2 ring-rose-500/20'
-                      : 'border-slate-200/90 dark:border-slate-800 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20'
+                      : 'border-slate-200/90 dark:border-slate-800 focus-within:border-purple-500 focus-within:ring-2 focus-within:ring-purple-500/20'
                   }`}
                 >
                   <div className="relative flex-1 flex items-center pl-3">
@@ -427,7 +427,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                     <button
                       type="submit"
                       disabled={isLoading || !query.trim()}
-                      className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-xs"
+                      className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-purple-600/20"
                     >
                       <span>Guess</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -469,7 +469,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
               >
                 {/* Pokémon Info: Dex #, Name, Types */}
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">
+                  <span className="font-mono text-xs font-bold text-purple-600 dark:text-purple-400">
                     #{String(targetPokemon?.id || 0).padStart(4, '0')}
                   </span>
                   <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
@@ -512,7 +512,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                   <button
                     type="button"
                     onClick={loadNextRound}
-                    className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-xs"
+                    className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-purple-600/20"
                   >
                     <span>Next Pokémon</span>
                     <ArrowRight className="w-4 h-4" />
