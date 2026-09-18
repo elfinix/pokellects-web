@@ -39,7 +39,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Global',
     badgeRange: '1–1,025',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-red-300 hover:bg-red-50/40',
-    activeStyle: 'bg-gradient-to-r from-red-600 to-rose-700 text-white border-transparent shadow-md shadow-red-600/25 ring-2 ring-red-500/20',
+    activeStyle: 'bg-gradient-to-r from-red-600 to-rose-700 text-white border-transparent ring-2 ring-red-500/20',
     iconBg: 'bg-red-50 text-red-500',
     accentHex: '#ef4444',
     renderIcon: (active) => (
@@ -59,7 +59,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 1',
     badgeRange: '#001–#151',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-emerald-300 hover:bg-emerald-50/40',
-    activeStyle: 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white border-transparent shadow-md shadow-emerald-600/25 ring-2 ring-emerald-500/20',
+    activeStyle: 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white border-transparent ring-2 ring-emerald-500/20',
     iconBg: 'bg-emerald-50 text-emerald-600',
     accentHex: '#10b981',
     renderIcon: (active) => (
@@ -78,7 +78,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 2',
     badgeRange: '#152–#251',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-amber-300 hover:bg-amber-50/40',
-    activeStyle: 'bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-white border-transparent shadow-md shadow-amber-500/25 ring-2 ring-amber-500/20',
+    activeStyle: 'bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-white border-transparent ring-2 ring-amber-500/20',
     iconBg: 'bg-amber-50 text-amber-600',
     accentHex: '#f59e0b',
     renderIcon: (active) => (
@@ -97,7 +97,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 3',
     badgeRange: '#252–#386',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-blue-300 hover:bg-blue-50/40',
-    activeStyle: 'bg-gradient-to-r from-blue-600 via-cyan-600 to-emerald-600 text-white border-transparent shadow-md shadow-blue-600/25 ring-2 ring-blue-500/20',
+    activeStyle: 'bg-gradient-to-r from-blue-600 via-cyan-600 to-emerald-600 text-white border-transparent ring-2 ring-blue-500/20',
     iconBg: 'bg-blue-50 text-blue-600',
     accentHex: '#3b82f6',
     renderIcon: (active) => (
@@ -116,7 +116,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 4',
     badgeRange: '#387–#493',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-cyan-300 hover:bg-cyan-50/40',
-    activeStyle: 'bg-gradient-to-r from-cyan-600 via-indigo-600 to-sky-700 text-white border-transparent shadow-md shadow-cyan-600/25 ring-2 ring-cyan-500/20',
+    activeStyle: 'bg-gradient-to-r from-cyan-600 via-indigo-600 to-sky-700 text-white border-transparent ring-2 ring-cyan-500/20',
     iconBg: 'bg-cyan-50 text-cyan-600',
     accentHex: '#06b6d4',
     renderIcon: (active) => (
@@ -137,7 +137,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 5',
     badgeRange: '#494–#649',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-slate-400 hover:bg-slate-50',
-    activeStyle: 'bg-gradient-to-r from-slate-900 via-slate-800 to-zinc-700 text-white border-transparent shadow-md shadow-slate-900/30 ring-2 ring-slate-700/20',
+    activeStyle: 'bg-gradient-to-r from-slate-900 via-slate-800 to-zinc-700 text-white border-transparent ring-2 ring-slate-700/20',
     iconBg: 'bg-slate-100 text-slate-600',
     accentHex: '#64748b',
     renderIcon: (active) => (
@@ -157,7 +157,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 6',
     badgeRange: '#650–#721',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-indigo-300 hover:bg-indigo-50/40',
-    activeStyle: 'bg-gradient-to-r from-blue-600 via-indigo-600 to-pink-600 text-white border-transparent shadow-md shadow-indigo-600/25 ring-2 ring-indigo-500/20',
+    activeStyle: 'bg-gradient-to-r from-blue-600 via-indigo-600 to-pink-600 text-white border-transparent ring-2 ring-indigo-500/20',
     iconBg: 'bg-indigo-50 text-indigo-600',
     accentHex: '#6366f1',
     renderIcon: (active) => (
@@ -176,7 +176,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 7',
     badgeRange: '#722–#809',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-orange-300 hover:bg-orange-50/40',
-    activeStyle: 'bg-gradient-to-r from-orange-500 via-amber-500 to-rose-600 text-white border-transparent shadow-md shadow-orange-500/25 ring-2 ring-orange-500/20',
+    activeStyle: 'bg-gradient-to-r from-orange-500 via-amber-500 to-rose-600 text-white border-transparent ring-2 ring-orange-500/20',
     iconBg: 'bg-orange-50 text-orange-600',
     accentHex: '#f97316',
     renderIcon: (active) => (
@@ -202,7 +202,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 8',
     badgeRange: '#810–#898',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-sky-300 hover:bg-sky-50/40',
-    activeStyle: 'bg-gradient-to-r from-sky-600 via-blue-700 to-fuchsia-600 text-white border-transparent shadow-md shadow-sky-600/25 ring-2 ring-sky-500/20',
+    activeStyle: 'bg-gradient-to-r from-sky-600 via-blue-700 to-fuchsia-600 text-white border-transparent ring-2 ring-sky-500/20',
     iconBg: 'bg-sky-50 text-sky-600',
     accentHex: '#0ea5e9',
     renderIcon: (active) => (
@@ -221,7 +221,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Legends',
     badgeRange: '#899–#905',
     idleStyle: 'bg-white border-amber-800/20 text-stone-800 hover:border-amber-600/40 hover:bg-amber-50/40',
-    activeStyle: 'bg-gradient-to-r from-amber-900 via-stone-800 to-teal-900 text-white border-transparent shadow-md shadow-stone-800/30 ring-2 ring-amber-700/20',
+    activeStyle: 'bg-gradient-to-r from-amber-900 via-stone-800 to-teal-900 text-white border-transparent ring-2 ring-amber-700/20',
     iconBg: 'bg-amber-50 text-amber-700',
     accentHex: '#d97706',
     renderIcon: (active) => (
@@ -241,7 +241,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Gen 9',
     badgeRange: '#906–#1025',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-purple-300 hover:bg-purple-50/40',
-    activeStyle: 'bg-gradient-to-r from-red-600 via-purple-600 to-violet-700 text-white border-transparent shadow-md shadow-purple-600/25 ring-2 ring-purple-500/20',
+    activeStyle: 'bg-gradient-to-r from-red-600 via-purple-600 to-violet-700 text-white border-transparent ring-2 ring-purple-500/20',
     iconBg: 'bg-purple-50 text-purple-600',
     accentHex: '#a855f7',
     renderIcon: (active) => (
@@ -261,7 +261,7 @@ export const REGIONS: RegionIdentity[] = [
     era: 'Z-A',
     badgeRange: 'Kalos City',
     idleStyle: 'bg-white border-slate-200/90 text-slate-800 hover:border-teal-300 hover:bg-teal-50/40',
-    activeStyle: 'bg-gradient-to-r from-teal-500 via-cyan-600 to-indigo-700 text-white border-transparent shadow-md shadow-teal-600/25 ring-2 ring-teal-500/20',
+    activeStyle: 'bg-gradient-to-r from-teal-500 via-cyan-600 to-indigo-700 text-white border-transparent ring-2 ring-teal-500/20',
     iconBg: 'bg-teal-50 text-teal-600',
     accentHex: '#14b8a6',
     renderIcon: (active) => (
@@ -313,7 +313,7 @@ export const RegionFilterBar: React.FC<RegionFilterBarProps> = ({
               className={`p-2.5 rounded-xl border transition-all duration-150 ease-out cursor-pointer flex items-center gap-2.5 select-none text-left relative overflow-hidden group active:scale-[0.98] ${
                 isActive
                   ? region.activeStyle
-                  : `${region.idleStyle} shadow-2xs`
+                  : `${region.idleStyle} `
               }`}
             >
               {/* Regional Identity Emblem */}

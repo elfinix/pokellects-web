@@ -111,7 +111,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
     filters.selectedType !== 'all' ? POKEMON_TYPE_THEMES[filters.selectedType] : null;
 
   return (
-    <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 shadow-xs space-y-3 transition-all relative z-10">
+    <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 space-y-3 transition-all relative z-10">
       {/* Top row: Search Bar and Quick Actions */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Search Field */}
@@ -124,7 +124,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
             value={filters.searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50/80 border border-slate-200/80 text-xs sm:text-sm text-slate-900 placeholder-slate-400 font-medium focus:outline-hidden focus:border-red-500/80 focus:bg-white focus:ring-2 focus:ring-red-500/10 transition-all shadow-2xs"
+            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50/80 border border-slate-200/80 text-xs sm:text-sm text-slate-900 placeholder-slate-400 font-medium focus:outline-hidden focus:border-red-500/80 focus:bg-white focus:ring-2 focus:ring-red-500/10 transition-all"
           />
           {filters.searchQuery && (
             <button
@@ -162,7 +162,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
               }}
               className={`h-8 flex items-center gap-2 px-3 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
                 isTypeOpen || filters.selectedType !== 'all'
-                  ? 'bg-slate-100 border-slate-300 text-slate-900 shadow-2xs'
+                  ? 'bg-slate-100 border-slate-300 text-slate-900'
                   : 'bg-slate-50/80 hover:bg-slate-100 border-slate-200/80 text-slate-700'
               }`}
             >
@@ -188,7 +188,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
 
             {/* Custom Dropdown Menu */}
             {isTypeOpen && (
-              <div className="absolute top-full mt-1.5 left-0 z-50 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-xl shadow-slate-300/30 p-1.5 w-52 max-h-72 overflow-y-auto no-scrollbar animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute top-full mt-1.5 left-0 z-50 bg-white rounded-2xl border border-slate-200 p-1.5 w-52 max-h-72 overflow-y-auto no-scrollbar animate-in fade-in zoom-in-95 duration-150">
                 <button
                   type="button"
                   onClick={() => {
@@ -229,7 +229,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
                     >
                       <div className="flex items-center gap-2">
                         <span
-                          className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
                           style={{ backgroundColor: theme.accentHex }}
                         />
                         <span>{theme.name}</span>
@@ -254,7 +254,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
               }}
               className={`h-8 flex items-center gap-2 px-3 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
                 isSortOpen || filters.sortCriteria !== 'id'
-                  ? 'bg-slate-100 border-slate-300 text-slate-900 shadow-2xs'
+                  ? 'bg-slate-100 border-slate-300 text-slate-900'
                   : 'bg-slate-50/80 hover:bg-slate-100 border-slate-200/80 text-slate-700'
               }`}
             >
@@ -274,7 +274,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
 
             {/* Custom Sort Dropdown Menu */}
             {isSortOpen && (
-              <div className="absolute top-full mt-1.5 left-0 z-50 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-xl shadow-slate-300/30 p-1.5 w-48 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute top-full mt-1.5 left-0 z-50 bg-white rounded-2xl border border-slate-200 p-1.5 w-48 animate-in fade-in zoom-in-95 duration-150">
                 {[
                   { id: 'id' as SortCriteria, label: 'Pokédex #' },
                   { id: 'name' as SortCriteria, label: 'Name (A-Z)' },
@@ -308,7 +308,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
           <button
             type="button"
             onClick={toggleSortOrder}
-            className="h-8 w-8 rounded-xl bg-slate-50/80 hover:bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-red-600 hover:border-red-200/80 transition-all cursor-pointer flex items-center justify-center active:scale-95 group shadow-2xs shrink-0"
+            className="h-8 w-8 rounded-xl bg-slate-50/80 hover:bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-red-600 hover:border-red-200/80 transition-all cursor-pointer flex items-center justify-center active:scale-95 group shrink-0"
             title={`Sort ${filters.sortOrder === 'asc' ? 'Ascending (lowest to highest)' : 'Descending (highest to lowest)'} - click to toggle`}
           >
             {filters.sortOrder === 'asc' ? (

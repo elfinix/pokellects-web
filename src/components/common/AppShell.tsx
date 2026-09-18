@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutDashboard,
   BookOpen,
-  Swords,
+  Gamepad2,
   BarChart3,
   Trophy,
   Settings,
@@ -57,7 +57,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       icon: BookOpen,
       badge: `${stats.totalUnlocked}/${stats.totalDexCount}`,
     },
-    { id: 'arena' as WorkspaceTab, label: 'Arena Games', icon: Swords },
+    { id: 'arena' as WorkspaceTab, label: 'Minigames', icon: Gamepad2 },
     { id: 'reports' as WorkspaceTab, label: 'Reports', icon: BarChart3 },
     { id: 'achievements' as WorkspaceTab, label: 'Achievements', icon: Trophy },
     { id: 'settings' as WorkspaceTab, label: 'Settings', icon: Settings },

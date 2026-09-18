@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToLogin }) => {
               About
             </a>
             <a href="#arena" className="hover:text-white transition-colors">
-              Arena Games
+              Minigames
             </a>
             <a href="#developer" className="hover:text-white transition-colors">
               Developer

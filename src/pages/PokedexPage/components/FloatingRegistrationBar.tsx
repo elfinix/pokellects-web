@@ -80,10 +80,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
   return (
     <div className="fixed bottom-6 sm:bottom-8 z-30 left-0 right-0 md:left-[var(--sidebar-width,16rem)] pointer-events-none flex justify-center px-4 transition-[left] duration-300 ease-in-out">
       {/* Floating Pill Card (Centered specifically on the Main Page, ignoring the sidebar) */}
-      <div className="pointer-events-auto w-full max-w-xl md:max-w-2xl bg-white/95 backdrop-blur-xl rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 shadow-2xl shadow-slate-900/15 hover:shadow-slate-900/20 transition-all space-y-2 relative overflow-hidden">
-        {/* Subtle accent glow */}
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-600/10 rounded-full blur-2xl pointer-events-none" />
-
+      <div className="pointer-events-auto w-full max-w-xl md:max-w-2xl bg-white rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 space-y-2 relative overflow-hidden">
         {/* Feedback Message Banner */}
         {feedback && (
           <div
@@ -137,7 +134,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Register Pokémon by name..."
-              className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 text-slate-900 text-xs sm:text-sm focus:outline-hidden focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all shadow-2xs font-medium placeholder:text-slate-400 disabled:opacity-60"
+              className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-slate-200 bg-slate-50/80 text-slate-900 text-xs sm:text-sm focus:outline-hidden focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 transition-all font-medium placeholder:text-slate-400 disabled:opacity-60"
             />
 
             {/* Clear Input Button (when text is typed) */}
@@ -159,7 +156,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-600/20 active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+            className="px-4 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold text-xs sm:text-sm active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
           >
             {isSubmitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />

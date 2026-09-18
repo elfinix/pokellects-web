@@ -14,7 +14,7 @@ import {
 import {
   Trophy,
   BookOpen,
-  Swords,
+  Gamepad2,
   ArrowRight,
   TrendingUp,
   Award,
@@ -137,7 +137,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             Welcome, {currentUser?.firstName}!
           </h1>
           <p className="text-xs sm:text-sm text-white/90 max-w-lg leading-relaxed font-normal">
-            Your personal Pokédex is synced. Identify species in the Pokédex or test your recall in the Battle Arena to expand your collection.
+            Your personal Pokédex is synced. Identify species in the Pokédex or test your recall in Minigames to expand your collection.
           </p>
         </div>
 
@@ -156,8 +156,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             onClick={() => onNavigate('arena')}
             className="px-5 py-3 rounded-2xl bg-slate-950/40 hover:bg-slate-950/60 text-white font-bold text-xs sm:text-sm transition-all border border-white/20 flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Swords className="w-4 h-4 text-amber-400" />
-            <span>Arena Trials</span>
+            <Gamepad2 className="w-4 h-4 text-amber-400" />
+            <span>Minigames</span>
           </button>
         </div>
       </div>
@@ -320,7 +320,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     isHovered ? 'text-white/90' : 'text-slate-500'
                   }`}
                 >
-                  Arena Victories
+                  Minigame Victories
                 </span>
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
