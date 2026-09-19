@@ -169,6 +169,16 @@ class StorageService {
     }));
   }
 
+  public getAllPokedexEntries(): (UnlockedPokemonEntry & { userId: string })[] {
+    const { pokedexEntries } = getMemoryState();
+    return (pokedexEntries || []).map((r: any) => ({
+      userId: r.user_id,
+      pokemonId: r.pokemon_id,
+      unlockedAt: r.unlocked_at,
+      discoveryMethod: r.discovery_method,
+    }));
+  }
+
   public registerPokemonToPlayer(
     playerId: string,
     pokemonId: number,

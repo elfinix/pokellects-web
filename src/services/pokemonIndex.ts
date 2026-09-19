@@ -15,10 +15,32 @@ import {
 const dynamicRegistry = new Map<number, Pokemon>();
 
 // Preload initial stubs (1 to 1025) into the registry
-const initialStubs = generateInitialDexStubs();
-initialStubs.forEach((stub) => {
+export const ALL_KNOWN_POKEMON = generateInitialDexStubs();
+export const ALL_KNOWN_POKEMON_MAP: Record<number, Pokemon> = {};
+
+ALL_KNOWN_POKEMON.forEach((stub) => {
   dynamicRegistry.set(stub.id, stub);
+  ALL_KNOWN_POKEMON_MAP[stub.id] = stub;
 });
+
+export interface RegionMeta {
+  generation: number;
+  name: string;
+  startId: number;
+  endId: number;
+}
+
+export const REGION_METADATA: RegionMeta[] = [
+  { generation: 1, name: 'Kanto', startId: 1, endId: 151 },
+  { generation: 2, name: 'Johto', startId: 152, endId: 251 },
+  { generation: 3, name: 'Hoenn', startId: 252, endId: 386 },
+  { generation: 4, name: 'Sinnoh', startId: 387, endId: 493 },
+  { generation: 5, name: 'Unova', startId: 494, endId: 649 },
+  { generation: 6, name: 'Kalos', startId: 650, endId: 721 },
+  { generation: 7, name: 'Alola', startId: 722, endId: 809 },
+  { generation: 8, name: 'Galar & Hisui', startId: 810, endId: 905 },
+  { generation: 9, name: 'Paldea', startId: 906, endId: 1025 },
+];
 
 // Asynchronously fetch canonical names from PokeAPI v2 to refine stubs
 fetchAllPokemonList().then((list) => {
@@ -28,8 +50,11 @@ fetchAllPokemonList().then((list) => {
       existing.name = item.name;
       existing.displayName = formatDisplayName(item.name);
       existing.aliases = generateAliases(item.name, existing.displayName);
+      ALL_KNOWN_POKEMON_MAP[item.id] = existing;
     } else {
-      dynamicRegistry.set(item.id, createPokemonStub(item.id, item.name));
+      const stub = createPokemonStub(item.id, item.name);
+      dynamicRegistry.set(item.id, stub);
+      ALL_KNOWN_POKEMON_MAP[item.id] = stub;
     }
   });
 });

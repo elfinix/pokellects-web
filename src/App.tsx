@@ -14,18 +14,28 @@ import ReportsPage from './pages/ReportsPage';
 import AchievementsPage from './pages/AchievementsPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
-import AdminConfigPage from './pages/Admin/AdminConfigPage';
+import AdminDashboardPage from './pages/Admin/AdminDashboardPage';
 import AdminUsersPage from './pages/Admin/AdminUsersPage';
+import AdminAnalyticsPage from './pages/Admin/AdminAnalyticsPage';
+import AdminConfigPage from './pages/Admin/AdminConfigPage';
 
 type ViewMode = 'landing' | 'login' | 'app';
 
 function AuthenticatedWorkspace({ onReturnToLanding }: { onReturnToLanding: () => void }) {
-  const [activeTab, setActiveTab] = useState<WorkspaceTab>('dashboard');
+  const { currentUser, isAdmin } = useAuth();
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>(() => (currentUser?.role === 'admin' ? 'admin-dashboard' : 'dashboard'));
 
   const handleTabChange = (tab: WorkspaceTab) => {
     setActiveTab(tab);
     globalScrollToTop(true);
   };
+
+  // Switch initial tab if user changes role
+  useEffect(() => {
+    if (isAdmin && (activeTab === 'dashboard')) {
+      setActiveTab('admin-dashboard');
+    }
+  }, [isAdmin]);
 
   // Scroll to top whenever active tab changes
   useEffect(() => {
@@ -45,8 +55,10 @@ function AuthenticatedWorkspace({ onReturnToLanding }: { onReturnToLanding: () =
       {activeTab === 'achievements' && <AchievementsPage />}
       {activeTab === 'settings' && <SettingsPage />}
       {activeTab === 'profile' && <ProfilePage />}
-      {activeTab === 'admin-config' && <AdminConfigPage />}
+      {activeTab === 'admin-dashboard' && <AdminDashboardPage onNavigate={handleTabChange} />}
       {activeTab === 'admin-users' && <AdminUsersPage />}
+      {activeTab === 'admin-analytics' && <AdminAnalyticsPage />}
+      {activeTab === 'admin-config' && <AdminConfigPage />}
     </AppShell>
   );
 }

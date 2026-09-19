@@ -29,8 +29,10 @@ export type WorkspaceTab =
   | 'achievements'
   | 'settings'
   | 'profile'
-  | 'admin-config'
-  | 'admin-users';
+  | 'admin-dashboard'
+  | 'admin-users'
+  | 'admin-analytics'
+  | 'admin-config';
 
 interface AppShellProps {
   activeTab: WorkspaceTab;
@@ -66,8 +68,10 @@ export const AppShell: React.FC<AppShellProps> = ({
   ];
 
   const adminNavItems = [
-    { id: 'admin-config' as WorkspaceTab, label: 'Configurations', icon: Sliders },
-    { id: 'admin-users' as WorkspaceTab, label: 'User Directory', icon: Users },
+    { id: 'admin-dashboard' as WorkspaceTab, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'admin-users' as WorkspaceTab, label: 'Users', icon: Users },
+    { id: 'admin-analytics' as WorkspaceTab, label: 'Analytics', icon: BarChart3 },
+    { id: 'admin-config' as WorkspaceTab, label: 'Settings', icon: Sliders },
   ];
 
   const handleNavClick = (tab: WorkspaceTab) => {
@@ -156,74 +160,74 @@ export const AppShell: React.FC<AppShellProps> = ({
 
           {/* Navigation Links */}
           <div className="py-4 px-3 space-y-6 overflow-y-auto max-h-[calc(100vh-190px)] overflow-x-hidden">
-            {/* Player Menu Items */}
-            <div className="space-y-1.5">
-              {playerNavItems.map((item) => {
-                const isActive = activeTab === item.id;
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => handleNavClick(item.id)}
-                    className={`flex items-center h-10 rounded-xl font-semibold text-xs transition-colors cursor-pointer ${
-                      isActive
-                        ? 'bg-red-600 text-white shadow-sm shadow-red-200 dark:shadow-none'
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
-                    } ${
-                      isSidebarCollapsed
-                        ? 'w-10 mx-auto justify-center px-0'
-                        : 'w-full px-3 justify-between'
-                    }`}
-                    title={isSidebarCollapsed ? item.label : undefined}
-                  >
-                    <div className="flex items-center min-w-0">
-                      <Icon className="w-4 h-4 shrink-0" />
+            {!isAdmin ? (
+              /* Player Menu Items (Trainer Vault) */
+              <div className="space-y-1.5">
+                {playerNavItems.map((item) => {
+                  const isActive = activeTab === item.id;
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handleNavClick(item.id)}
+                      className={`flex items-center h-10 rounded-xl font-semibold text-xs transition-colors cursor-pointer ${
+                        isActive
+                          ? 'bg-red-600 text-white shadow-sm shadow-red-200 dark:shadow-none'
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
+                      } ${
+                        isSidebarCollapsed
+                          ? 'w-10 mx-auto justify-center px-0'
+                          : 'w-full px-3 justify-between'
+                      }`}
+                      title={isSidebarCollapsed ? item.label : undefined}
+                    >
+                      <div className="flex items-center min-w-0">
+                        <Icon className="w-4 h-4 shrink-0" />
+                        <AnimatePresence initial={false}>
+                          {!isSidebarCollapsed && (
+                            <motion.span
+                              initial={{ opacity: 0, width: 0 }}
+                              animate={{ opacity: 1, width: 'auto' }}
+                              exit={{ opacity: 0, width: 0 }}
+                              transition={{ duration: 0.2, ease: 'easeInOut' }}
+                              className="ml-3 overflow-hidden whitespace-nowrap text-left"
+                            >
+                              {item.label}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </div>
                       <AnimatePresence initial={false}>
-                        {!isSidebarCollapsed && (
+                        {!isSidebarCollapsed && item.badge && (
                           <motion.span
-                            initial={{ opacity: 0, width: 0 }}
-                            animate={{ opacity: 1, width: 'auto' }}
-                            exit={{ opacity: 0, width: 0 }}
-                            transition={{ duration: 0.2, ease: 'easeInOut' }}
-                            className="ml-3 overflow-hidden whitespace-nowrap text-left"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.15 }}
+                            className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono shrink-0 ml-1.5 ${
+                              isActive
+                                ? 'bg-red-700 text-white'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                            }`}
                           >
-                            {item.label}
+                            {item.badge}
                           </motion.span>
                         )}
                       </AnimatePresence>
-                    </div>
-                    <AnimatePresence initial={false}>
-                      {!isSidebarCollapsed && item.badge && (
-                        <motion.span
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          transition={{ duration: 0.15 }}
-                          className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono shrink-0 ml-1.5 ${
-                            isActive
-                              ? 'bg-red-700 text-white'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
-                          }`}
-                        >
-                          {item.badge}
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Admin Nav Section (Only shown if current logged-in user is Admin) */}
-            {isAdmin && (
-              <div className="space-y-1.5 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              /* Admin Nav Section (Only shown if current logged-in user is Admin) */
+              <div className="space-y-1.5">
                 {isSidebarCollapsed ? (
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-300 dark:bg-purple-600 mx-auto my-2" />
                 ) : (
                   <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 mb-2 flex items-center gap-1.5 overflow-hidden whitespace-nowrap">
                     <Shield className="w-3 h-3 shrink-0" />
-                    <span>Admin System</span>
+                    <span>Admin Vault</span>
                   </div>
                 )}
                 {adminNavItems.map((item) => {
@@ -425,35 +429,35 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </div>
 
                   <div className="py-4 space-y-1">
-                    {playerNavItems.map((item) => {
-                      const isActive = activeTab === item.id;
-                      const Icon = item.icon;
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => handleNavClick(item.id)}
-                          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold text-xs transition-all ${
-                            isActive
-                              ? 'bg-red-600 text-white shadow-xs'
-                              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <Icon className="w-4 h-4" />
-                            <span>{item.label}</span>
-                          </div>
-                          {item.badge && (
-                            <span className="text-[10px] opacity-80 font-mono">{item.badge}</span>
-                          )}
-                        </button>
-                      );
-                    })}
-
-                    {isAdmin && (
-                      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 mt-3">
+                    {!isAdmin ? (
+                      playerNavItems.map((item) => {
+                        const isActive = activeTab === item.id;
+                        const Icon = item.icon;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => handleNavClick(item.id)}
+                            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold text-xs transition-all ${
+                              isActive
+                                ? 'bg-red-600 text-white shadow-xs'
+                                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Icon className="w-4 h-4" />
+                              <span>{item.label}</span>
+                            </div>
+                            {item.badge && (
+                              <span className="text-[10px] opacity-80 font-mono">{item.badge}</span>
+                            )}
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div>
                         <span className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider block px-3 mb-2">
-                          Admin System
+                          Admin Vault
                         </span>
                         {adminNavItems.map((item) => {
                           const isActive = activeTab === item.id;
