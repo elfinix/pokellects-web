@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Flame } from 'lucide-react';
+import { ArrowLeft, Flame, BookOpenCheck, ChartNoAxesCombined, Gamepad2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { DEMO_CREDENTIALS } from '../../services/mockdata';
+import { useAuthActions } from '@convex-dev/auth/react';
 import { useHotkeys } from '../../hooks/useHotkeys';
 import LoginForm from './components/LoginForm';
-import DemoAccounts from './components/DemoAccounts';
 import { PokellectsLogo } from '../../components/common/PokellectsLogo';
 
 interface LoginPageProps {
@@ -74,10 +73,14 @@ const MYSTERY_POKEMON = [
 ];
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSuccess }) => {
-  const { login } = useAuth();
+  const { currentUser } = useAuth();
+  const { signIn } = useAuthActions();
 
-  const [identifier, setIdentifier] = useState(DEMO_CREDENTIALS.player.username);
-  const [password, setPassword] = useState(DEMO_CREDENTIALS.player.password);
+  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [username, setUsername] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [silhouetteIndex, setSilhouetteIndex] = useState(0);
@@ -104,32 +107,37 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
     return () => clearInterval(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!identifier.trim()) {
-      setErrorMessage('Please enter your username or email.');
+    if (!identifier.trim() && mode === 'signIn') {
+      setErrorMessage('Please enter your username.');
       return;
     }
 
     setIsSubmitting(true);
 
-    const success = login(identifier, password);
-    setIsSubmitting(false);
-
-    if (success) {
-      onLoginSuccess();
-    } else {
-      setErrorMessage('Invalid credentials. You can select a demo account below.');
+    try {
+      const formData = new FormData();
+      formData.set('username', mode === 'signUp' ? username : identifier);
+      formData.set('password', password);
+      formData.set('flow', mode);
+      if (mode === 'signUp') {
+        formData.set('firstName', firstName);
+      }
+      await signIn('password', formData);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      setErrorMessage(message.includes('InvalidAccountId') || message.includes('InvalidSecret') || message.includes('Invalid credentials')
+        ? 'Incorrect username or password.'
+        : 'We could not sign you in. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDemoSelect = (username: string, pass: string) => {
-    setIdentifier(username);
-    setPassword(pass);
-    setErrorMessage(null);
-  };
+  useEffect(() => { if (currentUser) onLoginSuccess(); }, [currentUser, onLoginSuccess]);
 
   const currentSilhouette = MYSTERY_POKEMON[silhouetteIndex];
 
@@ -162,7 +170,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
       </header>
 
       {/* Main Dual-Panel Content with Equal Height */}
-      <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1 flex items-center justify-center">
+      <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-4 flex-1 flex items-start justify-center">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full items-stretch">
           {/* Left Panel: Clean Silhouette Showcase (No top accent bar so Right Panel is highlighted) */}
           <div className="md:col-span-6 flex flex-col justify-between text-center p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full">
@@ -261,45 +269,56 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
           </div>
 
           {/* Right Panel: Clean Authentication Form (Highlighted with Top Accent Gradient Bar) */}
-          <div className="md:col-span-6 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full space-y-5">
+          <div className="md:col-span-6 h-[560px] flex flex-col justify-between p-6 pb-6 sm:p-8 sm:pb-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
             {/* Top Accent Gradient Line highlighting the Right Panel */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-red-500 to-rose-400" />
 
             <div className="space-y-1 relative z-10 pt-1">
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display tracking-tight">
-                Welcome back
+                {mode === 'signUp' ? 'Start your Pokédex' : 'Welcome back'}
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Sign in to continue to your Pokédex.
+                {mode === 'signUp' ? 'Create your trainer account and begin collecting.' : 'Sign in to continue to your Pokédex.'}
               </p>
             </div>
 
-            <div className="relative z-10 flex-1 flex flex-col justify-center">
+            <div className="relative z-10 py-4 sm:py-5">
               <LoginForm
+                mode={mode}
                 identifier={identifier}
                 setIdentifier={setIdentifier}
                 password={password}
                 setPassword={setPassword}
+                firstName={firstName}
+                setFirstName={setFirstName}
+                username={username}
+                setUsername={setUsername}
                 errorMessage={errorMessage}
                 onSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
               />
             </div>
 
-            <div className="relative z-10">
-              <DemoAccounts
-                activeUsername={identifier}
-                onSelectAccount={handleDemoSelect}
-              />
+            <div className="relative z-10 space-y-5">
+              {mode === 'signIn' && <div className="rounded-2xl border border-slate-200/80 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-800/50 px-4 py-3.5">
+                  <p className="text-xs font-bold text-slate-800 dark:text-slate-100">Your trainer journey</p>
+                  <div className="mt-2.5 grid grid-cols-3 gap-2 text-center">
+                    <div className="space-y-1"><BookOpenCheck className="mx-auto h-4 w-4 text-rose-500" /><span className="block text-[10px] leading-tight text-slate-500 dark:text-slate-400">Personal Pokédex</span></div>
+                    <div className="space-y-1"><ChartNoAxesCombined className="mx-auto h-4 w-4 text-violet-500" /><span className="block text-[10px] leading-tight text-slate-500 dark:text-slate-400">Track progress</span></div>
+                    <div className="space-y-1"><Gamepad2 className="mx-auto h-4 w-4 text-amber-500" /><span className="block text-[10px] leading-tight text-slate-500 dark:text-slate-400">Learn by playing</span></div>
+                  </div>
+              </div>}
+              <div className="text-center text-xs text-slate-500 dark:text-slate-400">
+                {mode === 'signUp' ? 'Already have an account?' : 'New to Pokellects?'}{' '}
+                <button type="button" onClick={() => { setMode(mode === 'signUp' ? 'signIn' : 'signUp'); setErrorMessage(null); }} className="font-bold text-rose-600 hover:text-rose-500 cursor-pointer">
+                  {mode === 'signUp' ? 'Sign in' : 'Create an account'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="max-w-5xl w-full mx-auto px-4 sm:px-6 py-4 text-center text-xs text-slate-400 dark:text-slate-500">
-        Pokellects • Personal Pokédex
-      </footer>
     </div>
   );
 };

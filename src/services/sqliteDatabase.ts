@@ -40,17 +40,12 @@ function notifyDatabaseListeners(): void {
 }
 
 /**
- * Completely purges browser localStorage, sessionStorage, and IndexedDB storage.
+ * Removes only the legacy browser-backed SQLite cache. Authentication tokens
+ * belong to Convex Auth and must never be cleared by the SQLite bridge.
  */
 export function purgeBrowserStorage(): void {
   try {
     if (typeof window !== 'undefined') {
-      if (window.localStorage) {
-        window.localStorage.clear();
-      }
-      if (window.sessionStorage) {
-        window.sessionStorage.clear();
-      }
       if (typeof indexedDB !== 'undefined' && indexedDB.databases) {
         indexedDB
           .databases()

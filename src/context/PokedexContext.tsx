@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useMutation, useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import { Pokemon, UnlockedPokemonEntry } from '../types/pokemon';
 import {
   resolvePokemonByQuery,
@@ -13,7 +15,6 @@ import {
   fetchPokemon,
   getGenerationFromId,
 } from '../services/pokeapi';
-import storageService from '../services/storageService';
 import { useAuth } from './AuthContext';
 
 export interface RegisterResult {
@@ -57,21 +58,18 @@ const PokedexContext = createContext<PokedexContextType | undefined>(undefined);
 
 export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser } = useAuth();
-  const playerId = currentUser?.id || 'usr-player-1';
-
-  const [unlockedEntries, setUnlockedEntries] = useState<UnlockedPokemonEntry[]>([]);
+  const convexEntries = useQuery(api.pokedex.mine, currentUser ? {} : 'skip');
+  const registerEntry = useMutation(api.pokedex.register);
+  const ensureStarter = useMutation(api.pokedex.ensureStarter);
+  const unlockedEntries = useMemo<UnlockedPokemonEntry[]>(() => (convexEntries ?? []).map((entry) => ({ ...entry, unlockedAt: new Date(entry.unlockedAt).toISOString() })), [convexEntries]);
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewlyRegistered, setIsNewlyRegistered] = useState(false);
   const [allPokemonList, setAllPokemonList] = useState<Pokemon[]>(() => getAllKnownPokemon());
 
-  // Sync unlocked entries whenever active user changes
   useEffect(() => {
-    if (playerId) {
-      const entries = storageService.getPlayerUnlockedEntries(playerId);
-      setUnlockedEntries(entries);
-    }
-  }, [playerId]);
+    if (currentUser) void ensureStarter();
+  }, [currentUser, ensureStarter]);
 
   const unlockedIds = useMemo(
     () => unlockedEntries.map((e) => e.pokemonId),
@@ -160,18 +158,14 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
       let newCount = 0;
       let alreadyCount = 0;
 
-      matches.forEach((p) => {
-        const { isNew } = storageService.registerPokemonToPlayer(playerId, p.id, method);
+      for (const p of matches) {
+        const isNew = await registerEntry({ pokemonId: p.id, discoveryMethod: method });
         if (isNew) {
           newCount += 1;
         } else {
           alreadyCount += 1;
         }
-      });
-
-      // Update state with newly refreshed entries and updated list
-      const refreshedEntries = storageService.getPlayerUnlockedEntries(playerId);
-      setUnlockedEntries(refreshedEntries);
+      }
       setAllPokemonList(getAllKnownPokemon());
 
       // Open detail modal for the primary/first match with newly-registered status
@@ -194,7 +188,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
         message,
       };
     },
-    [playerId, openDetailModal]
+    [registerEntry, openDetailModal]
   );
 
   /**
@@ -217,9 +211,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
         };
       }
 
-      const { isNew } = storageService.registerPokemonToPlayer(playerId, id, method);
-      const refreshedEntries = storageService.getPlayerUnlockedEntries(playerId);
-      setUnlockedEntries(refreshedEntries);
+      const isNew = await registerEntry({ pokemonId: id, discoveryMethod: method });
       setAllPokemonList(getAllKnownPokemon());
 
       return {
@@ -232,7 +224,7 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
           : `#${pokemon.id} ${pokemon.displayName} was already in your Pokédex.`,
       };
     },
-    [playerId, openDetailModal]
+    [registerEntry, openDetailModal]
   );
 
 

@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle } from 'lucide-react';
+import { AtSign, Lock, Eye, EyeOff, ArrowRight, AlertCircle, UserRound } from 'lucide-react';
 
 interface LoginFormProps {
+  mode: 'signIn' | 'signUp';
   identifier: string;
   setIdentifier: (val: string) => void;
   password: string;
   setPassword: (val: string) => void;
+  firstName: string;
+  setFirstName: (val: string) => void;
+  username: string;
+  setUsername: (val: string) => void;
   errorMessage: string | null;
   onSubmit: (e: React.FormEvent) => void;
   isSubmitting?: boolean;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
+  mode,
   identifier,
   setIdentifier,
   password,
   setPassword,
+  firstName,
+  setFirstName,
+  username,
+  setUsername,
   errorMessage,
   onSubmit,
   isSubmitting = false,
@@ -42,17 +52,22 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       </AnimatePresence>
 
       <form onSubmit={onSubmit} className="space-y-3.5">
-        {/* Username or Email */}
-        <div className="space-y-1.5">
+        {mode === 'signUp' && <>
+          <div className="space-y-1.5"><label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Trainer name</label><div className="relative rounded-2xl"><UserRound className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" /><input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="e.g. Misty" autoComplete="given-name" className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm focus:outline-hidden focus:border-rose-400 transition-all placeholder:text-slate-400" /></div></div>
+          <div className="space-y-1.5"><label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">Username</label><div className="relative rounded-2xl"><UserRound className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" /><input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="misty_waterflower" autoComplete="username" className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm focus:outline-hidden focus:border-rose-400 transition-all placeholder:text-slate-400" /></div></div>
+        </>}
+
+        {/* Username is the only credential identifier. */}
+        {mode === 'signIn' && <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-            Username or Email
+            Username
           </label>
           <div
             className={`relative rounded-2xl transition-all duration-200 ${
               focusedField === 'id' ? 'ring-2 ring-rose-500/20' : ''
             }`}
           >
-            <Mail
+            <AtSign
               className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
                 focusedField === 'id' ? 'text-rose-500' : 'text-slate-400 dark:text-slate-500'
               }`}
@@ -63,12 +78,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               onChange={(e) => setIdentifier(e.target.value)}
               onFocus={() => setFocusedField('id')}
               onBlur={() => setFocusedField(null)}
-              placeholder="e.g. ash_ketchum or ash@pokellects.dev"
+              placeholder="Enter your username"
               autoComplete="username"
               className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm focus:outline-hidden focus:border-rose-400 focus:bg-white dark:focus:bg-slate-800 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs"
             />
           </div>
-        </div>
+        </div>}
 
         {/* Password */}
         <div className="space-y-1.5">
@@ -92,7 +107,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               onFocus={() => setFocusedField('pass')}
               onBlur={() => setFocusedField(null)}
               placeholder="Enter your password"
-              autoComplete="current-password"
+              autoComplete={mode === 'signUp' ? 'new-password' : 'current-password'}
               className="w-full pl-10 pr-10 py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/80 text-slate-900 dark:text-white text-sm focus:outline-hidden focus:border-rose-400 focus:bg-white dark:focus:bg-slate-800 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs"
             />
             <button
@@ -117,7 +132,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           {/* Subtle button sheen swipe on hover */}
           <div className="absolute inset-0 w-1/2 h-full bg-white/15 skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-700 ease-out pointer-events-none" />
 
-          <span className="relative z-10">{isSubmitting ? 'Signing in...' : 'Sign In'}</span>
+          <span className="relative z-10">{isSubmitting ? (mode === 'signUp' ? 'Creating account...' : 'Signing in...') : (mode === 'signUp' ? 'Create Account' : 'Sign In')}</span>
           <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
         </motion.button>
       </form>

@@ -70,6 +70,6 @@ export interface UnlockedPokemonEntry {
     | 'hangmon'
     | 'identicry'
     | 'biologist'
+    | 'pokedle'
     | 'starter_grant';
 }
-
