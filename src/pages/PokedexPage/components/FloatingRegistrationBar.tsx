@@ -109,10 +109,10 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
         )}
 
         {/* Omnibar Input Form */}
-        <form onSubmit={handleSubmit} className="flex items-center gap-2 relative">
-          <div className="relative flex-1 flex items-center">
+        <form onSubmit={handleSubmit} className="flex items-stretch gap-2 relative h-11 sm:h-12">
+          <div className="relative flex-1 flex items-center h-full">
             {/* Thematic Pokéball Icon */}
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center">
               <svg
                 className="w-4.5 h-4.5 text-red-600 dark:text-red-500 shrink-0"
                 viewBox="0 0 24 24"
@@ -134,7 +134,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Register Pokémon by name..."
-              className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/80 dark:bg-slate-950/70 text-slate-900 dark:text-slate-100 text-xs sm:text-sm focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-red-500/20 transition-all font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 disabled:opacity-60"
+              className="w-full h-full pl-10 pr-9 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/80 dark:bg-slate-950/70 text-slate-900 dark:text-slate-100 text-xs sm:text-sm focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-red-500/20 transition-all font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 disabled:opacity-60 box-border leading-normal"
             />
 
             {/* Clear Input Button (when text is typed) */}
@@ -156,7 +156,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
           <button
             type="submit"
             disabled={isSubmitting}
-            className="min-h-11 px-3.5 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 dark:disabled:bg-red-800 text-white font-bold text-xs sm:text-sm active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm shadow-red-500/20"
+            className="h-full px-3.5 sm:px-5 rounded-xl border border-transparent bg-red-600 hover:bg-red-700 disabled:bg-red-400 dark:disabled:bg-red-800 text-white font-bold text-xs sm:text-sm active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-sm shadow-red-500/20 box-border leading-none"
           >
             {isSubmitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />

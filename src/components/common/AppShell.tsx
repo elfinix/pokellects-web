@@ -525,7 +525,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         </AnimatePresence>
 
         {/* Main Content Viewport */}
-        <main className="flex-1 w-full p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <main className="flex-1 w-full px-4 pt-6 pb-8 sm:p-6 lg:p-8 max-w-7xl mx-auto">
           {children}
         </main>
       </div>

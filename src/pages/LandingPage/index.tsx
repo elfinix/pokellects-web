@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 
 interface LandingPageProps {
   onNavigateToLogin: () => void;
+  onNavigateToMinigames?: () => void;
 }
 
 // Popular starter IDs across generations for prominent showcase
@@ -22,7 +23,7 @@ function pickRandomTrio(): Pokemon[] {
   return shuffled.slice(0, 3).map((id) => createPokemonStub(id));
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin, onNavigateToMinigames }) => {
   const [revealedPokemonList, setRevealedPokemonList] = useState<Pokemon[]>([]);
   const [revealCount, setRevealCount] = useState(0);
   const nextTrioRef = useRef<Pokemon[]>([]);
@@ -80,7 +81,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigateToLogin }) =
               onBallClick={handleBallClick}
             />
             <AboutSection />
-            <ArenaSection />
+            <ArenaSection
+              onNavigateToLogin={onNavigateToLogin}
+              onLaunchMinigames={onNavigateToMinigames || onNavigateToLogin}
+            />
             <DeveloperSection />
           </main>
           <Footer onNavigateToLogin={onNavigateToLogin} />

@@ -15,7 +15,7 @@ export const SmoothScrollProvider: React.FC<SmoothScrollProviderProps> = ({ chil
         duration: 1.15,
         smoothWheel: true,
         wheelMultiplier: 1.0,
-        touchMultiplier: 1.0,
+        touchMultiplier: 0,
         infinite: false,
         anchors: false,
       }}

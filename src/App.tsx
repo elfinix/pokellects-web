@@ -69,7 +69,12 @@ function MainApp() {
 
   return <div className="min-h-screen w-full bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100"><AnimatePresence mode="wait">
     {path === '/login' ? <motion.div key="login" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><LoginPage onBackToLanding={() => navigate('/')} onLoginSuccess={() => {}} /></motion.div>
-      : <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><LandingPage onNavigateToLogin={() => navigate('/login')} /></motion.div>}
+      : <motion.div key="landing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <LandingPage
+            onNavigateToLogin={() => navigate(currentUser ? defaultPath(isAdmin) : '/login')}
+            onNavigateToMinigames={() => navigate(currentUser ? tabPaths.arena : '/login')}
+          />
+        </motion.div>}
   </AnimatePresence></div>;
 }
 

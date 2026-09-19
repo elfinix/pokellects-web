@@ -114,9 +114,9 @@ export const Hero: React.FC<HeroProps> = ({
               className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs select-none"
             >
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="font-semibold text-slate-900 dark:text-white">1,025 Species Roster</span>
+              <span className="font-semibold text-slate-900 dark:text-white">1,000+ Pokémon</span>
               <span className="text-slate-300 dark:text-slate-700">•</span>
-              <span className="text-slate-500 dark:text-slate-400 font-medium">Gen 1–9 Ready</span>
+              <span className="text-slate-500 dark:text-slate-400 font-medium">Gen 1–9</span>
             </motion.div>
 
             {/* Display Headline */}
@@ -145,9 +145,8 @@ export const Hero: React.FC<HeroProps> = ({
               variants={itemVariants}
               className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0"
             >
-              Unlike traditional quizzes where your scores disappear when you reload,{' '}
-              <strong className="text-slate-900 dark:text-white font-semibold">Pokellects gives your Pokémon knowledge permanence</strong>. Test your memory,
-              uncover species, and complete a personal Pokédex ledger that stays with you.
+              Test your Pokémon familiarity, uncover species, pursue quizzes, and complete a {' '}
+              <strong className="text-slate-900 dark:text-white font-semibold">personal Pokédex that stays with you</strong>.
             </motion.p>
 
             {/* CTAs with specular sheen sweeps and solid high-contrast buttons */}

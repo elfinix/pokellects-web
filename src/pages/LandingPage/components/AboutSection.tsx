@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import {
   BookOpen,
   Keyboard,
@@ -10,15 +10,6 @@ import { motion, useScroll, useTransform } from 'motion/react';
 
 export const AboutSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(max-width: 767px)');
-    const update = () => setIsMobile(media.matches);
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
 
   // Track scroll progress within this 290vh runway (Lenis handles smooth wheel scrolling globally)
   const { scrollYProgress } = useScroll({
@@ -83,38 +74,43 @@ export const AboutSection: React.FC = () => {
     <section
       id="about"
       ref={containerRef}
-      className={isMobile ? 'relative py-4' : 'relative h-[290vh]'}
+      className="relative h-[250vh] sm:h-[290vh]"
     >
       {/* Pinned Full-Screen Viewport Stage covering entire screen height below sticky header */}
-      <div className={isMobile ? 'w-full px-4' : 'sticky top-0 h-screen w-full flex flex-col justify-between items-center pt-16 sm:pt-20 pb-4 sm:pb-6 px-3 sm:px-6 lg:px-8 overflow-hidden'}>
+      <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-center items-center pt-14 sm:pt-18 pb-4 sm:pb-6 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Soft ambient background aura */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-red-100/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
-        {/* Center Stage: Full-Height Swiping Card Container */}
-        <div className={isMobile ? 'flex w-full gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 select-none' : 'relative w-full max-w-6xl xl:max-w-7xl h-[calc(100vh-8rem)] min-h-[500px] flex items-center justify-center select-none my-auto'}>
+        {/* Center Stage: Proportioned Swiping Card Container */}
+        <div className="relative w-full max-w-6xl xl:max-w-7xl h-[460px] sm:h-[480px] md:h-[500px] lg:h-[540px] xl:h-[580px] max-h-[calc(100dvh-5rem)] flex items-center justify-center select-none my-auto">
           {/* ================= CARD 01: PERMANENT LEDGER ================= */}
           <motion.div
-            style={isMobile ? undefined : {
-              x: x0, scale: scale0, rotate: rotate0, opacity: opacity0, zIndex: 30, willChange: 'transform, opacity',
+            style={{
+              x: x0,
+              scale: scale0,
+              rotate: rotate0,
+              opacity: opacity0,
+              zIndex: 30,
+              willChange: 'transform, opacity',
             }}
-            className={isMobile ? 'relative w-[calc(100vw-2rem)] shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-5 flex flex-col gap-6' : 'absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden'}
+            className="absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-6 lg:gap-10 overflow-hidden"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 via-rose-400 to-amber-400" />
 
             {/* Left Column: Narrative Copy */}
-            <div className="w-full lg:w-1/2 space-y-6 text-left">
+            <div className="w-full lg:w-1/2 space-y-5 sm:space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 border border-red-200/80 dark:border-red-900/60">
                 <BookOpen className="w-4 h-4" />
                 <span>01 • Persistent Ledger</span>
               </div>
 
-              <div className="space-y-3">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight leading-[1.12]">
+              <div className="space-y-2.5 sm:space-y-3">
+                <h3 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight leading-[1.12]">
                   A Pokédex That <br className="hidden sm:block" />
                   <span className="text-red-600 dark:text-red-500">Never Resets</span>.
                 </h3>
-                <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl">
+                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg leading-relaxed max-w-xl">
                   Traditional trivia quizzes discard your progress the second you close the tab.
                   Pokellects gives your Pokémon knowledge permanence, archiving every species into an
                   immutable national ledger.
@@ -122,7 +118,7 @@ export const AboutSection: React.FC = () => {
               </div>
 
               {/* Feature Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 pt-1">
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0" />
                   <span>1,025 Species National Roster</span>
@@ -142,8 +138,8 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Visual Interactive Ledger Preview */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center">
+            {/* Right Column: Visual Interactive Ledger Preview (Desktop only) */}
+            <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center">
               <div className="w-full max-w-md lg:max-w-lg rounded-2xl bg-slate-50/90 dark:bg-slate-950/80 text-slate-800 dark:text-slate-200 p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800/80 shadow-2xs relative overflow-hidden space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2">
@@ -223,34 +219,39 @@ export const AboutSection: React.FC = () => {
 
           {/* ================= CARD 02: FLUID FAST INPUT ================= */}
           <motion.div
-            style={isMobile ? undefined : {
-              x: x1, scale: scale1, rotate: rotate1, opacity: opacity1, zIndex: 20, willChange: 'transform, opacity',
+            style={{
+              x: x1,
+              scale: scale1,
+              rotate: rotate1,
+              opacity: opacity1,
+              zIndex: 20,
+              willChange: 'transform, opacity',
             }}
-            className={isMobile ? 'relative w-[calc(100vw-2rem)] shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-5 flex flex-col gap-6' : 'absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden'}
+            className="absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-6 lg:gap-10 overflow-hidden"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500" />
 
             {/* Left Column: Narrative Copy */}
-            <div className="w-full lg:w-1/2 space-y-6 text-left">
+            <div className="w-full lg:w-1/2 space-y-5 sm:space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200/80 dark:border-blue-900/60">
                 <Keyboard className="w-4 h-4" />
                 <span>02 • Rapid Input Engine</span>
               </div>
 
-              <div className="space-y-3">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight leading-[1.12]">
+              <div className="space-y-2.5 sm:space-y-3">
+                <h3 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight leading-[1.12]">
                   Continuous <br className="hidden sm:block" />
                   <span className="text-blue-600 dark:text-blue-400">Fast Recall</span>.
                 </h3>
-                <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl">
+                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg leading-relaxed max-w-xl">
                   Engineered specifically for lightning-fast memory recall. Type any species name
                   into the floating omnibar, inspect typing multipliers, then hit <kbd className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">Esc</kbd> to return instantly to the search bar.
                 </p>
               </div>
 
               {/* Feature Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 pt-1">
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   <CheckCircle2 className="w-4 h-4 text-blue-500 shrink-0" />
                   <span>Instant Keystroke Fuzzy Match</span>
@@ -270,8 +271,8 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Visual Omnibar Keyboard HUD */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center">
+            {/* Right Column: Visual Omnibar Keyboard HUD (Desktop only) */}
+            <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center">
               <div className="w-full max-w-md lg:max-w-lg rounded-2xl bg-slate-50/90 dark:bg-slate-950/80 text-slate-800 dark:text-slate-200 p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800/80 shadow-2xs space-y-4 relative">
                 {/* Floating Search Bar Mockup */}
                 <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-blue-400/60 dark:border-blue-500/50 shadow-xs">
@@ -326,27 +327,32 @@ export const AboutSection: React.FC = () => {
 
           {/* ================= CARD 03: ARENA DISCOVERY ================= */}
           <motion.div
-            style={isMobile ? undefined : {
-              x: x2, scale: scale2, rotate: rotate2, opacity: opacity2, zIndex: 10, willChange: 'transform, opacity',
+            style={{
+              x: x2,
+              scale: scale2,
+              rotate: rotate2,
+              opacity: opacity2,
+              zIndex: 10,
+              willChange: 'transform, opacity',
             }}
-            className={isMobile ? 'relative w-[calc(100vw-2rem)] shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-5 flex flex-col gap-6' : 'absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden'}
+            className="absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-6 lg:gap-10 overflow-hidden"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 via-pink-400 to-amber-400" />
 
             {/* Left Column: Narrative Copy */}
-            <div className="w-full lg:w-1/2 space-y-6 text-left">
+            <div className="w-full lg:w-1/2 space-y-5 sm:space-y-6 text-left">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200/80 dark:border-purple-900/60">
                 <Trophy className="w-4 h-4" />
                 <span>03 • Minigame Discovery</span>
               </div>
 
-              <div className="space-y-3">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight leading-[1.12]">
+              <div className="space-y-2.5 sm:space-y-3">
+                <h3 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white font-display tracking-tight leading-[1.12]">
                   Game-Driven <br className="hidden sm:block" />
                   <span className="text-purple-600 dark:text-purple-400">Smart Unlocks</span>.
                 </h3>
-                <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl">
+                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg leading-relaxed max-w-xl">
                   Challenges in Pokellects carry permanent progression. Every victory in our
                   minigames algorithmically rewards a guaranteed undiscovered species directly into your
                   ledger, accelerating full roster completion.
@@ -354,7 +360,7 @@ export const AboutSection: React.FC = () => {
               </div>
 
               {/* Feature Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 pt-1">
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0" />
                   <span>Guaranteed Undiscovered Unlocks</span>
@@ -374,8 +380,8 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column: Visual Minigame Victory & Unlock HUD */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center">
+            {/* Right Column: Visual Minigame Victory & Unlock HUD (Desktop only) */}
+            <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center">
               <div className="w-full max-w-md lg:max-w-lg rounded-2xl bg-slate-50/90 dark:bg-slate-950/80 text-slate-800 dark:text-slate-200 p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800/80 shadow-2xs relative overflow-hidden space-y-4">
                 {/* Header: Victory Banner */}
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">

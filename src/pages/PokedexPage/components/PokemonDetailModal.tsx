@@ -362,7 +362,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
       if (child.evolvesTo) {
         for (const grandchild of child.evolvesTo) {
           if (grandchild.id === currentId) {
-            return 'Stage 2 (Final Evolution)';
+            return 'Stage 2 (Final)';
           }
         }
       }
@@ -501,7 +501,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{ willChange: 'transform, opacity' }}
             data-lenis-prevent
-            className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl sm:max-w-3xl w-full p-4 sm:p-7 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between h-[min(680px,calc(100dvh-1rem))] sm:h-[610px] max-h-[calc(100dvh-1rem)] sm:max-h-[92vh]"
+            className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl sm:max-w-3xl w-full p-4 pt-6 sm:p-7 sm:pt-7 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between h-[min(680px,calc(100dvh-1rem))] sm:h-[610px] max-h-[calc(100dvh-1rem)] sm:max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top Type Accent Border (Supporting mono- or dual-type palette) */}
@@ -525,7 +525,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             />
 
             {/* Modal Header */}
-            <div className="flex items-start justify-between relative z-10 pb-1">
+            <div className="flex items-start justify-between relative z-10 pt-1 sm:pt-0 pb-1">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-mono font-bold text-slate-400 dark:text-slate-500">
@@ -1632,7 +1632,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
       </div>
 
       {/* Modal Footer: Registered Previous & Next Navigation OR Minigame Insignia & Stamp */}
-      <div className="mt-3 pt-3.5 sm:mt-0 sm:pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 relative z-10">
+      <div className="mt-3 pt-3.5 sm:mt-0 sm:pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 sm:gap-3 relative z-10">
         {showNavigation ? (
           <>
             {/* Previous Registered Pokemon Button */}
@@ -1640,30 +1640,30 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               type="button"
               disabled={!prevPokemon}
               onClick={() => prevPokemon && onNavigatePokemon && onNavigatePokemon(prevPokemon)}
-              className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
+              className={`flex items-center justify-center gap-1 w-16 sm:w-20 h-11 sm:h-12 px-1.5 sm:px-2.5 rounded-2xl border transition-all duration-150 shrink-0 ${
                 prevPokemon
                   ? 'bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer active:scale-95 shadow-2xs'
-                  : 'opacity-30 border-dashed border-slate-200 dark:border-slate-800 bg-transparent text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                  : 'opacity-20 border-dashed border-slate-200 dark:border-slate-800 bg-transparent text-slate-400 dark:text-slate-600 cursor-not-allowed'
               }`}
               title={prevPokemon ? `Previous: #${prevPokemon.id} ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
               aria-label={prevPokemon ? `Previous Pokémon: ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
             >
-              <ChevronLeft className="w-5 h-5 shrink-0 text-slate-600 dark:text-slate-400" />
+              <ChevronLeft className="w-4 h-4 shrink-0 text-slate-600 dark:text-slate-400" />
               {prevPokemon ? (
                 <img
                   src={prevPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(prevPokemon.id)}
                   alt={prevPokemon.displayName}
-                  className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
+                  className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-xs"
                   loading="lazy"
                 />
               ) : (
-                <div className="w-12 h-12 sm:w-13 sm:h-13" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10" />
               )}
             </button>
 
             {/* Center: Chalk "REGISTERED" Stamp Banner (Only for Newly Registered) */}
             {isNewlyRegistered ? (
-              <div className="flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center px-1">
                 <ChalkRegisteredStamp isNew={true} />
               </div>
             ) : (
@@ -1675,10 +1675,10 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               type="button"
               disabled={!nextPokemon}
               onClick={() => nextPokemon && onNavigatePokemon && onNavigatePokemon(nextPokemon)}
-              className={`flex items-center gap-1 px-3 py-1 sm:px-4 sm:py-1 rounded-2xl border transition-all duration-150 h-12 sm:h-13 ${
+              className={`flex items-center justify-center gap-1 w-16 sm:w-20 h-11 sm:h-12 px-1.5 sm:px-2.5 rounded-2xl border transition-all duration-150 shrink-0 ${
                 nextPokemon
                   ? 'bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer active:scale-95 shadow-2xs'
-                  : 'opacity-30 border-dashed border-slate-200 dark:border-slate-800 bg-transparent text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                  : 'opacity-20 border-dashed border-slate-200 dark:border-slate-800 bg-transparent text-slate-400 dark:text-slate-600 cursor-not-allowed'
               }`}
               title={nextPokemon ? `Next: #${nextPokemon.id} ${nextPokemon.displayName}` : 'No next registered Pokémon'}
               aria-label={nextPokemon ? `Next Pokémon: ${nextPokemon.displayName}` : 'No next registered Pokémon'}
@@ -1687,13 +1687,13 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 <img
                   src={nextPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(nextPokemon.id)}
                   alt={nextPokemon.displayName}
-                  className="w-12 h-12 sm:w-13 sm:h-13 object-contain drop-shadow-xs"
+                  className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-xs"
                   loading="lazy"
                 />
               ) : (
-                <div className="w-12 h-12 sm:w-13 sm:h-13" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10" />
               )}
-              <ChevronRight className="w-5 h-5 shrink-0 text-slate-600 dark:text-slate-400" />
+              <ChevronRight className="w-4 h-4 shrink-0 text-slate-600 dark:text-slate-400" />
             </button>
           </>
         ) : (

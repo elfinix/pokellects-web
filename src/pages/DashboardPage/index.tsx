@@ -124,7 +124,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const featuredPokemon = unlockedPokemonList[0] || allPokemon[0];
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-7 sm:space-y-8 pb-6 w-full">
       {/* Welcome Banner */}
       <div className="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl p-5 sm:p-8 text-white shadow-lg shadow-red-600/15 dark:shadow-black/40 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 border border-red-500/30 dark:border-slate-800">
         {/* Top accent hairline for dark mode */}

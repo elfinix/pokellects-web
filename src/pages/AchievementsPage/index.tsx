@@ -423,37 +423,43 @@ export const AchievementsPage: React.FC = () => {
       </div>
 
       {/* Progress Overview Summary */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
-        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
-          <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold block uppercase tracking-wider">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="p-2.5 min-[380px]:p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-0.5 sm:space-y-1">
+          <span className="text-slate-400 dark:text-slate-500 text-[9px] min-[360px]:text-[10px] sm:text-xs font-semibold block uppercase tracking-wider truncate">
             Total Accolades
           </span>
-          <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-display">
-            {evaluatedAchievements.length} <span className="text-xs text-slate-400 dark:text-slate-500 font-normal">Challenges</span>
+          <div className="text-lg min-[360px]:text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white font-display leading-tight">
+            {evaluatedAchievements.length}{' '}
+            <span className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 font-normal hidden min-[440px]:inline">
+              Challenges
+            </span>
           </div>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
-          <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold block uppercase tracking-wider">
-            Mastered Accolades
+        <div className="p-2.5 min-[380px]:p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-0.5 sm:space-y-1">
+          <span className="text-slate-400 dark:text-slate-500 text-[9px] min-[360px]:text-[10px] sm:text-xs font-semibold block uppercase tracking-wider truncate">
+            Mastered
           </span>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 font-display">
-            {totalCompletedCount} <span className="text-xs text-slate-400 dark:text-slate-500 font-normal">/ {evaluatedAchievements.length}</span>
+          <div className="text-lg min-[360px]:text-xl sm:text-2xl md:text-3xl font-black text-emerald-600 dark:text-emerald-400 font-display leading-tight">
+            {totalCompletedCount}{' '}
+            <span className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 font-normal">
+              / {evaluatedAchievements.length}
+            </span>
           </div>
         </div>
 
-        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
-          <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold block uppercase tracking-wider">
+        <div className="p-2.5 min-[380px]:p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-0.5 sm:space-y-1">
+          <span className="text-slate-400 dark:text-slate-500 text-[9px] min-[360px]:text-[10px] sm:text-xs font-semibold block uppercase tracking-wider truncate">
             Completion Rate
           </span>
-          <div className="text-2xl sm:text-3xl font-black text-amber-500 dark:text-amber-400 font-display">
+          <div className="text-lg min-[360px]:text-xl sm:text-2xl md:text-3xl font-black text-amber-500 dark:text-amber-400 font-display leading-tight">
             {Math.round((totalCompletedCount / evaluatedAchievements.length) * 100)}%
           </div>
         </div>
       </div>
 
       {/* Page Toolbox / Filters */}
-      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white dark:bg-slate-900 p-2.5 sm:p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
@@ -465,7 +471,7 @@ export const AchievementsPage: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto no-scrollbar w-full sm:w-auto pb-0.5">
+        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden w-full sm:w-auto pb-0.5">
           {[
             { id: 'all', label: 'All Groups' },
             { id: 'dex', label: 'Dex Completion' },
@@ -490,7 +496,7 @@ export const AchievementsPage: React.FC = () => {
       </div>
 
       {/* Grouped Achievement Sections */}
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         {groups
           .filter((g) => selectedGroupFilter === 'all' || selectedGroupFilter === g.id)
           .map((group) => {
@@ -498,65 +504,65 @@ export const AchievementsPage: React.FC = () => {
             if (groupAchievements.length === 0) return null;
 
             return (
-              <div key={group.id} className="space-y-3.5">
-                <div className="pb-1 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
-                  <div>
-                    <h2 className="text-base font-bold text-slate-900 dark:text-white">
+              <div key={group.id} className="space-y-3 sm:space-y-3.5">
+                <div className="pb-1 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
                       {group.label}
                     </h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                       {group.desc}
                     </p>
                   </div>
-                  <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl">
+                  <span className="text-[11px] sm:text-xs font-mono font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg sm:rounded-xl shrink-0">
                     {groupAchievements.filter((a) => a.isCompleted).length} / {groupAchievements.length}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-2.5 sm:gap-3">
                   {groupAchievements.map((ach) => {
                     const Icon = ach.icon;
                     return (
                       <div
                         key={ach.id}
-                        className={`p-4 sm:p-5 rounded-3xl border transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                        className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 sm:gap-4 ${
                           ach.isCompleted
                             ? 'bg-gradient-to-r from-emerald-50/40 via-white to-amber-50/30 dark:from-emerald-950/20 dark:via-slate-900 dark:to-amber-950/20 border-emerald-200/80 dark:border-emerald-800/60 shadow-xs'
                             : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 shadow-2xs hover:shadow-xs'
                         }`}
                       >
                         {/* Left: Icon and Details */}
-                        <div className="flex items-start gap-4 min-w-0 flex-1">
+                        <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
                           <div
-                            className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${ach.iconBg}`}
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 border ${ach.iconBg}`}
                           >
-                            <Icon className="w-5 h-5" />
+                            <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                           </div>
 
                           <div className="space-y-1 min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
                                 {ach.title}
                               </h3>
                               {ach.isCompleted && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.2 rounded-md bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                                  <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-md bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 text-[9px] sm:text-[10px] font-bold">
+                                  <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600 dark:text-emerald-400" />
                                   <span>Completed</span>
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+                            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
                               {ach.description}
                             </p>
 
                             {/* Milestones chips */}
-                            <div className="flex items-center gap-1.5 pt-1 flex-wrap">
+                            <div className="flex items-center gap-1 sm:gap-1.5 pt-0.5 sm:pt-1 flex-wrap">
                               {ach.milestones.map((m) => {
                                 const reached = ach.currentVal >= m;
                                 return (
                                   <span
                                     key={m}
-                                    className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border transition-colors ${
+                                    className={`px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-mono font-bold border transition-colors ${
                                       reached
                                         ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800/60'
                                         : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700'
@@ -571,21 +577,21 @@ export const AchievementsPage: React.FC = () => {
                         </div>
 
                         {/* Right: Progress bar & Count */}
-                        <div className="w-full md:w-56 space-y-1.5 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+                        <div className="w-full md:w-56 space-y-1.5 shrink-0 pt-2.5 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
                           <div className="flex items-center justify-between text-xs">
-                            <span className="font-semibold text-slate-500 dark:text-slate-400 text-[11px]">
+                            <span className="font-semibold text-slate-500 dark:text-slate-400 text-[10px] sm:text-[11px]">
                               {ach.isCompleted ? (
                                 <span className="text-emerald-600 dark:text-emerald-400 font-bold">Mastered</span>
                               ) : (
                                 <span>Next: {ach.nextMilestone}</span>
                               )}
                             </span>
-                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-[11px]">
+                            <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-[10px] sm:text-[11px]">
                               {ach.currentVal} / {ach.nextMilestone}
                             </span>
                           </div>
 
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 sm:h-2 rounded-full overflow-hidden">
                             <div
                               className={`h-full rounded-full transition-all duration-500 ${
                                 ach.isCompleted ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-red-500'
@@ -594,7 +600,7 @@ export const AchievementsPage: React.FC = () => {
                             />
                           </div>
 
-                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono text-right block">
+                          <span className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 font-mono text-right block">
                             {ach.isCompleted
                               ? 'All Milestones Reached'
                               : `${Math.max(0, ach.nextMilestone - ach.currentVal)} remaining`}

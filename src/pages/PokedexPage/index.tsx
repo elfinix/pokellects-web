@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, BookOpen, HelpCircle, ChevronDown, Check, MapPin } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
 import { Pokemon } from '../../types/pokemon';
 import { POKEMON_TYPE_THEMES } from '../../styles/theme';
+import { getPokemonById, getPokemonByIdAsync } from '../../services/pokemonIndex';
 import Toolbox, { ToolboxFilters } from '../../components/common/Toolbox';
 import { RegionId, REGIONS } from './components/RegionFilterBar';
 import PokemonDetailModal from './components/PokemonDetailModal';
@@ -177,6 +179,7 @@ const RegisteredPokemonCard: React.FC<{
 });
 
 export const PokedexPage: React.FC = () => {
+  const { currentUser } = useAuth();
   const {
     allPokemon,
     unlockedIds,
@@ -188,11 +191,27 @@ export const PokedexPage: React.FC = () => {
     stats,
   } = usePokedex();
 
-
   const [selectedRegion, setSelectedRegion] = useState<RegionId>('national');
   const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false);
   const [isBannerHovered, setIsBannerHovered] = useState(false);
   const regionDropdownRef = useRef<HTMLDivElement>(null);
+
+  // When a new user enters the Pokedex page, immediately show the Pikachu registration popup modal
+  useEffect(() => {
+    if (!currentUser) return;
+    const storageKey = `pokellects_welcome_pikachu_${currentUser.id || currentUser.username}`;
+    const alreadyShown = localStorage.getItem(storageKey);
+    if (!alreadyShown) {
+      localStorage.setItem(storageKey, 'true');
+      const timer = setTimeout(async () => {
+        const pikachu = getPokemonById(25) || (await getPokemonByIdAsync(25));
+        if (pikachu) {
+          openDetailModal(pikachu, true);
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [currentUser, openDetailModal]);
 
   const [filters, setFilters] = useState<ToolboxFilters>({
     searchQuery: '',
@@ -740,11 +759,11 @@ export const PokedexPage: React.FC = () => {
 
           {/* Right: Regional Mastery Meter & Percentage */}
           <div
-            className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 transition-colors duration-700 ${
+            className={`w-full md:w-auto flex flex-col shrink-0 pt-3 md:pt-0 border-t md:border-t-0 transition-colors duration-700 ${
               isBannerHovered ? 'border-white/20' : 'border-slate-100 dark:border-slate-800'
             }`}
           >
-            <div className="space-y-1.5 sm:text-right">
+            <div className="w-full space-y-1.5 md:text-right">
               <span
                 className={`text-[10px] uppercase font-bold tracking-wider block transition-colors duration-700 ${
                   isBannerHovered ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'
@@ -752,9 +771,9 @@ export const PokedexPage: React.FC = () => {
               >
                 Regional Mastery
               </span>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 w-full">
                 <div
-                  className={`w-32 sm:w-44 h-2.5 rounded-full overflow-hidden shrink-0 border transition-all duration-700 ${
+                  className={`w-full md:w-44 h-2.5 rounded-full overflow-hidden flex-1 md:flex-initial border transition-all duration-700 ${
                     isBannerHovered
                       ? 'bg-black/25 border-white/20'
                       : 'bg-slate-100 dark:bg-slate-800 border-slate-200/60 dark:border-slate-700'

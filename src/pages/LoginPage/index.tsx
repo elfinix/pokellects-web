@@ -170,7 +170,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
       </header>
 
       {/* Main Dual-Panel Content with Equal Height */}
-      <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex-1 flex items-start justify-center">
+      <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] flex-1 flex items-center justify-center my-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full items-stretch">
           {/* Left Panel: Clean Silhouette Showcase (No top accent bar so Right Panel is highlighted) */}
           <div className="hidden md:col-span-6 md:flex flex-col justify-between text-center p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full">

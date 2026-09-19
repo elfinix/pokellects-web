@@ -304,7 +304,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
             <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
 
-          <h1 className="text-lg sm:text-2xl leading-tight font-black text-slate-900 dark:text-white font-display tracking-tight">
+          <h1 className="text-base sm:text-xl md:text-2xl leading-tight font-black text-slate-900 dark:text-white font-display tracking-tight">
             Identicry
           </h1>
         </div>
@@ -328,7 +328,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
       </div>
 
       {/* Main Full-Screen Stage Area */}
-      <div className="flex-1 min-h-0 my-3 sm:my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-3 sm:p-8">
+      <div className="flex-1 min-h-0 my-3 sm:my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-4 sm:p-8 pb-5 sm:pb-8">
         {/* Subtle Grid Pattern Overlay */}
         <div
           className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
@@ -339,10 +339,10 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
         />
 
         {/* Decorative Scanner Corner Brackets */}
-        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-tl-sm pointer-events-none" />
-        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-tr-sm pointer-events-none" />
-        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-bl-sm pointer-events-none" />
-        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-br-sm pointer-events-none" />
+        <div className="absolute top-3.5 left-3.5 w-3.5 h-3.5 border-t-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-tl-sm pointer-events-none" />
+        <div className="absolute top-3.5 right-3.5 w-3.5 h-3.5 border-t-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-tr-sm pointer-events-none" />
+        <div className="absolute bottom-3.5 left-3.5 w-3.5 h-3.5 border-b-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-bl-sm pointer-events-none" />
+        <div className="absolute bottom-3.5 right-3.5 w-3.5 h-3.5 border-b-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-br-sm pointer-events-none" />
 
         {/* Registered Stamp (Positioned in top-right of canvas upon victory) */}
         <AnimatePresence>
@@ -351,7 +351,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
               initial={{ opacity: 0, scale: 0.8, y: -6 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute top-8 right-8 sm:top-10 sm:right-10 z-20 pointer-events-none select-none"
+              className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 pointer-events-none select-none"
             >
               <ChalkRegisteredStamp isNew={isNewlyUnlocked} />
             </motion.div>
@@ -359,54 +359,56 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
         </AnimatePresence>
 
         {/* Top Stage Bar: Deduction Hints */}
-        {showHints && <div className="relative z-10 flex flex-col items-start gap-2 pl-4 sm:pl-6">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Hints:
-          </span>
+        {showHints && (
+          <div className="relative z-10 flex flex-col items-start gap-2 pt-3 pl-5 sm:pt-1 sm:pl-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Hints:
+            </span>
 
-          {isLoading || !targetPokemon ? (
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <div className="w-24 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
-              <div className="w-20 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
-              <div className="w-16 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
-              <div className="w-24 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
-            </div>
-          ) : (
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              {/* First letter hint */}
-              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
-                Starts with '{targetPokemon.displayName.charAt(0).toUpperCase()}'
-              </span>
-
-              {/* Letter count */}
-              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
-                {targetPokemon.displayName.replace(/[^a-zA-Z]/g, '').length} Letters
-              </span>
-
-              {/* Generation */}
-              <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
-                Gen {targetPokemon.generation}
-              </span>
-
-              {/* Type Badges */}
-              <div className="flex items-center gap-1">
-                {targetPokemon.types.map((t) => {
-                  const theme = POKEMON_TYPE_THEMES[t];
-                  return (
-                    <span
-                      key={t}
-                      className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                        theme ? theme.border : 'border-slate-200 dark:border-slate-700'
-                      } ${theme ? theme.badgeBg : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
-                    >
-                      {theme ? theme.name : t}
-                    </span>
-                  );
-                })}
+            {isLoading || !targetPokemon ? (
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <div className="w-24 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
+                <div className="w-20 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
+                <div className="w-16 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
+                <div className="w-24 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700/80" />
               </div>
-            </div>
-          )}
-        </div>}
+            ) : (
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                {/* First letter hint */}
+                <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+                  Starts with '{targetPokemon.displayName.charAt(0).toUpperCase()}'
+                </span>
+
+                {/* Letter count */}
+                <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+                  {targetPokemon.displayName.replace(/[^a-zA-Z]/g, '').length} Letters
+                </span>
+
+                {/* Generation */}
+                <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+                  Gen {targetPokemon.generation}
+                </span>
+
+                {/* Type Badges */}
+                <div className="flex items-center gap-1">
+                  {targetPokemon.types.map((t) => {
+                    const theme = POKEMON_TYPE_THEMES[t];
+                    return (
+                      <span
+                        key={t}
+                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+                          theme ? theme.border : 'border-slate-200 dark:border-slate-700'
+                        } ${theme ? theme.badgeBg : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
+                      >
+                        {theme ? theme.name : t}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Central Display: Sound Visualizer / Replay Cry OR Revealed Pokémon */}
         <div className="flex-1 flex items-center justify-center relative w-full h-full min-h-[220px]">
@@ -493,7 +495,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
         </div>
 
         {/* Floating Middle-Bottom Interactive Dock */}
-        <div className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center gap-2">
+        <div className="relative z-10 w-full max-w-sm sm:max-w-lg mx-auto flex flex-col items-center gap-2 mb-3 sm:mb-1 px-1 sm:px-0">
           <AnimatePresence mode="wait">
             {!isRevealed ? (
               <motion.div
@@ -570,12 +572,12 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                 {/* Error Banner & Tried Guesses */}
                 <div className="min-h-[20px] flex items-center justify-between px-2 text-xs">
                   {hasError ? (
-                    <span className="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1">
-                      <XCircle className="w-3.5 h-3.5 text-rose-500" />
+                    <span className="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1 truncate">
+                      <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                       Not quite! Listen again or try another guess.
                     </span>
                   ) : incorrectAttempts.length > 0 ? (
-                    <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-[11px]">
+                    <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-[11px] truncate">
                       <span>Tried:</span>
                       {incorrectAttempts.slice(0, 3).map((item, i) => (
                         <span key={i} className="line-through text-slate-500 dark:text-slate-400 font-medium">
@@ -584,7 +586,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                       ))}
                     </div>
                   ) : (
-                    <span className="text-slate-400 dark:text-slate-500 text-[11px]">
+                    <span className="text-slate-400 dark:text-slate-500 text-[11px] truncate">
                       Listen to the audio cry and type the Pokémon's name.
                     </span>
                   )}
@@ -598,19 +600,19 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="w-full flex flex-wrap items-center justify-between gap-4 p-3.5 sm:p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800"
+                className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 p-3 sm:p-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-md"
               >
                 {/* Pokémon Info: Dex #, Name, Types */}
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">
+                <div className="flex items-center justify-center sm:justify-start gap-2.5 w-full sm:w-auto min-w-0">
+                  <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-800/50 shrink-0">
                     #{String(targetPokemon?.id || 0).padStart(4, '0')}
                   </span>
-                  <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display tracking-tight">
+                  <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white font-display tracking-tight truncate">
                     {targetPokemon?.displayName}
                   </span>
 
                   {/* Types */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 shrink-0">
                     {targetPokemon?.types.map((t) => {
                       const theme = POKEMON_TYPE_THEMES[t];
                       return (
@@ -628,7 +630,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                 </div>
 
                 {/* Actions: View Dex + Next Pokémon */}
-                <div className="flex items-center gap-2 ml-auto">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => {
@@ -636,7 +638,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                         openDetailModal(targetPokemon, false);
                       }
                     }}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
+                    className="flex-1 sm:flex-initial justify-center px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
                   >
                     <BookOpen className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     <span>View Dex</span>
@@ -645,7 +647,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                   <button
                     type="button"
                     onClick={loadNextRound}
-                    className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-amber-500/20"
+                    className="flex-1 sm:flex-initial justify-center px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-amber-500/20"
                   >
                     <span>Next Pokémon</span>
                     <ArrowRight className="w-4 h-4" />

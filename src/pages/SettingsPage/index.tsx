@@ -189,14 +189,16 @@ export const SettingsPage: React.FC = () => {
 
           <button
             type="button"
+            role="switch"
+            aria-checked={soundEnabled}
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className={`w-12 h-6.5 rounded-full transition-colors relative cursor-pointer ${
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
               soundEnabled ? 'bg-red-600' : 'bg-slate-300 dark:bg-slate-700'
             }`}
           >
-            <div
-              className={`w-5 h-5 rounded-full bg-white shadow-md transform transition-transform absolute top-0.5 ${
-                soundEnabled ? 'translate-x-6 left-0.5' : 'left-1'
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                soundEnabled ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
           </button>
@@ -215,14 +217,16 @@ export const SettingsPage: React.FC = () => {
 
           <button
             type="button"
+            role="switch"
+            aria-checked={reducedMotion}
             onClick={() => setReducedMotion(!reducedMotion)}
-            className={`w-12 h-6.5 rounded-full transition-colors relative cursor-pointer ${
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
               reducedMotion ? 'bg-red-600' : 'bg-slate-300 dark:bg-slate-700'
             }`}
           >
-            <div
-              className={`w-5 h-5 rounded-full bg-white shadow-md transform transition-transform absolute top-0.5 ${
-                reducedMotion ? 'translate-x-6 left-0.5' : 'left-1'
+            <span
+              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                reducedMotion ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
           </button>

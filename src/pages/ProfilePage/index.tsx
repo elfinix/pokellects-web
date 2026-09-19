@@ -578,7 +578,7 @@ export const ProfilePage: React.FC = () => {
                   setIsPartnerDropdownOpen(true);
                 }}
                 placeholder="Type a Pokémon name or #ID..."
-                className="w-full pl-10 pr-24 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium"
+                className="w-full pl-10 pr-24 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-hidden focus:border-emerald-500 dark:focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-800 transition-all font-medium"
               />
               {partnerPokemon && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none">
@@ -615,7 +615,9 @@ export const ProfilePage: React.FC = () => {
                           setIsPartnerDropdownOpen(false);
                         }}
                         className={`w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors cursor-pointer ${
-                          isSelected ? 'bg-red-50/80 dark:bg-red-950/40 text-red-900 dark:text-red-200 font-bold' : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
+                          isSelected
+                            ? 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-100 font-bold border border-emerald-500/40'
+                            : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -703,18 +705,18 @@ export const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="pt-2 flex items-center justify-between">
+        <div className="pt-2 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <span className={`text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 transition-opacity ${isSaved ? 'opacity-100' : 'opacity-0'}`}>
-            <Check className="w-4 h-4" />
+            <Check className="w-4 h-4 shrink-0" />
             <span>Trainer Card details updated successfully!</span>
           </span>
 
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 shadow-red-600/20"
+            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-red-600/20 shrink-0 whitespace-nowrap self-end sm:self-auto"
           >
-            <Save className="w-4 h-4" />
-            <span>Save Profile</span>
+            <Save className="w-4 h-4 shrink-0" />
+            <span className="whitespace-nowrap">Save Profile</span>
           </button>
         </div>
       </form>

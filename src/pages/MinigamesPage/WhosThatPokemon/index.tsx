@@ -263,7 +263,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
             <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
 
-          <h1 className="text-lg sm:text-2xl leading-tight font-black text-slate-900 dark:text-slate-100 font-display tracking-tight max-w-[92px] sm:max-w-none">
+          <h1 className="text-base sm:text-xl md:text-2xl leading-tight font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
             Who's That Pokémon?
           </h1>
         </div>
@@ -287,7 +287,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
       </div>
 
       {/* Main Full-Screen Canvas Area */}
-      <div className="flex-1 min-h-0 my-3 sm:my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-3 sm:p-8">
+      <div className="flex-1 min-h-0 my-3 sm:my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-4 sm:p-8 pb-5 sm:pb-8">
         {/* Subtle Grid Pattern Overlay */}
         <div
           className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
@@ -298,10 +298,10 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
         />
 
         {/* Decorative Scanner Corner Brackets */}
-        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-tl-sm pointer-events-none" />
-        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-tr-sm pointer-events-none" />
-        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-bl-sm pointer-events-none" />
-        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-br-sm pointer-events-none" />
+        <div className="absolute top-3.5 left-3.5 w-3.5 h-3.5 border-t-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-tl-sm pointer-events-none" />
+        <div className="absolute top-3.5 right-3.5 w-3.5 h-3.5 border-t-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-tr-sm pointer-events-none" />
+        <div className="absolute bottom-3.5 left-3.5 w-3.5 h-3.5 border-b-2 border-l-2 border-slate-300 dark:border-slate-700 rounded-bl-sm pointer-events-none" />
+        <div className="absolute bottom-3.5 right-3.5 w-3.5 h-3.5 border-b-2 border-r-2 border-slate-300 dark:border-slate-700 rounded-br-sm pointer-events-none" />
 
         {/* Registered Stamp (Positioned in top-right of canvas) */}
         <AnimatePresence>
@@ -310,7 +310,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
               initial={{ opacity: 0, scale: 0.8, y: -6 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute top-8 right-8 sm:top-10 sm:right-10 z-20 pointer-events-none select-none"
+              className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 pointer-events-none select-none"
             >
               <ChalkRegisteredStamp isNew={isNewlyUnlocked} />
             </motion.div>
@@ -318,7 +318,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
         </AnimatePresence>
 
         {(showGenerationHint || showTypeHint) && !isLoading && targetPokemon && (
-          <div className="relative z-10 flex flex-wrap items-center gap-1.5 pl-1">
+          <div className="relative z-10 flex flex-wrap items-center gap-1.5 pt-3 pl-5 sm:pt-1 sm:pl-3">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">Hints:</span>
             {showGenerationHint && <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">Gen {targetPokemon.generation}</span>}
             {showTypeHint && targetPokemon.types.map((type) => {
@@ -376,7 +376,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
         </div>
 
         {/* Floating Middle-Bottom Interactive Dock */}
-        <div className="relative z-10 w-full max-w-xl mx-auto flex flex-col items-center gap-2">
+        <div className="relative z-10 w-full max-w-sm sm:max-w-lg mx-auto flex flex-col items-center gap-2 mb-3 sm:mb-1 px-1 sm:px-0">
           <AnimatePresence mode="wait">
             {!isRevealed ? (
               <motion.div
@@ -451,14 +451,14 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                 </form>
 
                 {/* Error Banner & Tried Guesses */}
-                <div className="min-h-[20px] flex items-center justify-between px-2 text-xs">
+                <div className="min-h-[20px] flex items-center justify-between px-3 text-xs">
                   {hasError ? (
-                    <span className="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1">
-                      <XCircle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
+                    <span className="text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1 truncate">
+                      <XCircle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0" />
                       Not quite! Try another guess or skip.
                     </span>
                   ) : incorrectAttempts.length > 0 ? (
-                    <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-[11px]">
+                    <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-[11px] truncate">
                       <span>Tried:</span>
                       {incorrectAttempts.slice(0, 3).map((item, i) => (
                         <span key={i} className="line-through text-slate-500 dark:text-slate-400 font-medium">
@@ -467,7 +467,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                       ))}
                     </div>
                   ) : (
-                    <span className="text-slate-400 dark:text-slate-500 text-[11px]">
+                    <span className="text-slate-400 dark:text-slate-500 text-[11px] truncate">
                       Type the exact name and press Enter to guess.
                     </span>
                   )}
@@ -480,19 +480,19 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="w-full flex flex-wrap items-center justify-between gap-4 p-3.5 sm:p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-md"
+                className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 p-3 sm:p-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-md"
               >
                 {/* Pokémon Info: Dex #, Name, Types */}
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs font-bold text-purple-600 dark:text-purple-400">
+                <div className="flex items-center justify-center sm:justify-start gap-2.5 w-full sm:w-auto min-w-0">
+                  <span className="font-mono text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/50 px-2 py-0.5 rounded-md border border-purple-200/60 dark:border-purple-800/50 shrink-0">
                     #{String(targetPokemon?.id || 0).padStart(4, '0')}
                   </span>
-                  <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
+                  <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 font-display tracking-tight truncate">
                     {targetPokemon?.displayName}
                   </span>
 
                   {/* Types */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 shrink-0">
                     {targetPokemon?.types.map((t) => {
                       const theme = POKEMON_TYPE_THEMES[t];
                       return (
@@ -510,7 +510,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                 </div>
 
                 {/* Actions: View Dex + Next Pokémon */}
-                <div className="flex items-center gap-2 ml-auto">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={() => {
@@ -518,7 +518,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                         openDetailModal(targetPokemon, false);
                       }
                     }}
-                    className="px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
+                    className="flex-1 sm:flex-initial justify-center px-4 py-2.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95"
                   >
                     <BookOpen className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     <span>View Dex</span>
@@ -527,7 +527,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                   <button
                     type="button"
                     onClick={loadNextRound}
-                    className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-purple-600/20"
+                    className="flex-1 sm:flex-initial justify-center px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 shadow-sm shadow-purple-600/20"
                   >
                     <span>Next Pokémon</span>
                     <ArrowRight className="w-4 h-4" />

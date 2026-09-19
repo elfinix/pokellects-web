@@ -294,86 +294,84 @@ export const DeveloperSection: React.FC = () => {
               </div>
 
             {/* Top Red Trainer Card Ribbon with Rich Contrast */}
-            <div className="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 px-6 sm:px-8 py-3.5 flex items-center justify-between text-white shadow-xs">
-              <div className="flex items-center gap-2.5">
+            <div className="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 px-4 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between text-white shadow-xs">
+              <div className="flex items-center gap-2">
                 {/* Pokéball Silhouette */}
-                <div className="w-5 h-5 rounded-full border-2 border-white/90 flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-2 bg-white/40" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-white z-10" />
+                <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-white/90 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-1.5 sm:h-2 bg-white/40" />
+                  <div className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-white z-10" />
                 </div>
-                <span className="font-display font-extrabold tracking-wider text-sm sm:text-base">
+                <span className="font-display font-extrabold tracking-wider text-xs sm:text-sm">
                   TRAINER CARD
                 </span>
               </div>
 
               {/* High-Contrast ID & Star Badge */}
-              <div className="flex items-center gap-2.5 bg-black/25 backdrop-blur-xs px-3 py-1 rounded-lg border border-white/20 shadow-xs">
-                <span className="text-xs font-mono font-bold tracking-wider text-white">
+              <div className="flex items-center gap-2 bg-black/25 backdrop-blur-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-white/20 shadow-xs">
+                <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider text-white">
                   IDNo. 091326
                 </span>
-                <span className="text-amber-300 drop-shadow-xs font-bold text-xs tracking-tight">
+                <span className="text-amber-300 drop-shadow-xs font-bold text-[11px] sm:text-xs tracking-tight">
                   ★★★★★
                 </span>
               </div>
             </div>
 
             {/* Card Interior */}
-            <div className="p-6 sm:p-8 space-y-6">
+            <div className="p-4 sm:p-7 space-y-4 sm:space-y-5">
               {/* Top Identity Block: Avatar & Trainer Credentials */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5 sm:gap-5">
                 {/* Trainer Portrait Frame: Lucario Partner */}
                 <div className="relative shrink-0">
-                  <div className="w-24 h-28 sm:w-28 sm:h-32 rounded-2xl bg-gradient-to-b from-slate-100 to-slate-200/80 dark:from-slate-800 dark:to-slate-900 border-2 border-slate-300/80 dark:border-slate-700 p-1 shadow-inner flex flex-col items-center justify-between overflow-hidden relative">
-                    {/* Portrait Inner Canvas */}
-                    <div className="w-full h-full rounded-xl bg-gradient-to-b from-sky-50 to-blue-50/60 dark:from-sky-950/30 dark:to-blue-950/20 flex flex-col items-center justify-center relative">
+                  <div className="w-18 h-20 sm:w-24 sm:h-28 rounded-xl sm:rounded-2xl bg-gradient-to-b from-slate-100 to-slate-200/80 dark:from-slate-800 dark:to-slate-900 border-2 border-slate-300/80 dark:border-slate-700 p-1 shadow-inner flex flex-col items-center justify-between overflow-hidden relative">
+                    <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-b from-sky-50 to-blue-50/60 dark:from-sky-950/30 dark:to-blue-950/20 flex flex-col items-center justify-center relative">
                       <img
                         src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png"
                         alt="Partner Lucario"
-                        className="w-20 h-20 sm:w-22 sm:h-22 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                        className="w-14 h-14 sm:w-18 sm:h-18 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                       />
-                      <span className="absolute bottom-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-900/80 dark:bg-black/80 text-white leading-none">
+                      <span className="absolute bottom-0.5 px-1 py-0.5 rounded text-[8px] sm:text-[9px] font-mono font-bold bg-slate-900/80 dark:bg-black/80 text-white leading-none">
                         #448
                       </span>
                     </div>
                   </div>
 
                   {/* Trainer Level Chip */}
-                  <div className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-mono font-bold shadow-xs border border-white dark:border-slate-900">
+                  <div className="absolute -bottom-1.5 -right-1.5 px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[9px] sm:text-[10px] font-mono font-bold shadow-xs border border-white dark:border-slate-900">
                     Lv. 100
                   </div>
                 </div>
 
                 {/* Identity & Mission Details */}
-                <div className="space-y-3 text-center sm:text-left flex-1">
+                <div className="space-y-2 text-center sm:text-left flex-1 min-w-0">
                   <div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3">
-                      <h3 className="text-2xl font-black font-display text-slate-900 dark:text-white tracking-tight">
+                    <div className="flex flex-row items-center justify-center sm:justify-start gap-2">
+                      <h3 className="text-xl sm:text-2xl font-black font-display text-slate-900 dark:text-white tracking-tight">
                         Elfinix
                       </h3>
-                      <span className="self-center sm:self-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/60">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/60">
                         Pokellects Creator
                       </span>
                     </div>
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">
                       Software Engineer & Pokémon Archivist
                     </p>
                   </div>
 
                   {/* Trainer Philosophy Quote */}
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic bg-slate-50/80 dark:bg-slate-950/80 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800">
-                    "Traditional trivia wipes your score the minute you close the tab. Pokellects is
-                    built as a persistent, keyboard-first Pokédex companion that remembers every victory."
+                  <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic bg-slate-50/80 dark:bg-slate-950/80 p-2 sm:p-2.5 rounded-xl border border-slate-200/70 dark:border-slate-800">
+                    "A persistent, keyboard-first Pokédex companion that remembers every victory."
                   </p>
 
                   {/* Stats Row */}
-                  <div className="flex items-center justify-center sm:justify-start gap-4 text-xs text-slate-500 dark:text-slate-400 pt-1 font-mono">
+                  <div className="flex items-center justify-center sm:justify-start gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                     <div>
-                      <span className="text-slate-400 dark:text-slate-500">ROSTER: </span>
+                      <span className="text-slate-400">ROSTER: </span>
                       <span className="font-bold text-slate-800 dark:text-slate-200">1,025 Logged</span>
                     </div>
                     <span className="text-slate-300 dark:text-slate-700">•</span>
                     <div>
-                      <span className="text-slate-400 dark:text-slate-500">REGION: </span>
+                      <span className="text-slate-400">REGION: </span>
                       <span className="font-bold text-slate-800 dark:text-slate-200">National</span>
                     </div>
                   </div>
@@ -381,29 +379,29 @@ export const DeveloperSection: React.FC = () => {
               </div>
 
               {/* Badges Display Case Ribbon */}
-              <div className="space-y-2.5 pt-2">
-                <div className="flex items-center justify-between text-xs">
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between text-[11px] sm:text-xs">
                   <span className="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1.5">
-                    <span>HONORARY MASTERY BADGES</span>
+                    <span>Mastery Badges</span>
                     <span className="text-amber-500">🏆</span>
                   </span>
-                  <span className="text-slate-400 dark:text-slate-500 font-mono text-[11px]">8 / 8 Mastered</span>
+                  <span className="text-slate-400 dark:text-slate-500 font-mono text-[10px] sm:text-[11px]">8 / 8 Mastered</span>
                 </div>
 
                 {/* Inset Badge Tray */}
-                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-slate-100/90 to-slate-50/80 dark:from-slate-950/90 dark:to-slate-900/80 border-2 border-slate-200/90 dark:border-slate-800 shadow-inner">
-                  <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 sm:gap-2 items-center justify-items-center">
+                <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-b from-slate-100/90 to-slate-50/80 dark:from-slate-950/90 dark:to-slate-900/80 border border-slate-200/90 dark:border-slate-800 shadow-inner">
+                  <div className="grid grid-cols-8 gap-1 sm:gap-2 items-center justify-items-center">
                     {BADGES.map((badge) => (
                       <div
                         key={badge.id}
                         onMouseEnter={() => setHoveredBadge(badge)}
                         onMouseLeave={() => setHoveredBadge(null)}
-                        className="relative group/badge p-1.5 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer"
+                        className="relative group/badge p-1 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer"
                       >
                         <motion.div
-                          whileHover={{ scale: 1.25, y: -2 }}
+                          whileHover={{ scale: 1.2, y: -2 }}
                           transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-                          className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center"
+                          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center"
                         >
                           {badge.renderSvg()}
                         </motion.div>
@@ -413,28 +411,28 @@ export const DeveloperSection: React.FC = () => {
                 </div>
 
                 {/* Dynamic Badge Tooltip */}
-                <div className="h-6 flex items-center justify-center text-center">
+                <div className="h-4 sm:h-5 flex items-center justify-center text-center">
                   <AnimatePresence mode="wait">
                     {hoveredBadge ? (
                       <motion.div
                         key={hoveredBadge.id}
-                        initial={{ opacity: 0, y: 3 }}
+                        initial={{ opacity: 0, y: 2 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -3 }}
+                        exit={{ opacity: 0, y: -2 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center gap-2 text-xs font-mono"
+                        className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono"
                       >
-                        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: hoveredBadge.color }} />
-                        <span className="font-extrabold text-slate-900 dark:text-white font-display text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: hoveredBadge.color }} />
+                        <span className="font-extrabold text-slate-900 dark:text-white font-display">
                           "{hoveredBadge.creativeTitle}"
                         </span>
-                        <span className="text-slate-400 dark:text-slate-500 text-[11px]">
+                        <span className="text-slate-400 text-[10px] hidden sm:inline">
                           ({hoveredBadge.name} • {hoveredBadge.location})
                         </span>
                       </motion.div>
                     ) : (
-                      <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">
-                        Hover over any badge to inspect creative mastery titles
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono hidden sm:inline">
+                        Hover badges to view creative mastery titles
                       </span>
                     )}
                   </AnimatePresence>
@@ -442,13 +440,13 @@ export const DeveloperSection: React.FC = () => {
               </div>
 
               {/* Trainer Actions & Certified Status */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2.5 text-xs">
                 <div className="flex items-center gap-2">
                   <a
                     href="https://github.com/elfinix"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700 font-semibold transition-all shadow-2xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700 font-semibold text-xs transition-all shadow-2xs cursor-pointer"
                   >
                     <GithubIcon className="w-3.5 h-3.5" />
                     <span>GitHub</span>
@@ -457,7 +455,7 @@ export const DeveloperSection: React.FC = () => {
 
                   <a
                     href={`mailto:${contactEmail}`}
-                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold transition-all shadow-2xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold text-xs transition-all shadow-2xs cursor-pointer"
                   >
                     <Mail className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     <span>Contact Me</span>
@@ -465,9 +463,9 @@ export const DeveloperSection: React.FC = () => {
                 </div>
 
                 {/* Prestige Certification Tag */}
-                <div className="text-[11px] font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/60 px-3 py-1 rounded-full flex items-center gap-1.5 font-semibold">
+                <div className="text-[10px] sm:text-[11px] font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800/60 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-semibold">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Pokémon League Certified</span>
+                  <span>League Certified</span>
                 </div>
               </div>
             </div>
