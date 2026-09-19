@@ -34,7 +34,6 @@ export const SettingsPage: React.FC = () => {
 
   // 4. Reduced Motion Draft
   const [reducedMotion, setReducedMotion] = useState(false);
-
   const [savedToast, setSavedToast] = useState(false);
 
   useEffect(() => {
@@ -60,10 +59,9 @@ export const SettingsPage: React.FC = () => {
     });
 
     setTheme(appearance);
-
-    // Show save indicator
     setSavedToast(true);
-    setTimeout(() => setSavedToast(false), 2500);
+    window.setTimeout(() => setSavedToast(false), 2500);
+
   };
 
   return (
@@ -80,14 +78,6 @@ export const SettingsPage: React.FC = () => {
           Configure display preferences, appearance mode, and game behaviors.
         </p>
       </div>
-
-      {/* Save Notification Toast */}
-      {savedToast && (
-        <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-semibold flex items-center gap-2 transition-all">
-          <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>Display configurations saved and applied to your environment!</span>
-        </div>
-      )}
 
       {/* 1. DISPLAY CONFIGURATIONS */}
       <form
@@ -159,11 +149,10 @@ export const SettingsPage: React.FC = () => {
               type="button"
               onClick={() => {
                 setAppearance('light');
-                setTheme('light');
               }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 appearance === 'light'
-                  ? 'bg-amber-500 text-white shadow-xs'
+                  ? 'bg-amber-500 dark:bg-amber-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
@@ -174,7 +163,6 @@ export const SettingsPage: React.FC = () => {
               type="button"
               onClick={() => {
                 setAppearance('dark');
-                setTheme('dark');
               }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 appearance === 'dark'
@@ -246,7 +234,6 @@ export const SettingsPage: React.FC = () => {
             <Check className="w-4 h-4" />
             <span>Preferences saved successfully!</span>
           </span>
-
           <button
             type="submit"
             className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 ml-auto"

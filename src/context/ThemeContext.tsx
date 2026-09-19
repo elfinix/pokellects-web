@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import storageService from '../services/storageService';
-import { useDatabaseVersion } from '../hooks/useDatabaseVersion';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -13,27 +11,27 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const THEME_STORAGE_KEY = 'pokellects-theme';
+
+const readSavedTheme = (): ThemeMode | null => {
+  if (typeof window === 'undefined') return null;
+  const saved = window.localStorage.getItem(THEME_STORAGE_KEY);
+  return saved === 'dark' || saved === 'light' ? saved : null;
+};
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser } = useAuth();
-  const databaseVersion = useDatabaseVersion();
-  const [theme, setThemeState] = useState<ThemeMode>('light');
+  const [theme, setThemeState] = useState<ThemeMode>(() => readSavedTheme() ?? 'light');
 
   useEffect(() => {
     if (!currentUser) return;
-    const selectedTheme = currentUser.role === 'admin'
-      ? storageService.getAdminDisplayConfig().theme
-      : storageService.getUserSettings(currentUser.id).theme;
-    setThemeState(selectedTheme);
-  }, [currentUser?.id, currentUser?.role, databaseVersion]);
+    const savedTheme = readSavedTheme();
+    if (savedTheme) setThemeState(savedTheme);
+  }, [currentUser?.id]);
 
   const setTheme = (newTheme: ThemeMode) => {
     setThemeState(newTheme);
-    if (currentUser?.role === 'admin') {
-      storageService.updateAdminDisplayConfig({ theme: newTheme });
-    } else if (currentUser) {
-      storageService.updateUserSettings(currentUser.id, { theme: newTheme });
-    }
+    window.localStorage.setItem(THEME_STORAGE_KEY, newTheme);
   };
 
   const toggleTheme = () => {
