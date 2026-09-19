@@ -165,7 +165,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
       <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full items-stretch">
           {/* Left Panel: Clean Silhouette Showcase (No top accent bar so Right Panel is highlighted) */}
-          <div className="md:col-span-6 flex flex-col justify-between text-center p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 relative overflow-hidden h-full">
+          <div className="md:col-span-6 flex flex-col justify-between text-center p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full">
             {/* Top Badge: "Gotta Name em All" */}
             <div className="relative z-10 flex items-center justify-center pt-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200/80 dark:border-red-800/60 shadow-2xs">
@@ -261,7 +261,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
           </div>
 
           {/* Right Panel: Clean Authentication Form (Highlighted with Top Accent Gradient Bar) */}
-          <div className="md:col-span-6 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 relative overflow-hidden h-full space-y-5">
+          <div className="md:col-span-6 flex flex-col justify-between p-6 sm:p-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full space-y-5">
             {/* Top Accent Gradient Line highlighting the Right Panel */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-red-500 to-rose-400" />
 

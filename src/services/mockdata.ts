@@ -85,6 +85,7 @@ export const DEFAULT_GAME_CONFIG: GameConfiguration = {
     showTypeHint: true,
     showGenerationHint: true,
     maxAttempts: 3,
+    imageSize: 'normal',
   },
   hangmon: {
     maxStrikes: 6,
@@ -95,10 +96,15 @@ export const DEFAULT_GAME_CONFIG: GameConfiguration = {
     replayCryLimit: 3,
     timerSeconds: 20,
     multipleChoiceOptions: 4,
+    showHints: true,
+  },
+  biologist: {
+    showHints: true,
   },
   general: {
     allowAnyGeneration: true,
     enabledGenerations: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    pokemonFetch: 'undiscovered',
   },
 };
 
@@ -179,8 +185,8 @@ export const MOCK_ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'ach-arena-champion',
-    title: 'Arena Contender',
-    description: 'Successfully complete 5 minigames in the Arena.',
+    title: 'Minigame Contender',
+    description: 'Successfully complete 5 minigames.',
     category: 'arena',
     icon: 'Swords',
     targetCount: 5,

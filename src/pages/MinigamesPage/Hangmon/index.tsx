@@ -24,7 +24,7 @@ import {
   getAllKnownPokemon,
   getPokemonById,
   getPokemonByIdAsync,
-  getRandomUndiscoveredPokemon,
+  getRandomPokemonForGame,
   normalizePokemonQuery,
 } from '../../../services/pokemonIndex';
 import ChalkRegisteredStamp from '../../../components/common/ChalkRegisteredStamp';
@@ -35,7 +35,6 @@ interface HangmonProps {
   onBack: () => void;
 }
 
-const MAX_STRIKES = 6;
 const KEYBOARD_ROWS = [
   ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
   ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
@@ -70,6 +69,9 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
   const roundCounterRef = useRef(0);
 
   const allPokemon = useMemo(() => getAllKnownPokemon(), []);
+  const gameConfig = storageService.getGameConfig();
+  const maxStrikes = gameConfig.hangmon.maxStrikes ?? 6;
+  const showHints = gameConfig.hangmon.showCategoryHint ?? true;
 
   // Canonical letters to guess
   const targetLetters = useMemo(() => {
@@ -96,7 +98,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
     return count;
   }, [guessedLetters, requiredLettersSet]);
 
-  const strikesRemaining = MAX_STRIKES - wrongGuesses;
+  const strikesRemaining = maxStrikes - wrongGuesses;
 
   // Artwork image URL
   const artworkUrl = targetPokemon
@@ -120,7 +122,8 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
     const playerId = currentUser?.id || 'usr-player-1';
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
-    let picked: Pokemon | null = getRandomUndiscoveredPokemon(combinedUnlocked);
+    const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
 
     // Fallback only if player has unlocked all 1,025 Pokémon
     if (!picked) {
@@ -218,7 +221,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
           if (!requiredLettersSet.has(l)) wrongCount++;
         });
 
-        if (wrongCount >= MAX_STRIKES) {
+        if (wrongCount >= maxStrikes) {
           // Out of strikes - Loss
           setIsRevealed(true);
           setIsWon(false);
@@ -246,6 +249,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
       isPokemonUnlocked,
       registerById,
       currentUser,
+      maxStrikes,
     ]
   );
 
@@ -356,7 +360,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
               Chances:
             </span>
             <div className="flex items-center gap-1.5">
-              {Array.from({ length: MAX_STRIKES }).map((_, idx) => {
+              {Array.from({ length: maxStrikes }).map((_, idx) => {
                 const isLost = idx >= strikesRemaining;
                 return (
                   <div
@@ -378,7 +382,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
             </div>
           </div>
 
-          {isLoading || !targetPokemon ? (
+          {showHints && (isLoading || !targetPokemon ? (
             <div className="flex items-center gap-2">
               <div className="w-14 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700" />
               <div className="w-32 h-6 rounded-lg bg-slate-200/70 dark:bg-slate-800/70 animate-pulse border border-slate-200/80 dark:border-slate-700" />
@@ -392,7 +396,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
                 {requiredLettersSet.size} Unique Letters
               </span>
             </div>
-          )}
+          ))}
         </div>
 
         {/* Central Display: Concealed Letter Tiles OR Revealed Pokémon (Only if won!) */}

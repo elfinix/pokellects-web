@@ -112,7 +112,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           type="submit"
           disabled={isSubmitting}
           whileTap={{ scale: 0.985 }}
-          className="w-full mt-1.5 py-3 px-4 rounded-2xl bg-gradient-to-r from-red-600 via-rose-500 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-sm shadow-md shadow-rose-500/20 hover:shadow-lg hover:shadow-rose-500/25 transition-all flex items-center justify-center gap-2 group cursor-pointer relative overflow-hidden disabled:opacity-70"
+          className="w-full mt-1.5 py-3 px-4 rounded-2xl bg-gradient-to-r from-red-600 via-rose-500 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 group cursor-pointer relative overflow-hidden disabled:opacity-70"
         >
           {/* Subtle button sheen swipe on hover */}
           <div className="absolute inset-0 w-1/2 h-full bg-white/15 skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-700 ease-out pointer-events-none" />

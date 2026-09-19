@@ -13,6 +13,23 @@ import storageService from '../../services/storageService';
 import { GameConfiguration, FeatureFlags } from '../../types/game';
 import { REGION_METADATA } from '../../services/pokemonIndex';
 
+const ToggleRow = ({ label, description, enabled, onToggle }: {
+  label: string;
+  description: string;
+  enabled: boolean;
+  onToggle: () => void;
+}) => (
+  <div className="flex items-center justify-between gap-3 py-2.5 border-t border-slate-200/70 dark:border-slate-800 first:border-t-0 first:pt-0">
+    <div>
+      <p className="text-xs font-bold text-slate-800 dark:text-slate-200">{label}</p>
+      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{description}</p>
+    </div>
+    <button type="button" onClick={onToggle} aria-pressed={enabled} className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer shrink-0 ${enabled ? 'bg-purple-600' : 'bg-slate-300 dark:bg-slate-700'}`}>
+      <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${enabled ? 'translate-x-5' : ''}`} />
+    </button>
+  </div>
+);
+
 export const AdminConfigPage: React.FC = () => {
   const [config, setConfig] = useState<GameConfiguration>(() => storageService.getGameConfig());
   const [flags, setFlags] = useState<FeatureFlags>(() => storageService.getFeatureFlags());
@@ -60,10 +77,10 @@ export const AdminConfigPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
-            Game Configurations & Feature Flags
+            Minigames Configuration
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-            Tune minigame parameters, strike limits, timers, generation filters, and runtime system feature toggles.
+            Configure each game’s difficulty cues, visual presentation, and Pokémon selection pool.
           </p>
         </div>
 
@@ -193,14 +210,14 @@ export const AdminConfigPage: React.FC = () => {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
             <Sliders className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <h2 className="text-base font-bold">Minigame Rules & Constraints</h2>
+            <h2 className="text-base font-bold">Minigames Configuration</h2>
           </div>
           <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium leading-relaxed text-right max-w-xs">
-            Rules below reflect current implemented game mechanics.
+            Changes are applied to new rounds after you save.
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
           {/* Who's That Pokémon */}
           <div className="p-4 rounded-2xl border border-purple-200/70 dark:border-purple-900/50 bg-purple-50/50 dark:bg-purple-950/20 space-y-3">
             <div className="flex items-center gap-2">
@@ -209,20 +226,20 @@ export const AdminConfigPage: React.FC = () => {
               </div>
               <span className="text-xs font-bold text-slate-900 dark:text-slate-100">Who's That Pokémon?</span>
             </div>
-            <div className="space-y-1.5">
-              {[
-                { label: 'Mode', value: 'Free-text guess input' },
-                { label: 'Attempts', value: 'Unlimited — skip anytime' },
-                { label: 'Timer', value: 'None — self-paced' },
-                { label: 'Hints', value: 'None' },
-                { label: 'Win', value: 'Type exact Pokémon name' },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between gap-2 text-[11px]">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">{row.label}</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">{row.value}</span>
-                </div>
-              ))}
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Image size</label>
+              <div className="grid grid-cols-2 gap-2">
+                {(['normal', 'smaller'] as const).map((size) => (
+                  <button key={size} type="button" onClick={() => setConfig({ ...config, whosThatPokemon: { ...config.whosThatPokemon, imageSize: size } })} className={`h-11 px-3 rounded-xl border text-xs font-bold capitalize cursor-pointer transition-colors ${((config.whosThatPokemon.imageSize ?? 'normal') === size) ? 'bg-purple-600 border-purple-600 text-white' : 'bg-white/70 dark:bg-slate-900/50 border-purple-200 dark:border-purple-800 text-slate-600 dark:text-slate-300'}`}>
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
+            <ToggleRow label="Hints" description="Show generation and type cues beside the silhouette." enabled={(config.whosThatPokemon.showTypeHint ?? true) || (config.whosThatPokemon.showGenerationHint ?? true)} onToggle={() => {
+              const enabled = !((config.whosThatPokemon.showTypeHint ?? true) || (config.whosThatPokemon.showGenerationHint ?? true));
+              setConfig({ ...config, whosThatPokemon: { ...config.whosThatPokemon, showTypeHint: enabled, showGenerationHint: enabled } });
+            }} />
           </div>
 
           {/* Hangmon */}
@@ -233,20 +250,11 @@ export const AdminConfigPage: React.FC = () => {
               </div>
               <span className="text-xs font-bold text-slate-900 dark:text-slate-100">Hangmon</span>
             </div>
-            <div className="space-y-1.5">
-              {[
-                { label: 'Mode', value: 'Letter-by-letter keyboard' },
-                { label: 'Max Strikes', value: '6 chances' },
-                { label: 'Timer', value: 'None — self-paced' },
-                { label: 'Hints', value: 'Gen badge · Unique letter count' },
-                { label: 'Loss', value: 'Identity stays concealed' },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between gap-2 text-[11px]">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">{row.label}</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">{row.value}</span>
-                </div>
-              ))}
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Max strikes</label>
+              <input type="number" min="1" max="12" value={config.hangmon.maxStrikes ?? 6} onChange={(event) => setConfig({ ...config, hangmon: { ...config.hangmon, maxStrikes: Math.min(12, Math.max(1, Number(event.target.value) || 1)) } })} className="w-full h-11 px-3 rounded-xl bg-white/70 dark:bg-slate-900/50 border border-blue-200 dark:border-blue-800 text-sm font-bold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20" />
             </div>
+            <ToggleRow label="Hints" description="Show generation and unique-letter cues." enabled={config.hangmon.showCategoryHint ?? true} onToggle={() => setConfig({ ...config, hangmon: { ...config.hangmon, showCategoryHint: !(config.hangmon.showCategoryHint ?? true) } })} />
           </div>
 
           {/* Identicry */}
@@ -257,21 +265,8 @@ export const AdminConfigPage: React.FC = () => {
               </div>
               <span className="text-xs font-bold text-slate-900 dark:text-slate-100">Identicry</span>
             </div>
-            <div className="space-y-1.5">
-              {[
-                { label: 'Mode', value: 'Free-text guess input' },
-                { label: 'Audio', value: 'Auto-plays on load' },
-                { label: 'Replay', value: 'Unlimited (press R)' },
-                { label: 'Timer', value: 'None — self-paced' },
-                { label: 'Win', value: 'Type exact Pokémon name' },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between gap-2 text-[11px]">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">{row.label}</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">{row.value}</span>
-                </div>
-              ))}
+            <ToggleRow label="Hints" description="Show first letter, length, generation, and types." enabled={config.identicry.showHints ?? true} onToggle={() => setConfig({ ...config, identicry: { ...config.identicry, showHints: !(config.identicry.showHints ?? true) } })} />
             </div>
-          </div>
 
           {/* Biolo-gist */}
           <div className="p-4 rounded-2xl border border-teal-200/70 dark:border-teal-900/50 bg-teal-50/50 dark:bg-teal-950/20 space-y-3">
@@ -281,20 +276,22 @@ export const AdminConfigPage: React.FC = () => {
               </div>
               <span className="text-xs font-bold text-slate-900 dark:text-slate-100">Biolo-gist</span>
             </div>
-            <div className="space-y-1.5">
-              {[
-                { label: 'Mode', value: 'Free-text guess input' },
-                { label: 'Clue', value: 'Redacted biology excerpt' },
-                { label: 'Source', value: 'Bulbapedia live fetch' },
-                { label: 'Timer', value: 'None — self-paced' },
-                { label: 'Attempts', value: 'Unlimited — skip anytime' },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between gap-2 text-[11px]">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">{row.label}</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">{row.value}</span>
-                </div>
-              ))}
-            </div>
+            <ToggleRow label="Hints" description="Show generation and type cues with the excerpt." enabled={config.biologist?.showHints ?? true} onToggle={() => setConfig({ ...config, biologist: { ...(config.biologist ?? { showHints: true }), showHints: !(config.biologist?.showHints ?? true) } })} />
+          </div>
+        </div>
+
+        <div className="pt-2 border-t border-slate-200/80 dark:border-slate-800">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Global Pokémon fetch</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {([
+              ['undiscovered', 'Undiscovered only', 'Prioritize species missing from each trainer’s Pokédex.'],
+              ['all', 'All Pokémon', 'Allow every species in the configured generation pool.'],
+            ] as const).map(([value, label, description]) => (
+              <button key={value} type="button" onClick={() => setConfig({ ...config, general: { ...config.general, pokemonFetch: value } })} className={`p-3 rounded-xl text-left border transition-colors cursor-pointer ${((config.general.pokemonFetch ?? 'undiscovered') === value) ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-800' : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800'}`}>
+                <span className="block text-xs font-bold text-slate-900 dark:text-slate-100">{label}</span>
+                <span className="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{description}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

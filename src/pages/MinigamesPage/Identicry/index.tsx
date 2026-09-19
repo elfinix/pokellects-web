@@ -25,7 +25,7 @@ import {
   getAllKnownPokemon,
   getPokemonById,
   getPokemonByIdAsync,
-  getRandomUndiscoveredPokemon,
+  getRandomPokemonForGame,
   normalizePokemonQuery,
 } from '../../../services/pokemonIndex';
 import ChalkRegisteredStamp from '../../../components/common/ChalkRegisteredStamp';
@@ -73,6 +73,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const roundCounterRef = useRef(0);
   const allPokemon = useMemo(() => getAllKnownPokemon(), []);
+  const showHints = storageService.getGameConfig().identicry.showHints ?? true;
 
   // Artwork image URL
   const artworkUrl = targetPokemon
@@ -120,7 +121,8 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
     const playerId = currentUser?.id || 'usr-player-1';
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
-    let picked: Pokemon | null = getRandomUndiscoveredPokemon(combinedUnlocked);
+    const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
 
     // Fallback only if player has unlocked all 1,025 Pokémon
     if (!picked) {
@@ -355,7 +357,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
         </AnimatePresence>
 
         {/* Top Stage Bar: Deduction Hints */}
-        <div className="relative z-10 flex flex-col items-start gap-2 pl-4 sm:pl-6">
+        {showHints && <div className="relative z-10 flex flex-col items-start gap-2 pl-4 sm:pl-6">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Hints:
           </span>
@@ -402,7 +404,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
               </div>
             </div>
           )}
-        </div>
+        </div>}
 
         {/* Central Display: Sound Visualizer / Replay Cry OR Revealed Pokémon */}
         <div className="flex-1 flex items-center justify-center relative w-full h-full min-h-[220px]">

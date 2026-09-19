@@ -1,26 +1,18 @@
 import React, { useMemo } from 'react';
 import {
-  Shield,
   Users,
   BookOpen,
   Gamepad2,
   HardDrive,
   ArrowUpRight,
-  Sparkles,
-  Trophy,
-  CheckCircle2,
-  XCircle,
-  Clock,
   Sliders,
   BarChart3,
-  ExternalLink,
-  Flame,
-  Activity,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import storageService from '../../services/storageService';
-import { ALL_KNOWN_POKEMON_MAP } from '../../services/pokemonIndex';
+import { REGION_METADATA } from '../../services/pokemonIndex';
 import { WorkspaceTab } from '../../components/common/AppShell';
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface AdminDashboardPageProps {
   onNavigate?: (tab: WorkspaceTab) => void;
@@ -67,53 +59,15 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
     });
   }, [allSessions, flags]);
 
-  // Recent activity stream (combined dex entries and arena sessions)
-  const recentActivities = useMemo(() => {
-    const items: Array<{
-      id: string;
-      type: 'dex_entry' | 'arena_session';
-      timestamp: string;
-      title: string;
-      subtitle: string;
-      isPositive: boolean;
-      user: string;
-    }> = [];
-
-    // Map dex unlocks
-    allDexEntries.slice(0, 8).forEach((e, idx) => {
-      const p = ALL_KNOWN_POKEMON_MAP[e.pokemonId];
-      const u = availableUsers.find((user) => user.id === e.userId);
-      items.push({
-        id: `dex-${idx}-${e.pokemonId}`,
-        type: 'dex_entry',
-        timestamp: e.unlockedAt,
-        title: `Unlocked #${String(e.pokemonId).padStart(4, '0')} ${p?.displayName || 'Unknown'}`,
-        subtitle: `Discovery via ${e.discoveryMethod.replace(/_/g, ' ')}`,
-        isPositive: true,
-        user: u?.firstName ? `${u.firstName} ${u.lastName || ''}`.trim() : 'Trainer',
-      });
-    });
-
-    // Map recent minigame sessions
-    allSessions.slice(0, 8).forEach((s) => {
-      const p = ALL_KNOWN_POKEMON_MAP[s.pokemonId];
-      const u = availableUsers.find((user) => user.id === s.userId);
-      items.push({
-        id: s.id,
-        type: 'arena_session',
-        timestamp: s.playedAt,
-        title: `${s.isWon ? 'Won' : 'Attempted'} ${s.gameType.replace(/_/g, ' ')}`,
-        subtitle: p ? `Target: ${p.displayName}` : 'Minigame challenge',
-        isPositive: s.isWon,
-        user: u?.firstName ? `${u.firstName} ${u.lastName || ''}`.trim() : 'Trainer',
-      });
-    });
-
-    // Sort by timestamp desc
-    return items
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 6);
-  }, [allDexEntries, allSessions, availableUsers]);
+  const regionalCompletion = useMemo(() => REGION_METADATA.map((region) => {
+    const total = region.endId - region.startId + 1;
+    const uniqueCollected = new Set(allDexEntries
+      .filter((entry) => entry.pokemonId >= region.startId && entry.pokemonId <= region.endId)
+      .map((entry) => entry.pokemonId));
+    const collected = uniqueCollected.size;
+    return { ...region, total, collected, percent: Math.round((collected / total) * 100) };
+  }), [allDexEntries]);
+  const regionalChartMax = Math.max(10, Math.ceil(Math.max(...regionalCompletion.map((region) => region.percent)) / 5) * 5);
 
   return (
     <div className="space-y-7 sm:space-y-8 pb-16 w-full">
@@ -293,109 +247,56 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
         </button>
       </div>
 
-      {/* 2-Column Section: Minigames Matrix + Live Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Minigames Status & Win Rate Matrix (2 cols) */}
-        <div className="lg:col-span-2 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
+      {/* Aggregate regional completion + Minigame health */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Aggregate regional completion */}
+        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4 flex flex-col">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                Regional Completion
+              </h2>
+            </div>
+            <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
+              unique species across all trainers
+            </span>
+          </div>
+
+          <div className="flex-1 min-h-72 pt-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={regionalCompletion} margin={{ top: 8, right: 4, left: -22, bottom: 0 }} barCategoryGap="22%">
+                <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fill: '#64748b', fontSize: 11, fontWeight: 600 }} />
+                <YAxis domain={[0, regionalChartMax]} tickFormatter={(value) => `${value}%`} tickLine={false} axisLine={false} tickCount={5} tick={{ fill: '#94a3b8', fontSize: 10 }} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.06)' }} contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} formatter={(value, _name, item) => [`${value}% (${item.payload.collected}/${item.payload.total})`, 'Completion']} />
+                <Bar dataKey="percent" radius={[6, 6, 0, 0]} maxBarSize={34}>
+                  {regionalCompletion.map((region) => <Cell key={region.generation} fill="#6366f1" />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Minigame health */}
+        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Gamepad2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-                Minigame Arena Health
-              </h2>
-            </div>
-            <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">
-              {allSessions.length} total sessions
-            </span>
-          </div>
-
-          <div className="space-y-3 pt-1">
-            {gameStats.map((game) => (
-              <div
-                key={game.id}
-                className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                      {game.name}
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                        game.enabled
-                          ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
-                      }`}
-                    >
-                      {game.enabled ? 'Active' : 'Disabled'}
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    {game.totalPlayed} played · {game.wins} won
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  {/* Mini Progress Bar */}
-                  <div className="w-28 sm:w-36 space-y-1">
-                    <div className="flex justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                      <span>Win Rate</span>
-                      <span className="font-bold text-slate-700 dark:text-slate-200">{game.winRate}%</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-purple-600 dark:bg-purple-400 transition-all duration-500"
-                        style={{ width: `${game.winRate}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Live Activity Stream (1 col) */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-                Recent Events
+                Minigames Health
               </h2>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-              Live
+              {allSessions.length} sessions
             </span>
           </div>
 
           <div className="space-y-3 pt-1">
-            {recentActivities.length === 0 ? (
-              <p className="text-xs text-slate-400 dark:text-slate-500 py-6 text-center">
-                No recent activity logged yet.
-              </p>
-            ) : (
-              recentActivities.map((act) => (
-                <div
-                  key={act.id}
-                  className="p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 space-y-1"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                      {act.title}
-                    </span>
-                    {act.isPositive ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                    ) : (
-                      <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                    <span>{act.user} · {act.subtitle}</span>
-                  </div>
-                </div>
-              ))
-            )}
+            {gameStats.map((game) => <div key={game.id} className="p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 space-y-2">
+              <div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{game.name}</span><span className={`text-[10px] font-bold ${game.enabled ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>{game.enabled ? 'Active' : 'Off'}</span></div>
+              <div className="flex justify-between text-[10px] text-slate-500 dark:text-slate-400"><span>{game.wins}/{game.totalPlayed} wins</span><span className="font-bold">{game.winRate}%</span></div>
+              <div className="h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><div className="h-full rounded-full bg-purple-600" style={{ width: `${game.winRate}%` }} /></div>
+            </div>)}
           </div>
         </div>
       </div>

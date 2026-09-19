@@ -16,6 +16,7 @@ export interface GameConfiguration {
     showTypeHint: boolean;
     showGenerationHint: boolean;
     maxAttempts: number;
+    imageSize: 'normal' | 'smaller';
   };
   hangmon: {
     maxStrikes: number;
@@ -26,10 +27,15 @@ export interface GameConfiguration {
     replayCryLimit: number;
     timerSeconds: number;
     multipleChoiceOptions: number; // 4 options
+    showHints: boolean;
+  };
+  biologist: {
+    showHints: boolean;
   };
   general: {
     allowAnyGeneration: boolean;
     enabledGenerations: number[]; // e.g. [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    pokemonFetch: 'undiscovered' | 'all';
   };
 }
 

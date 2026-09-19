@@ -27,7 +27,7 @@ import {
   getAllKnownPokemon,
   getPokemonById,
   getPokemonByIdAsync,
-  getRandomUndiscoveredPokemon,
+  getRandomPokemonForGame,
   normalizePokemonQuery,
 } from '../../../services/pokemonIndex';
 import { fetchBiologyExcerpt } from '../../../services/biologistService';
@@ -198,6 +198,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
 
   const roundCounterRef = useRef(0);
   const allPokemon = useMemo(() => getAllKnownPokemon(), []);
+  const showHints = storageService.getGameConfig().biologist?.showHints ?? true;
 
   // Refs for dynamic font-size fitting
   const bioTextWrapperRef = useRef<HTMLDivElement>(null);
@@ -226,7 +227,8 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
     const playerId = currentUser?.id || 'usr-player-1';
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
-    let picked: Pokemon | null = getRandomUndiscoveredPokemon(combinedUnlocked);
+    const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
 
     if (!picked) {
       const total = allPokemon.length > 0 ? allPokemon.length : 1025;
@@ -571,7 +573,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
               </div>
 
               {/* Hints Row (Gen, Types) — shown while guessing */}
-              {!isRevealed && targetPokemon && (
+              {showHints && !isRevealed && targetPokemon && (
                 <div className="relative z-10 flex flex-wrap items-center gap-1.5 pl-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">
                     Hints:

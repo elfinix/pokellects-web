@@ -311,7 +311,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
           )}
         </LiquidMetricCard>
 
-        {/* Metric 3: Arena Battles Won */}
+        {/* Metric 3: Minigames Won */}
         <LiquidMetricCard
           liquidGradient="from-amber-500 via-amber-600 to-orange-600"
           crestColor="text-amber-500"

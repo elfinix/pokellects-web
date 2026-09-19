@@ -173,6 +173,16 @@ export function getRandomUndiscoveredPokemon(unlockedIds: number[]): Pokemon | n
   return dynamicRegistry.get(pickedId) || createPokemonStub(pickedId);
 }
 
+/** Selects from either a trainer's undiscovered roster or the complete Pokédex. */
+export function getRandomPokemonForGame(
+  unlockedIds: number[],
+  fetchMode: 'undiscovered' | 'all' = 'undiscovered'
+): Pokemon | null {
+  if (fetchMode === 'undiscovered') return getRandomUndiscoveredPokemon(unlockedIds);
+  const id = Math.floor(Math.random() * 1025) + 1;
+  return dynamicRegistry.get(id) || createPokemonStub(id);
+}
+
 /**
  * Helper to fetch a Pokémon by exact ID from the local registry.
  */
@@ -216,6 +226,7 @@ export const pokemonIndexService = {
   resolvePokemonByQuery,
   resolvePokemonByQueryAsync,
   getRandomUndiscoveredPokemon,
+  getRandomPokemonForGame,
   getPokemonById,
   getPokemonByIdAsync,
   getAllKnownPokemon,

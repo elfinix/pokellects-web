@@ -26,7 +26,7 @@ import {
   getAllKnownPokemon,
   getPokemonById,
   getPokemonByIdAsync,
-  getRandomUndiscoveredPokemon,
+  getRandomPokemonForGame,
   normalizePokemonQuery,
 } from '../../../services/pokemonIndex';
 import ChalkRegisteredStamp from '../../../components/common/ChalkRegisteredStamp';
@@ -69,6 +69,9 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const allPokemon = useMemo(() => getAllKnownPokemon(), []);
+  const gameConfig = storageService.getGameConfig().whosThatPokemon;
+  const showGenerationHint = gameConfig.showGenerationHint ?? true;
+  const showTypeHint = gameConfig.showTypeHint ?? true;
 
   // Artwork image URL
   const artworkUrl = targetPokemon
@@ -93,7 +96,8 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
     const playerId = currentUser?.id || 'usr-player-1';
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
-    let picked: Pokemon | null = getRandomUndiscoveredPokemon(combinedUnlocked);
+    const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
 
     // Fallback only if player has unlocked all 1,025 Pokémon
     if (!picked) {
@@ -313,6 +317,17 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
           )}
         </AnimatePresence>
 
+        {(showGenerationHint || showTypeHint) && !isLoading && targetPokemon && (
+          <div className="relative z-10 flex flex-wrap items-center gap-1.5 pl-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">Hints:</span>
+            {showGenerationHint && <span className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">Gen {targetPokemon.generation}</span>}
+            {showTypeHint && targetPokemon.types.map((type) => {
+              const theme = POKEMON_TYPE_THEMES[type];
+              return <span key={type} className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${theme ? theme.border : 'border-slate-200 dark:border-slate-700'} ${theme ? theme.badgeBg : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>{theme ? theme.name : type}</span>;
+            })}
+          </div>
+        )}
+
         {/* Central Pokémon Display (Cleanly loaded with zero flicker) */}
         <div className="flex-1 flex items-center justify-center relative w-full h-full min-h-[260px]">
           {isLoading || !targetPokemon || !imageLoaded ? (
@@ -328,7 +343,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
                 draggable={false}
                 onDragStart={(e) => e.preventDefault()}
                 onContextMenu={(e) => e.preventDefault()}
-                className={`max-h-[200px] sm:max-h-[240px] md:max-h-[270px] w-auto object-contain transition-all duration-500 select-none pointer-events-none ${
+                className={`${(storageService.getGameConfig().whosThatPokemon.imageSize ?? 'normal') === 'smaller' ? 'max-h-[150px] sm:max-h-[180px] md:max-h-[205px]' : 'max-h-[200px] sm:max-h-[240px] md:max-h-[270px]'} w-auto object-contain transition-all duration-500 select-none pointer-events-none ${
                   isRevealed
                     ? 'filter-none scale-100'
                     : 'brightness-0 opacity-85 scale-95 dark:invert dark:opacity-75'

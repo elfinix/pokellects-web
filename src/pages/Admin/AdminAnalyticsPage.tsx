@@ -49,23 +49,23 @@ export const AdminAnalyticsPage: React.FC = () => {
   // 2. Discovery Methods Distribution
   const discoveryBreakdown = useMemo(() => {
     const counts: Record<string, number> = {
-      starter_grant: 0,
       whos_that_pokemon: 0,
       hangmon: 0,
       identicry: 0,
+      biologist: 0,
       manual_dex_input: 0,
     };
 
     allDexEntries.forEach((e) => {
-      const method = e.discoveryMethod || 'manual_dex_input';
+      const method = e.discoveryMethod === 'starter_grant' ? 'manual_dex_input' : (e.discoveryMethod || 'manual_dex_input');
       counts[method] = (counts[method] || 0) + 1;
     });
 
     const labels: Record<string, { label: string; color: string }> = {
-      starter_grant: { label: 'Starter Grant', color: 'bg-emerald-500' },
       whos_that_pokemon: { label: "Who's That Pokémon", color: 'bg-purple-500' },
       hangmon: { label: 'Hangmon Deduction', color: 'bg-blue-500' },
       identicry: { label: 'Identicry Audio', color: 'bg-amber-500' },
+      biologist: { label: 'Biolo-gist', color: 'bg-teal-500' },
       manual_dex_input: { label: 'Manual Dex Scan', color: 'bg-indigo-500' },
     };
 
@@ -89,7 +89,7 @@ export const AdminAnalyticsPage: React.FC = () => {
       { id: 'whos_that_pokemon', name: "Who's That Pokémon?", color: 'text-purple-600 dark:text-purple-400' },
       { id: 'hangmon', name: 'Hangmon Deduction', color: 'text-blue-600 dark:text-blue-400' },
       { id: 'identicry', name: 'Identicry Audio', color: 'text-amber-600 dark:text-amber-400' },
-      { id: 'biologist', name: 'Biologist Lore', color: 'text-teal-600 dark:text-teal-400' },
+      { id: 'biologist', name: 'Biolo-gist', color: 'text-teal-600 dark:text-teal-400' },
     ];
 
     return games.map((g) => {
@@ -132,6 +132,16 @@ export const AdminAnalyticsPage: React.FC = () => {
       .sort((a, b) => b.unlockedCount - a.unlockedCount);
   }, [availableUsers]);
 
+  const overview = useMemo(() => {
+    const victories = allSessions.filter((session) => session.isWon).length;
+    return {
+      trainers: trainerRanks.length,
+      uniqueSpecies: new Set(allDexEntries.map((entry) => entry.pokemonId)).size,
+      sessions: allSessions.length,
+      winRate: allSessions.length ? Math.round((victories / allSessions.length) * 100) : 0,
+    };
+  }, [allDexEntries, allSessions, trainerRanks.length]);
+
   return (
     <div className="space-y-7 sm:space-y-8 pb-16 w-full">
       {/* Header */}
@@ -142,6 +152,29 @@ export const AdminAnalyticsPage: React.FC = () => {
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
           Aggregated discovery rates across all 9 Pokémon generations, minigame performance curves, and player registration dynamics.
         </p>
+      </div>
+
+      {/* At-a-glance KPIs */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+        {[
+          { label: 'Active trainers', value: overview.trainers, detail: 'with a personal Pokédex', icon: Shield, tone: 'indigo' },
+          { label: 'Unique species', value: overview.uniqueSpecies, detail: 'found across all trainers', icon: BookOpen, tone: 'purple' },
+          { label: 'Minigame sessions', value: overview.sessions, detail: 'recorded game attempts', icon: Gamepad2, tone: 'amber' },
+          { label: 'Minigame win rate', value: `${overview.winRate}%`, detail: 'all games combined', icon: TrendingUp, tone: 'emerald' },
+        ].map((metric) => {
+          const tones: Record<string, string> = {
+            indigo: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400 border-indigo-200/70 dark:border-indigo-800/60',
+            purple: 'bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400 border-purple-200/70 dark:border-purple-800/60',
+            amber: 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200/70 dark:border-amber-800/60',
+            emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400 border-emerald-200/70 dark:border-emerald-800/60',
+          };
+          const Icon = metric.icon;
+          return <div key={metric.label} className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs">
+            <div className="flex items-center justify-between gap-2"><span className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400">{metric.label}</span><span className={`w-8 h-8 rounded-xl border flex items-center justify-center ${tones[metric.tone]}`}><Icon className="w-4 h-4" /></span></div>
+            <div className="mt-3 text-2xl font-black font-display text-slate-900 dark:text-slate-100">{metric.value}</div>
+            <p className="mt-0.5 text-[10px] text-slate-400 dark:text-slate-500">{metric.detail}</p>
+          </div>;
+        })}
       </div>
 
       {/* Discovery Channels Card */}
@@ -263,23 +296,25 @@ export const AdminAnalyticsPage: React.FC = () => {
             {minigameMetrics.map((g) => (
               <div
                 key={g.id}
-                className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between"
+              className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 space-y-2.5"
               >
-                <div>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
                   <div className={`text-xs font-bold ${g.color}`}>{g.name}</div>
                   <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
                     {g.total} played · {g.wins} victories
                   </div>
-                </div>
-
-                <div className="text-right space-y-0.5">
+                  </div>
+                  <div className="text-right space-y-0.5">
                   <div className="text-sm font-bold text-slate-900 dark:text-slate-100 font-mono">
                     {g.winRate}% Win Rate
                   </div>
                   <div className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                     ~{g.avgTime}s avg duration
                   </div>
+                  </div>
                 </div>
+                <div className="h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><div className="h-full rounded-full bg-purple-600 transition-all" style={{ width: `${g.winRate}%` }} /></div>
               </div>
             ))}
           </div>
@@ -320,7 +355,7 @@ export const AdminAnalyticsPage: React.FC = () => {
                       {tr.unlockedCount} Dex
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      {tr.arenaWins} arena wins
+                      {tr.arenaWins} minigame wins
                     </span>
                   </div>
                 </div>
