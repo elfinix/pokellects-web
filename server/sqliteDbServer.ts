@@ -224,6 +224,7 @@ export function seedDatabase(database: DatabaseSync) {
   const insertConfig = database.prepare('INSERT INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)');
   insertConfig.run('game_config', JSON.stringify(defaultConfig), new Date().toISOString());
   insertConfig.run('feature_flags', JSON.stringify(defaultFlags), new Date().toISOString());
+  insertConfig.run('admin_display_config', JSON.stringify({ theme: 'light' }), new Date().toISOString());
 
   // Achievements
   const achievements = [

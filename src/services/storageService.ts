@@ -35,6 +35,14 @@ export interface UserSettings {
   updatedAt: string;
 }
 
+export interface AdminDisplayConfiguration {
+  theme: 'light' | 'dark';
+}
+
+const DEFAULT_ADMIN_DISPLAY_CONFIG: AdminDisplayConfiguration = {
+  theme: 'light',
+};
+
 /**
  * SQLite Local File Database Repository.
  * Powered by local SQLite database file (`data/pokellects.db`) on disk,
@@ -348,6 +356,24 @@ class StorageService {
     getMemoryState().systemConfigs['feature_flags'] = updated;
     executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
       'feature_flags',
+      JSON.stringify(updated),
+      new Date().toISOString(),
+    ]);
+    return updated;
+  }
+
+  // --- ADMIN CONSOLE DISPLAY (SQLite: system_configs) ---
+  public getAdminDisplayConfig(): AdminDisplayConfiguration {
+    const { systemConfigs } = getMemoryState();
+    const stored = systemConfigs['admin_display_config'] || {};
+    return { ...DEFAULT_ADMIN_DISPLAY_CONFIG, ...stored, theme: stored.theme === 'dark' ? 'dark' : 'light' };
+  }
+
+  public updateAdminDisplayConfig(config: Partial<AdminDisplayConfiguration>): AdminDisplayConfiguration {
+    const updated = { ...this.getAdminDisplayConfig(), ...config };
+    getMemoryState().systemConfigs['admin_display_config'] = updated;
+    executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
+      'admin_display_config',
       JSON.stringify(updated),
       new Date().toISOString(),
     ]);

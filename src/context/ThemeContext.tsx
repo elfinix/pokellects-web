@@ -21,12 +21,19 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     if (!currentUser) return;
-    setThemeState(storageService.getUserSettings(currentUser.id).theme);
-  }, [currentUser?.id, databaseVersion]);
+    const selectedTheme = currentUser.role === 'admin'
+      ? storageService.getAdminDisplayConfig().theme
+      : storageService.getUserSettings(currentUser.id).theme;
+    setThemeState(selectedTheme);
+  }, [currentUser?.id, currentUser?.role, databaseVersion]);
 
   const setTheme = (newTheme: ThemeMode) => {
     setThemeState(newTheme);
-    if (currentUser) storageService.updateUserSettings(currentUser.id, { theme: newTheme });
+    if (currentUser?.role === 'admin') {
+      storageService.updateAdminDisplayConfig({ theme: newTheme });
+    } else if (currentUser) {
+      storageService.updateUserSettings(currentUser.id, { theme: newTheme });
+    }
   };
 
   const toggleTheme = () => {

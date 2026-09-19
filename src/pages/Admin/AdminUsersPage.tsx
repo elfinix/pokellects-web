@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { Search, BookOpen, UserCheck, X, Users } from 'lucide-react';
+import { Search, BookOpen, X, Users, RotateCcw, ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AppUser, PlayerUser, AdminUser } from '../../types/user';
-import { ALL_KNOWN_POKEMON_MAP } from '../../services/pokemonIndex';
+import { REGION_METADATA } from '../../services/pokemonIndex';
 import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export const AdminUsersPage: React.FC = () => {
-  const { availableUsers, currentUser, switchUser } = useAuth();
+  const { availableUsers, currentUser } = useAuth();
   useDatabaseVersion();
   const [search, setSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState<AppUser | null>(null);
@@ -32,10 +33,19 @@ export const AdminUsersPage: React.FC = () => {
     return `${first}${last}`.toUpperCase() || user.username.slice(0, 2).toUpperCase();
   };
 
-  const selectedUserUnlockedPokemon = useMemo(() => {
+  const selectedUserRegionalCompletion = useMemo(() => {
     if (!selectedUser || selectedUser.role !== 'player') return [];
-    const player = selectedUser as PlayerUser;
-    return (player.unlockedPokemonIds || []).map((id) => ALL_KNOWN_POKEMON_MAP[id]).filter(Boolean);
+    const unlocked = new Set((selectedUser as PlayerUser).unlockedPokemonIds || []);
+    return REGION_METADATA.map((region) => {
+      const total = region.endId - region.startId + 1;
+      const collected = Array.from(unlocked).filter((id) => id >= region.startId && id <= region.endId).length;
+      return {
+        name: region.name,
+        collected,
+        total,
+        percent: Math.round((collected / total) * 100),
+      };
+    });
   }, [selectedUser]);
 
   return (
@@ -50,31 +60,33 @@ export const AdminUsersPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Main Ledger Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            Trainer Ledger ({filteredUsers.length})
-          </h2>
-
-          {/* Directory toolbox: streamlined for a single-admin trainer ledger. */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative group">
-              <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-purple-500" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search trainers..."
-                className="pl-9 pr-3 py-2 rounded-xl bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-hidden focus:border-purple-500 dark:focus:ring-2 dark:focus:ring-purple-500/20 transition-all w-52"
-              />
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700 text-[11px] font-semibold text-slate-500 dark:text-slate-400"><Users className="w-3.5 h-3.5" />{filteredUsers.length} records</span>
-          </div>
+      {/* Trainer Vault-style toolbar */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800">
+        <div className="relative group">
+          <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none group-focus-within:text-purple-500 transition-colors" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by trainer name, username, or email..."
+            className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 font-medium focus:outline-hidden focus:border-purple-500 focus:ring-2 focus:ring-purple-500/10 transition-all"
+          />
+          {search && (
+            <button type="button" onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/40 cursor-pointer" aria-label="Clear trainer search">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
+        {search && <div className="pt-2"><button type="button" onClick={() => setSearch('')} className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 cursor-pointer"><RotateCcw className="w-3.5 h-3.5" />Reset search</button></div>}
+      </div>
 
-        {/* Ledger Rows */}
-        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+      {/* Trainer list */}
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-2xs overflow-hidden">
+        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Trainer Ledger <span className="font-mono text-xs font-semibold text-slate-400 dark:text-slate-500">· {filteredUsers.length}</span></h2>
+          <span className="hidden sm:inline text-[11px] font-mono text-slate-400 dark:text-slate-500">Select a record to inspect progress</span>
+        </div>
+        <div className="divide-y divide-slate-100 dark:divide-slate-800 px-5 sm:px-6">
           {filteredUsers.map((user) => {
             const isActive = currentUser?.id === user.id;
             const isPlayer = user.role === 'player';
@@ -83,7 +95,7 @@ export const AdminUsersPage: React.FC = () => {
             return (
               <div
                 key={user.id}
-                className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -138,15 +150,22 @@ export const AdminUsersPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelectedUser(user)}
-                      className="px-3 py-1 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-purple-950/30 hover:border-purple-200 dark:hover:border-purple-800 text-slate-600 dark:text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
                     >
-                      Inspect
+                      Inspect <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
               </div>
             );
           })}
+          {filteredUsers.length === 0 && (
+            <div className="py-14 text-center">
+              <Users className="w-7 h-7 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
+              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">No trainers found</p>
+              <p className="mt-1 text-xs text-slate-400">Try another search term.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -217,32 +236,27 @@ export const AdminUsersPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Player Specific Stats & Unlocked Badge preview */}
+            {/* Player progress aggregate */}
             {selectedUser.role === 'player' && (
               <div className="space-y-3 pt-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-                    <span>Unlocked Pokédex Entries ({(selectedUser as PlayerUser).unlockedPokemonIds?.length || 0})</span>
+                    <span>Regional Pokédex Completion</span>
                   </span>
+                  <span className="font-mono font-bold text-purple-600 dark:text-purple-400">{(selectedUser as PlayerUser).unlockedPokemonIds?.length || 0} total</span>
                 </div>
-
-                <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-2.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
-                  {selectedUserUnlockedPokemon.length === 0 ? (
-                    <span className="text-xs text-slate-400 italic">No Pokémon unlocked yet.</span>
-                  ) : (
-                    selectedUserUnlockedPokemon.map((p) => (
-                      <span
-                        key={p.id}
-                        className="px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1"
-                      >
-                        <span className="text-[10px] font-mono text-purple-600 dark:text-purple-400 font-bold">
-                          #{String(p.id).padStart(4, '0')}
-                        </span>
-                        <span>{p.displayName}</span>
-                      </span>
-                    ))
-                  )}
+                <div className="h-52 p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={selectedUserRegionalCompletion} margin={{ top: 8, right: 0, left: -22, bottom: 0 }} barCategoryGap="28%">
+                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#64748b', fontWeight: 600 }} axisLine={false} tickLine={false} interval={0} />
+                      <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={30} />
+                      <Tooltip cursor={{ fill: 'rgba(124, 58, 237, 0.05)' }} contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} formatter={(value, _name, item) => [`${value}% (${item.payload.collected}/${item.payload.total})`, 'Completion']} />
+                      <Bar dataKey="percent" radius={[6, 6, 0, 0]}>
+                        {selectedUserRegionalCompletion.map((entry) => <Cell key={entry.name} fill={entry.percent > 0 ? '#8b5cf6' : '#cbd5e1'} />)}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             )}
@@ -257,19 +271,6 @@ export const AdminUsersPage: React.FC = () => {
                 Close
               </button>
 
-              {currentUser?.id !== selectedUser.id && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    switchUser(selectedUser.id);
-                    setSelectedUser(null);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
-                >
-                  <UserCheck className="w-3.5 h-3.5" />
-                  <span>Switch to this User</span>
-                </button>
-              )}
             </div>
           </div>
         </div>

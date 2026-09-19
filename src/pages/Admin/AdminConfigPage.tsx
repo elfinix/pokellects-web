@@ -8,9 +8,12 @@ import {
   Sparkles,
   Database,
   HardDrive,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import storageService from '../../services/storageService';
 import { GameConfiguration, FeatureFlags } from '../../types/game';
+import { AdminDisplayConfiguration } from '../../services/storageService';
 import { REGION_METADATA } from '../../services/pokemonIndex';
 
 const ToggleRow = ({ label, description, enabled, onToggle }: {
@@ -33,12 +36,14 @@ const ToggleRow = ({ label, description, enabled, onToggle }: {
 export const AdminConfigPage: React.FC = () => {
   const [config, setConfig] = useState<GameConfiguration>(() => storageService.getGameConfig());
   const [flags, setFlags] = useState<FeatureFlags>(() => storageService.getFeatureFlags());
+  const [displayConfig, setDisplayConfig] = useState<AdminDisplayConfiguration>(() => storageService.getAdminDisplayConfig());
   const [savedNotice, setSavedNotice] = useState(false);
   const [resetNotice, setResetNotice] = useState(false);
 
   const handleSave = () => {
     storageService.updateGameConfig(config);
     storageService.updateFeatureFlags(flags);
+    storageService.updateAdminDisplayConfig(displayConfig);
     setSavedNotice(true);
     setTimeout(() => setSavedNotice(false), 2500);
   };
@@ -48,6 +53,7 @@ export const AdminConfigPage: React.FC = () => {
       await storageService.resetToDefaults();
       setConfig(storageService.getGameConfig());
       setFlags(storageService.getFeatureFlags());
+      setDisplayConfig(storageService.getAdminDisplayConfig());
       setResetNotice(true);
       setTimeout(() => setResetNotice(false), 2500);
     }
@@ -118,6 +124,34 @@ export const AdminConfigPage: React.FC = () => {
           <span>Restored factory default configurations and reset feature flags.</span>
         </div>
       )}
+
+      {/* Admin Console Display */}
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
+        <div className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <Moon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          <h2 className="text-base font-bold">Display Configuration</h2>
+        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400">Set the appearance used throughout the Admin Console. This does not change players’ personal display preferences.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          {([
+            ['light', 'Light mode', 'Bright, standard console appearance', Sun],
+            ['dark', 'Night mode', 'Low-light appearance for the Admin Console', Moon],
+          ] as const).map(([theme, label, description, Icon]) => {
+            const selected = displayConfig.theme === theme;
+            return (
+              <button
+                key={theme}
+                type="button"
+                onClick={() => setDisplayConfig({ theme })}
+                className={`flex items-center gap-3 p-4 rounded-2xl border text-left transition-all cursor-pointer ${selected ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-700 shadow-xs' : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'}`}
+              >
+                <span className={`w-9 h-9 rounded-xl flex items-center justify-center ${selected ? 'bg-purple-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-400 border border-slate-200 dark:border-slate-700'}`}><Icon className="w-4 h-4" /></span>
+                <span><span className="block text-xs font-bold text-slate-900 dark:text-slate-100">{label}</span><span className="block mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">{description}</span></span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Feature Flags Section */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-4">
