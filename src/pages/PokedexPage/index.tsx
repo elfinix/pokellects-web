@@ -386,7 +386,7 @@ export const PokedexPage: React.FC = () => {
         </div>
 
         {/* Dex Completion Status Badge (Overhauled Precision Optical Gauge) */}
-        <div className="relative flex items-center gap-3.5 sm:gap-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-red-200/80 dark:hover:border-red-800/80 transition-all duration-300 group shrink-0 self-start sm:self-auto overflow-hidden">
+        <div className="relative flex w-full sm:w-auto items-center gap-3.5 sm:gap-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-red-200/80 dark:hover:border-red-800/80 transition-all duration-300 group shrink-0 self-stretch sm:self-auto overflow-hidden">
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-bl from-red-500/10 via-rose-500/5 to-transparent rounded-full blur-xl pointer-events-none group-hover:from-red-500/15 transition-all duration-500" />
 

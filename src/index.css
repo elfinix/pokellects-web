@@ -49,6 +49,7 @@
     background-color: #f8fafc;
     color: #0f172a;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
 
   .dark body,
@@ -60,6 +61,26 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+}
+
+/* Phone ergonomics: avoid accidental double-tap zoom and respect device cutouts. */
+@media (max-width: 767px) {
+  html {
+    min-width: 320px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -247,4 +268,3 @@ html.dark .glass-card:hover {
 .animate-liquid-wave-v2 {
   animation: liquid-wave-v2 6.5s linear infinite;
 }
-

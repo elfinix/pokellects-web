@@ -94,7 +94,7 @@ export const Hero: React.FC<HeroProps> = ({
   };
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-8 pb-20 lg:pt-12 lg:pb-28 px-6 bg-gradient-to-b from-transparent via-white/20 dark:via-white/5 to-transparent">
+    <section id="hero" className="relative overflow-hidden pt-6 sm:pt-8 pb-16 sm:pb-20 lg:pt-12 lg:pb-28 px-4 sm:px-6 bg-gradient-to-b from-transparent via-white/20 dark:via-white/5 to-transparent">
       {/* Ambient subtle light glow backdrop */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-red-100/15 dark:bg-red-900/10 rounded-full blur-3xl pointer-events-none -z-10" />
 

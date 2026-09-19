@@ -126,14 +126,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-8 pb-12">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl p-6 sm:p-8 text-white shadow-lg shadow-red-600/15 dark:shadow-black/40 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border border-red-500/30 dark:border-slate-800">
+      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-red-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 rounded-3xl p-5 sm:p-8 text-white shadow-lg shadow-red-600/15 dark:shadow-black/40 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 border border-red-500/30 dark:border-slate-800">
         {/* Top accent hairline for dark mode */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 via-rose-500 to-amber-500 opacity-0 dark:opacity-100 transition-opacity" />
 
         {/* Ambient Corner Glow */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 dark:bg-red-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
-        <div className="space-y-2 text-center md:text-left relative z-10">
+        <div className="space-y-2 text-left relative z-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 dark:bg-red-950/60 backdrop-blur-xs text-xs font-semibold text-white dark:text-red-400 border border-white/10 dark:border-red-900/60">
             <Award className="w-3.5 h-3.5 text-white dark:text-red-400" />
             <span>Trainer Progress Overview</span>
@@ -148,11 +148,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Quick Launch Buttons */}
-        <div className="flex flex-wrap items-center gap-3 relative z-10 shrink-0">
+        <div className="grid grid-cols-2 w-full md:w-auto gap-2.5 sm:gap-3 relative z-10 shrink-0">
           <button
             type="button"
             onClick={() => onNavigate('pokedex')}
-            className="px-5 py-3 rounded-2xl bg-white dark:bg-red-600 text-slate-900 dark:text-white font-bold text-xs sm:text-sm hover:bg-slate-50 dark:hover:bg-red-700 transition-all shadow-md flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            className="px-3 sm:px-5 py-3 rounded-2xl bg-white dark:bg-red-600 text-slate-900 dark:text-white font-bold text-xs sm:text-sm hover:bg-slate-50 dark:hover:bg-red-700 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
           >
             <BookOpen className="w-4 h-4 text-red-600 dark:text-white" />
             <span>Open Pokédex</span>
@@ -160,7 +160,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
           <button
             type="button"
             onClick={() => onNavigate('arena')}
-            className="px-5 py-3 rounded-2xl bg-slate-950/40 dark:bg-slate-800/80 hover:bg-slate-950/60 dark:hover:bg-slate-700 text-white font-bold text-xs sm:text-sm transition-all border border-white/20 dark:border-slate-700 flex items-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+            className="px-3 sm:px-5 py-3 rounded-2xl bg-slate-950/40 dark:bg-slate-800/80 hover:bg-slate-950/60 dark:hover:bg-slate-700 text-white font-bold text-xs sm:text-sm transition-all border border-white/20 dark:border-slate-700 flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
           >
             <Gamepad2 className="w-4 h-4 text-amber-400" />
             <span>Minigames</span>

@@ -78,7 +78,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
   };
 
   return (
-    <div className="fixed bottom-6 sm:bottom-8 z-30 left-0 right-0 md:left-[var(--sidebar-width,16rem)] pointer-events-none flex justify-center px-4 transition-[left] duration-300 ease-in-out">
+    <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-8 z-30 left-0 right-0 md:left-[var(--sidebar-width,16rem)] pointer-events-none flex justify-center px-3 sm:px-4 transition-[left] duration-300 ease-in-out">
       {/* Floating Pill Card (Centered specifically on the Main Page, ignoring the sidebar) */}
       <div className="pointer-events-auto w-full max-w-xl md:max-w-2xl bg-white dark:bg-slate-900 rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 dark:border-slate-800 shadow-xl dark:shadow-2xl space-y-2 relative overflow-hidden">
         {/* Feedback Message Banner */}
@@ -156,7 +156,7 @@ export const FloatingRegistrationBar: React.FC<FloatingRegistrationBarProps> = (
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 dark:disabled:bg-red-800 text-white font-bold text-xs sm:text-sm active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm shadow-red-500/20"
+            className="min-h-11 px-3.5 sm:px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-400 dark:disabled:bg-red-800 text-white font-bold text-xs sm:text-sm active:scale-95 transition-all flex items-center gap-1.5 shrink-0 cursor-pointer shadow-sm shadow-red-500/20"
           >
             {isSubmitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />

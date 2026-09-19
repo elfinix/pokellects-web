@@ -423,8 +423,8 @@ export const AchievementsPage: React.FC = () => {
       </div>
 
       {/* Progress Overview Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
           <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold block uppercase tracking-wider">
             Total Accolades
           </span>
@@ -433,7 +433,7 @@ export const AchievementsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
           <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold block uppercase tracking-wider">
             Mastered Accolades
           </span>
@@ -442,7 +442,7 @@ export const AchievementsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1">
           <span className="text-slate-400 dark:text-slate-500 text-xs font-semibold block uppercase tracking-wider">
             Completion Rate
           </span>
@@ -465,7 +465,7 @@ export const AchievementsPage: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto no-scrollbar w-full sm:w-auto pb-0.5">
           {[
             { id: 'all', label: 'All Groups' },
             { id: 'dex', label: 'Dex Completion' },
@@ -477,7 +477,7 @@ export const AchievementsPage: React.FC = () => {
               key={f.id}
               type="button"
               onClick={() => setSelectedGroupFilter(f.id as any)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 selectedGroupFilter === f.id
                   ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-2xs'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-700'

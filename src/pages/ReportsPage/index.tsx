@@ -270,9 +270,9 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {/* 1. TOP METRICS CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Metric 1: Discovery Completion */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Registry Velocity
@@ -298,7 +298,7 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Metric 2: Average Base Stat Total */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Average Power (BST)
@@ -322,7 +322,7 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Metric 3: Physical Biometrics */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Biometric Apex
@@ -348,7 +348,7 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Metric 4: Type Diversity */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Typing Diversity
@@ -377,7 +377,7 @@ export const ReportsPage: React.FC = () => {
       {/* 2. GRAPHS LAYOUT: ROW 1 — [Base Stat Attribute Radar] & [Type Distribution] */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Chart 1: Base Stat Attribute Radar */}
-        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Activity className="w-4 h-4 text-red-600 dark:text-red-400" />
@@ -388,7 +388,7 @@ export const ReportsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="h-64 sm:h-72 w-full flex items-center justify-center">
+          <div className="h-56 sm:h-72 w-full flex items-center justify-center">
             {unlockedList.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData}>
@@ -436,7 +436,7 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Chart 2: Regional Distribution Donut Chart */}
-        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Globe className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -447,7 +447,7 @@ export const ReportsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="h-64 sm:h-72 w-full flex items-center justify-center">
+          <div className="h-56 sm:h-72 w-full flex items-center justify-center">
             {hasRegionalUnlocked ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -504,7 +504,7 @@ export const ReportsPage: React.FC = () => {
       {/* 3. GRAPHS LAYOUT: ROW 2 — [Competency Breakdown] & [Regional Discovery Trajectory] */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Chart 3: Minigame Competency Breakdown */}
-        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Award className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -515,7 +515,7 @@ export const ReportsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="h-64 sm:h-72 w-full pt-2">
+          <div className="h-56 sm:h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={minigamesData} layout="vertical" margin={{ top: 10, right: 20, left: 40, bottom: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={isDark ? '#334155' : '#f1f5f9'} />
@@ -546,7 +546,7 @@ export const ReportsPage: React.FC = () => {
         </div>
 
         {/* Chart 4: Regional Discovery Trajectory */}
-        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 flex flex-col justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -557,7 +557,7 @@ export const ReportsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="h-64 sm:h-72 w-full pt-2">
+          <div className="h-56 sm:h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={genProgressionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
@@ -598,7 +598,7 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {/* 4. GRAPHS LAYOUT: ROW 3 (Full Width) — [Biometric Clustering (Height vs Weight)] */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -614,7 +614,7 @@ export const ReportsPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="h-80 w-full pt-2">
+        <div className="h-64 sm:h-80 w-full pt-2">
           {scatterData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 15, right: 25, bottom: 15, left: 10 }}>

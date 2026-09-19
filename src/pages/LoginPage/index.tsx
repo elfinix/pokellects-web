@@ -149,7 +149,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-72 bg-gradient-to-b from-rose-200/30 via-pink-100/15 to-transparent dark:from-rose-950/20 dark:via-pink-950/10 dark:to-transparent blur-3xl pointer-events-none -z-10" />
 
       {/* Top Bar */}
-      <header className="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-6 pb-2">
+      <header className="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-2">
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -170,10 +170,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
       </header>
 
       {/* Main Dual-Panel Content with Equal Height */}
-      <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-4 flex-1 flex items-start justify-center">
+      <main className="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex-1 flex items-start justify-center">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full items-stretch">
           {/* Left Panel: Clean Silhouette Showcase (No top accent bar so Right Panel is highlighted) */}
-          <div className="md:col-span-6 flex flex-col justify-between text-center p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full">
+          <div className="hidden md:col-span-6 md:flex flex-col justify-between text-center p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden h-full">
             {/* Top Badge: "Gotta Name em All" */}
             <div className="relative z-10 flex items-center justify-center pt-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200/80 dark:border-red-800/60 shadow-2xs">
@@ -269,7 +269,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToLanding, onLoginSu
           </div>
 
           {/* Right Panel: Clean Authentication Form (Highlighted with Top Accent Gradient Bar) */}
-          <div className="md:col-span-6 h-[560px] flex flex-col justify-between p-6 pb-6 sm:p-8 sm:pb-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
+          <div className="md:col-span-6 flex flex-col gap-8 md:gap-0 md:h-[560px] md:justify-between p-5 sm:p-8 sm:pb-8 rounded-3xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 relative overflow-hidden">
             {/* Top Accent Gradient Line highlighting the Right Panel */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-red-500 to-rose-400" />
 

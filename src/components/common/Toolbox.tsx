@@ -150,8 +150,8 @@ export const Toolbox: React.FC<ToolboxProps> = ({
       </div>
 
       {/* Bottom row: Custom Type Dropdown, Custom Sort Dropdown, Order Toggle, and Count */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-100/90 dark:border-slate-800 text-xs">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100/90 dark:border-slate-800 text-xs">
+        <div className="flex flex-nowrap items-center gap-1.5 sm:gap-2 min-w-0">
           {/* Custom Type Filter Dropdown */}
           <div ref={typeDropdownRef} className="relative">
             <button
@@ -167,7 +167,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
               }`}
             >
               <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span className="text-slate-400 dark:text-slate-500 font-medium">Type:</span>
+              <span className="hidden sm:inline text-slate-400 dark:text-slate-500 font-medium">Type:</span>
               {selectedTypeTheme ? (
                 <div className="flex items-center gap-1.5">
                   <span
@@ -259,7 +259,7 @@ export const Toolbox: React.FC<ToolboxProps> = ({
               }`}
             >
               <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span className="text-slate-400 dark:text-slate-500 font-medium">Sort:</span>
+              <span className="hidden sm:inline text-slate-400 dark:text-slate-500 font-medium">Sort:</span>
               <span className="text-slate-800 dark:text-slate-200 font-bold">
                 {filters.sortCriteria === 'id' && 'Pokédex #'}
                 {filters.sortCriteria === 'name' && 'Name (A-Z)'}

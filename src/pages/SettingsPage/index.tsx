@@ -82,7 +82,7 @@ export const SettingsPage: React.FC = () => {
       {/* 1. DISPLAY CONFIGURATIONS */}
       <form
         onSubmit={handleSavePreferences}
-        className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-6"
+        className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5 sm:space-y-6"
       >
         <div>
           <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -105,11 +105,11 @@ export const SettingsPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xs shrink-0">
+          <div className="flex w-full sm:w-auto items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xs shrink-0">
             <button
               type="button"
               onClick={() => setMinigamesView('grid')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex flex-1 sm:flex-none justify-center items-center gap-1.5 px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 minigamesView === 'grid'
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -121,7 +121,7 @@ export const SettingsPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setMinigamesView('row')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex flex-1 sm:flex-none justify-center items-center gap-1.5 px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 minigamesView === 'row'
                   ? 'bg-red-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -144,13 +144,13 @@ export const SettingsPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xs shrink-0">
+          <div className="flex w-full sm:w-auto items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xs shrink-0">
             <button
               type="button"
               onClick={() => {
                 setAppearance('light');
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex flex-1 sm:flex-none justify-center items-center gap-1.5 px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 appearance === 'light'
                   ? 'bg-amber-500 dark:bg-amber-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -164,7 +164,7 @@ export const SettingsPage: React.FC = () => {
               onClick={() => {
                 setAppearance('dark');
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex flex-1 sm:flex-none justify-center items-center gap-1.5 px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 appearance === 'dark'
                   ? 'bg-slate-800 dark:bg-slate-700 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -229,14 +229,14 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* Save Preferences Action Bar */}
-        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <span className={`text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 transition-opacity ${savedToast ? 'opacity-100' : 'opacity-0'}`}>
             <Check className="w-4 h-4" />
             <span>Preferences saved successfully!</span>
           </span>
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 ml-auto"
+            className="w-full sm:w-auto justify-center px-5 py-3 sm:py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 sm:ml-auto"
           >
             <Save className="w-4 h-4" />
             <span>Save Preferences</span>

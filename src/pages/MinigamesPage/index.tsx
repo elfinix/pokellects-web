@@ -266,7 +266,7 @@ export const MinigamesPage: React.FC<MinigamesPageProps> = ({ onPlayGame }) => {
         </div>
 
         {/* Quick Trainer Minigame Stats Chips */}
-        <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto sm:pt-0.5">
+        <div className="grid grid-cols-2 w-full sm:w-auto gap-3 shrink-0 self-start sm:self-auto sm:pt-0.5">
           <div className="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 flex items-center gap-3 shadow-2xs">
             <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 flex items-center justify-center text-amber-600 dark:text-amber-400">
               <Trophy className="w-4 h-4" />
@@ -290,9 +290,9 @@ export const MinigamesPage: React.FC<MinigamesPageProps> = ({ onPlayGame }) => {
       </div>
 
       {/* Toolbar: Search Input & View Mode Switcher */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 transition-all relative z-10 shadow-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-2.5 sm:p-4 border border-slate-200/90 dark:border-slate-800 flex items-center justify-between gap-2 sm:gap-3 transition-all relative z-10 shadow-xs">
         {/* Search Field */}
-        <div className="relative flex-1 w-full group">
+        <div className="relative flex-1 min-w-0 group">
           <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-red-500 transition-colors">
             <Search className="w-4 h-4" />
           </div>
@@ -315,30 +315,32 @@ export const MinigamesPage: React.FC<MinigamesPageProps> = ({ onPlayGame }) => {
         </div>
 
         {/* View Mode Toggle: Grid (2x2) vs Row (1 per row) */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 justify-end shrink-0">
           <button
             type="button"
             onClick={() => handleViewModeChange('grid')}
-            className={`h-10 flex items-center gap-2 px-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
+            aria-label="Grid view"
+            className={`w-10 sm:w-auto h-10 flex items-center justify-center gap-2 sm:px-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
               viewMode === 'grid'
                 ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100'
                 : 'bg-slate-50/80 dark:bg-slate-950/60 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400'
             }`}
           >
             <LayoutGrid className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-            <span>Grid</span>
+            <span className="hidden sm:inline">Grid</span>
           </button>
           <button
             type="button"
             onClick={() => handleViewModeChange('row')}
-            className={`h-10 flex items-center gap-2 px-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
+            aria-label="Row view"
+            className={`w-10 sm:w-auto h-10 flex items-center justify-center gap-2 sm:px-3.5 rounded-xl border transition-all duration-150 cursor-pointer select-none text-xs font-bold ${
               viewMode === 'row'
                 ? 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100'
                 : 'bg-slate-50/80 dark:bg-slate-950/60 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400'
             }`}
           >
             <Rows3 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-            <span>Row</span>
+            <span className="hidden sm:inline">Row</span>
           </button>
         </div>
       </div>

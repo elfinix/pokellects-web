@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
 
   return (
     <motion.header
-      className={`sticky top-0 z-50 px-6 py-3.5 transition-colors duration-300 ${
+      className={`sticky top-0 z-50 px-4 sm:px-6 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3.5 transition-colors duration-300 ${
         isScrolled
           ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800 shadow-2xs'
           : 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs border-b border-slate-200/50 dark:border-slate-800/50'
@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
             type="button"
             onClick={togglePublicTheme}
             aria-label={pageIsDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            className="w-9 h-9 shrink-0 rounded-xl inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/80 dark:border-slate-700 shadow-2xs cursor-pointer"
+            className="w-10 h-10 sm:w-9 sm:h-9 shrink-0 rounded-xl inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/80 dark:border-slate-700 shadow-2xs cursor-pointer"
           >
             {pageIsDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
           </button>
@@ -111,9 +111,10 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
             whileHover={{ scale: 1.025, y: -0.5 }}
             whileTap={{ scale: 0.975 }}
             transition={{ type: 'spring', stiffness: 450, damping: 25 }}
-            className="group relative h-9 px-4 shrink-0 rounded-xl border border-slate-300/90 dark:border-slate-700 bg-transparent hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer inline-flex items-center justify-center gap-2 shadow-2xs hover:shadow-xs"
+            aria-label={hasActiveSession ? 'Continue to your vault' : 'Get started with Pokellects'}
+            className="group relative h-10 sm:h-9 px-3 sm:px-4 shrink-0 rounded-xl border border-slate-300/90 dark:border-slate-700 bg-transparent hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer inline-flex items-center justify-center gap-2 shadow-2xs hover:shadow-xs"
           >
-            <span className="relative z-10 leading-none">{hasActiveSession ? 'Continue' : 'Get Started'}</span>
+            <span className="relative z-10 leading-none hidden min-[380px]:inline">{hasActiveSession ? 'Continue' : 'Get Started'}</span>
             {/* Animated Pokéball that spins and scales on hover */}
             <svg
               viewBox="0 0 24 24"

@@ -288,7 +288,7 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Holographic Trainer ID Card */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 p-6 sm:p-8 text-white shadow-xl border border-slate-700/80">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 p-4 sm:p-8 text-white shadow-xl border border-slate-700/80">
         {/* Glow backdrop effects with dynamic partner type bloom */}
         <div
           className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20 transition-all duration-700 opacity-30"
@@ -300,7 +300,7 @@ export const ProfilePage: React.FC = () => {
         />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20" />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-slate-700/80">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 pb-5 sm:pb-6 border-b border-slate-700/80">
           <div className="flex items-center gap-4 sm:gap-5">
             {/* Avatar Pill */}
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-red-600 to-rose-400 flex items-center justify-center text-xl sm:text-2xl font-black text-white shadow-lg shadow-red-600/30 border-2 border-white/30 shrink-0 font-mono select-none">
@@ -363,7 +363,7 @@ export const ProfilePage: React.FC = () => {
         </div>
 
         {/* Trainer Card Stats Bar */}
-        <div className="relative z-10 pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="relative z-10 pt-5 sm:pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/60">
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
               Pokédex Discovery
@@ -423,7 +423,7 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Regional Exploration Badges Matrix */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -439,7 +439,7 @@ export const ProfilePage: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {PROFILE_REGIONS.map((r) => {
             const count = stats.byGeneration[r.gen]?.unlocked || 0;
             const total = stats.byGeneration[r.gen]?.total || 100;
@@ -523,7 +523,7 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Trainer Profile Information Edit Form */}
-      <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
+      <form onSubmit={handleSave} className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-7 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-5">
         <div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <UserCog className="w-4 h-4 text-red-600 dark:text-red-400" />

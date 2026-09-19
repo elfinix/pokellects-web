@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
   Keyboard,
@@ -10,6 +10,15 @@ import { motion, useScroll, useTransform } from 'motion/react';
 
 export const AboutSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+    const update = () => setIsMobile(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   // Track scroll progress within this 290vh runway (Lenis handles smooth wheel scrolling globally)
   const { scrollYProgress } = useScroll({
@@ -74,26 +83,21 @@ export const AboutSection: React.FC = () => {
     <section
       id="about"
       ref={containerRef}
-      className="relative h-[290vh]"
+      className={isMobile ? 'relative py-4' : 'relative h-[290vh]'}
     >
       {/* Pinned Full-Screen Viewport Stage covering entire screen height below sticky header */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center pt-16 sm:pt-20 pb-4 sm:pb-6 px-3 sm:px-6 lg:px-8 overflow-hidden">
+      <div className={isMobile ? 'w-full px-4' : 'sticky top-0 h-screen w-full flex flex-col justify-between items-center pt-16 sm:pt-20 pb-4 sm:pb-6 px-3 sm:px-6 lg:px-8 overflow-hidden'}>
         {/* Soft ambient background aura */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-red-100/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
         {/* Center Stage: Full-Height Swiping Card Container */}
-        <div className="relative w-full max-w-6xl xl:max-w-7xl h-[calc(100vh-8rem)] min-h-[500px] flex items-center justify-center select-none my-auto">
+        <div className={isMobile ? 'flex w-full gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 select-none' : 'relative w-full max-w-6xl xl:max-w-7xl h-[calc(100vh-8rem)] min-h-[500px] flex items-center justify-center select-none my-auto'}>
           {/* ================= CARD 01: PERMANENT LEDGER ================= */}
           <motion.div
-            style={{
-              x: x0,
-              scale: scale0,
-              rotate: rotate0,
-              opacity: opacity0,
-              zIndex: 30,
-              willChange: 'transform, opacity',
+            style={isMobile ? undefined : {
+              x: x0, scale: scale0, rotate: rotate0, opacity: opacity0, zIndex: 30, willChange: 'transform, opacity',
             }}
-            className="absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
+            className={isMobile ? 'relative w-[calc(100vw-2rem)] shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-5 flex flex-col gap-6' : 'absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden'}
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 via-rose-400 to-amber-400" />
@@ -219,15 +223,10 @@ export const AboutSection: React.FC = () => {
 
           {/* ================= CARD 02: FLUID FAST INPUT ================= */}
           <motion.div
-            style={{
-              x: x1,
-              scale: scale1,
-              rotate: rotate1,
-              opacity: opacity1,
-              zIndex: 20,
-              willChange: 'transform, opacity',
+            style={isMobile ? undefined : {
+              x: x1, scale: scale1, rotate: rotate1, opacity: opacity1, zIndex: 20, willChange: 'transform, opacity',
             }}
-            className="absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
+            className={isMobile ? 'relative w-[calc(100vw-2rem)] shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-5 flex flex-col gap-6' : 'absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden'}
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500" />
@@ -327,15 +326,10 @@ export const AboutSection: React.FC = () => {
 
           {/* ================= CARD 03: ARENA DISCOVERY ================= */}
           <motion.div
-            style={{
-              x: x2,
-              scale: scale2,
-              rotate: rotate2,
-              opacity: opacity2,
-              zIndex: 10,
-              willChange: 'transform, opacity',
+            style={isMobile ? undefined : {
+              x: x2, scale: scale2, rotate: rotate2, opacity: opacity2, zIndex: 10, willChange: 'transform, opacity',
             }}
-            className="absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden"
+            className={isMobile ? 'relative w-[calc(100vw-2rem)] shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-5 flex flex-col gap-6' : 'absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14 overflow-y-auto lg:overflow-hidden'}
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 via-pink-400 to-amber-400" />

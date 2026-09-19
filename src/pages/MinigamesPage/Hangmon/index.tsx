@@ -281,11 +281,11 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
   }, [isRevealed, isModalOpen, onBack, loadNextRound, guessLetter]);
 
   return (
-    <div className="w-full flex flex-col justify-between h-[calc(100vh-theme(spacing.20))] max-h-[860px] min-h-[580px] select-none">
+    <div className="w-full flex flex-col justify-between h-[calc(100dvh-5.5rem)] min-h-[520px] md:h-[calc(100vh-theme(spacing.20))] md:max-h-[860px] md:min-h-[580px] select-none">
       {/* Top Header Bar */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-200/90 dark:border-slate-800">
+      <div className="flex items-start sm:items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-slate-200/90 dark:border-slate-800">
         {/* Back Button + Game Icon + Title */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <button
             type="button"
             onClick={onBack}
@@ -299,31 +299,31 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
             <Type className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
+          <h1 className="text-lg sm:text-2xl leading-tight font-black text-slate-900 dark:text-slate-100 font-display tracking-tight">
             Hangmon
           </h1>
         </div>
 
         {/* Streak & Solved Counts */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 text-blue-800 dark:text-blue-300 text-xs font-bold font-mono">
+        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 text-blue-800 dark:text-blue-300 text-xs font-bold font-mono">
             <Flame
               className={`w-3.5 h-3.5 ${
                 streak > 0 ? 'text-blue-600 fill-blue-600 animate-pulse' : 'text-slate-400 dark:text-slate-500'
               }`}
             />
-            <span>{streak} Streak</span>
+            <span>{streak}<span className="hidden min-[420px]:inline"> Streak</span></span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold font-mono">
+          <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold font-mono">
             <Trophy className="w-3.5 h-3.5 text-blue-600" />
-            <span>{solvedCount} Solved</span>
+            <span>{solvedCount}<span className="hidden min-[420px]:inline"> Solved</span></span>
           </div>
         </div>
       </div>
 
       {/* Main Full-Screen Stage Area */}
-      <div className="flex-1 min-h-0 my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-6 sm:p-8">
+      <div className="flex-1 min-h-0 my-3 sm:my-4 relative rounded-3xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 overflow-hidden flex flex-col justify-between p-3 sm:p-8">
         {/* Subtle Grid Pattern Overlay */}
         <div
           className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"

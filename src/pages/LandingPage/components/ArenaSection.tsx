@@ -130,7 +130,10 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
           <div
             onMouseEnter={() => setHoveredCard('silhouette')}
             onMouseLeave={() => setHoveredCard(null)}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
+            onClick={() => setHoveredCard((current) => current === 'silhouette' ? null : 'silhouette')}
+            role="button"
+            tabIndex={0}
+            className="group relative min-h-[410px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-7 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-transparent" />
@@ -240,7 +243,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               <span className="text-slate-500 dark:text-slate-400 font-medium">
                 {hoveredCard === 'silhouette'
                   ? '✨ Revealed on hover'
-                  : 'Hover card to reveal silhouette'}
+                  : 'Tap or hover to reveal silhouette'}
               </span>
               <span className="text-amber-700 dark:text-amber-400 font-semibold text-xs flex items-center gap-1">
                 <span>+1 Guaranteed Entry</span>
@@ -252,7 +255,10 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
           <div
             onMouseEnter={() => setHoveredCard('hangmon')}
             onMouseLeave={() => setHoveredCard(null)}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
+            onClick={() => setHoveredCard((current) => current === 'hangmon' ? null : 'hangmon')}
+            role="button"
+            tabIndex={0}
+            className="group relative min-h-[410px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-7 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-transparent" />
@@ -367,7 +373,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               <span className="text-slate-500 dark:text-slate-400 font-medium">
                 {hoveredCard === 'hangmon'
                   ? '✨ Letters deduced into slots'
-                  : 'Hover card to animate deduction'}
+                  : 'Tap or hover to animate deduction'}
               </span>
               <span className="text-blue-700 dark:text-blue-400 font-semibold text-xs flex items-center gap-1">
                 <span>+1 Guaranteed Entry</span>
@@ -379,7 +385,10 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
           <div
             onMouseEnter={handleIdenticryEnter}
             onMouseLeave={handleIdenticryLeave}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
+            onClick={() => hoveredCard === 'identicry' ? handleIdenticryLeave() : handleIdenticryEnter()}
+            role="button"
+            tabIndex={0}
+            className="group relative min-h-[410px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-7 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
@@ -490,7 +499,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               <span className="text-slate-500 dark:text-slate-400 font-medium">
                 {hoveredCard === 'identicry'
                   ? '🔊 Sound cry & clue analysis'
-                  : 'Hover card to play sound cry'}
+                  : 'Tap or hover to play sound cry'}
               </span>
               <span className="text-amber-700 dark:text-amber-400 font-semibold text-xs flex items-center gap-1">
                 <span>+1 Guaranteed Entry</span>
@@ -502,7 +511,10 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
           <div
             onMouseEnter={() => setHoveredCard('biologist')}
             onMouseLeave={() => setHoveredCard(null)}
-            className="group relative h-[380px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-6 sm:p-7 flex flex-col justify-between overflow-hidden cursor-default"
+            onClick={() => setHoveredCard((current) => current === 'biologist' ? null : 'biologist')}
+            role="button"
+            tabIndex={0}
+            className="group relative min-h-[410px] sm:h-[390px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-7 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-transparent" />
@@ -573,7 +585,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin })
               <span className="text-slate-500 dark:text-slate-400 font-medium">
                 {hoveredCard === 'biologist'
                   ? '✨ Redaction decoded on hover'
-                  : 'Hover card to reveal excerpt'}
+                  : 'Tap or hover to reveal excerpt'}
               </span>
               <span className="text-teal-700 dark:text-teal-400 font-semibold text-xs flex items-center gap-1">
                 <span>+1 Guaranteed Entry</span>

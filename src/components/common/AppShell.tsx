@@ -356,12 +356,12 @@ export const AppShell: React.FC<AppShellProps> = ({
       {/* ========================================================================= */}
       <div className="flex-1 min-w-0 flex flex-col min-h-screen">
         {/* Mobile Header (Hidden on Desktop) */}
-        <header className="md:hidden sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between shadow-2xs">
+        <header className="md:hidden sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 flex items-center justify-between shadow-2xs">
           <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer"
+              className="w-10 h-10 inline-flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer"
               aria-label="Open menu"
             >
               <Menu className="w-5 h-5" />
@@ -378,7 +378,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             <button
               type="button"
               onClick={() => handleNavClick('profile')}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black transition-all cursor-pointer font-mono select-none ${
+              className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black transition-all cursor-pointer font-mono select-none ${
                 activeTab === 'profile'
                   ? 'bg-red-600 text-white ring-2 ring-red-400'
                   : 'bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 shadow-2xs'
@@ -409,7 +409,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -260 }}
                 transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                className="md:hidden fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 shadow-2xl p-5 flex flex-col justify-between border-r border-slate-200 dark:border-slate-800"
+                className="md:hidden fixed inset-y-0 left-0 z-50 w-[min(18rem,calc(100vw-2.5rem))] bg-white dark:bg-slate-900 shadow-2xl px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(1.25rem,env(safe-area-inset-bottom))] flex flex-col justify-between border-r border-slate-200 dark:border-slate-800"
               >
                 <div>
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
@@ -525,7 +525,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         </AnimatePresence>
 
         {/* Main Content Viewport */}
-        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+        <main className="flex-1 w-full p-3 sm:p-6 lg:p-8 max-w-7xl mx-auto">
           {children}
         </main>
       </div>

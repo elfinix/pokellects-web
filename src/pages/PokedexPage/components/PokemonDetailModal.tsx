@@ -489,7 +489,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12, ease: 'easeOut' }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/60 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-slate-950/60 backdrop-blur-xs"
           data-lenis-prevent
           onClick={onClose}
         >
@@ -501,7 +501,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{ willChange: 'transform, opacity' }}
             data-lenis-prevent
-            className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl sm:max-w-3xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between h-[620px] sm:h-[610px] max-h-[92vh]"
+            className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl sm:max-w-3xl w-full p-4 sm:p-7 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between h-[min(680px,calc(100dvh-1rem))] sm:h-[610px] max-h-[calc(100dvh-1rem)] sm:max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top Type Accent Border (Supporting mono- or dual-type palette) */}
@@ -592,7 +592,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
 
             {/* Minimalist Tabs Navigation with Animated Sliding Tab Indicator */}
             <div className="relative z-10 pt-3 pb-1">
-              <div className="flex items-center gap-1.5 p-1 bg-slate-100/80 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-xs">
+              <div className="grid grid-cols-2 sm:flex sm:w-full items-center gap-1.5 p-1 bg-slate-100/80 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-xs">
                 {TAB_ITEMS.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -602,7 +602,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={`relative flex-1 py-2 px-3 rounded-xl transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer select-none font-semibold ${
+                      className={`relative w-full sm:flex-1 py-2 px-2 sm:px-3 rounded-xl transition-colors duration-150 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer select-none font-semibold ${
                         isActive
                           ? 'text-white font-bold'
                           : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
@@ -907,18 +907,18 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.16, ease: 'easeOut' }}
-              className="space-y-2.5 pt-0.5 h-full flex flex-col justify-between"
+              className="space-y-3 sm:space-y-2.5 pt-0.5 h-full flex flex-col justify-between"
             >
               {/* Chart Body with Left-Stacked Vertical Toolbar */}
-              <div className="flex items-start gap-2.5 sm:gap-3.5">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5 sm:gap-3.5">
                 {/* Vertically Stacked Controls on the Left */}
-                <div className="flex flex-col items-center gap-1.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shrink-0">
+                <div className="grid grid-cols-4 sm:flex sm:flex-col items-center sm:justify-start gap-1.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shrink-0">
                   {/* Line View Mode Icon */}
                   <button
                     type="button"
                     onClick={() => setStatViewMode('line')}
                     style={statViewMode === 'line' ? { backgroundColor: activeTabBgColor, color: '#ffffff' } : undefined}
-                    className={`p-2 rounded-xl transition-all duration-150 cursor-pointer ${
+                    className={`w-full sm:w-auto p-2 rounded-xl transition-all duration-150 cursor-pointer flex items-center justify-center ${
                       statViewMode === 'line'
                         ? 'shadow-xs text-white'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800/70'
@@ -934,7 +934,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                     type="button"
                     onClick={() => setStatViewMode('bar')}
                     style={statViewMode === 'bar' ? { backgroundColor: activeTabBgColor, color: '#ffffff' } : undefined}
-                    className={`p-2 rounded-xl transition-all duration-150 cursor-pointer ${
+                    className={`w-full sm:w-auto p-2 rounded-xl transition-all duration-150 cursor-pointer flex items-center justify-center ${
                       statViewMode === 'bar'
                         ? 'shadow-xs text-white'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800/70'
@@ -950,7 +950,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                     type="button"
                     onClick={() => setStatViewMode('radar')}
                     style={statViewMode === 'radar' ? { backgroundColor: activeTabBgColor, color: '#ffffff' } : undefined}
-                    className={`p-2 rounded-xl transition-all duration-150 cursor-pointer ${
+                    className={`w-full sm:w-auto p-2 rounded-xl transition-all duration-150 cursor-pointer flex items-center justify-center ${
                       statViewMode === 'radar'
                         ? 'shadow-xs text-white'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800/70'
@@ -962,13 +962,13 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   </button>
 
                   {/* Divider */}
-                  <div className="w-full h-px bg-slate-200/80 dark:bg-slate-800 my-0.5" />
+                  <div className="hidden sm:block h-px w-full bg-slate-200/80 dark:bg-slate-800 my-0.5" />
 
                   {/* Color Toggle: Assorted vs Conditional */}
                   <button
                     type="button"
                     onClick={() => setStatColorMode((prev) => (prev === 'assorted' ? 'conditional' : 'assorted'))}
-                    className={`p-2 rounded-xl border transition-all duration-150 cursor-pointer ${
+                    className={`w-full sm:w-auto p-2 rounded-xl border transition-all duration-150 cursor-pointer flex items-center justify-center ${
                       statColorMode === 'conditional'
                         ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 shadow-2xs'
                         : 'bg-white dark:bg-slate-800 border-slate-200/90 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:border-slate-300 dark:hover:border-slate-600 shadow-2xs'
@@ -981,7 +981,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </div>
 
                 {/* Main Chart Area on Right with Mode-Switch Crossfade & Transitions */}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 w-full">
                   <AnimatePresence mode="wait">
                     {/* MODE 1: LINE (Default) - Animated from Left to Right */}
                     {statViewMode === 'line' && (
@@ -991,7 +991,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.15 }}
-                        className="h-64 sm:h-[268px] w-full px-4 sm:px-5 py-3 bg-slate-50/70 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between"
+                        className="h-64 sm:h-[268px] w-full px-3 sm:px-5 py-3 bg-slate-50/70 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between"
                       >
                         {orderedStats.map((stat, idx) => {
                           const percent = Math.min(100, Math.round((stat.value / 255) * 100));
@@ -1324,7 +1324,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               </div>
 
               {/* Bottom Card: Clean, Simple Base Stat Total (BST) */}
-              <div className="p-2 sm:px-3.5 sm:py-2 rounded-2xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center justify-between">
+              <div className="p-2 sm:px-3.5 sm:py-2 rounded-2xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                 <div className="flex items-center gap-2">
                   <Activity className="w-3.5 h-3.5" style={{ color: theme.accentHex }} />
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Base Stat Total</span>
@@ -1333,7 +1333,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400 font-medium">
+                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-mono text-slate-500 dark:text-slate-400 font-medium">
                   <span>Average:</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200">{(totalBaseStats / 6).toFixed(1)}</span>
                   <span className="text-[10px] text-slate-400 dark:text-slate-500">/ stat</span>
@@ -1632,7 +1632,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
       </div>
 
       {/* Modal Footer: Registered Previous & Next Navigation OR Minigame Insignia & Stamp */}
-      <div className="pt-3.5 sm:pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 relative z-10">
+      <div className="mt-3 pt-3.5 sm:mt-0 sm:pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 relative z-10">
         {showNavigation ? (
           <>
             {/* Previous Registered Pokemon Button */}

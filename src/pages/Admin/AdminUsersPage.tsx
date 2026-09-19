@@ -86,7 +86,7 @@ export const AdminUsersPage: React.FC = () => {
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Trainer Ledger <span className="font-mono text-xs font-semibold text-slate-400 dark:text-slate-500">· {filteredUsers.length}</span></h2>
           <span className="hidden sm:inline text-[11px] font-mono text-slate-400 dark:text-slate-500">Select a record to inspect progress</span>
         </div>
-        <div className="divide-y divide-slate-100 dark:divide-slate-800 px-5 sm:px-6">
+        <div className="divide-y divide-slate-100 dark:divide-slate-800 px-4 sm:px-6">
           {filteredUsers.map((user) => {
             const isActive = currentUser?.id === user.id;
             const isPlayer = user.role === 'player';
@@ -128,7 +128,7 @@ export const AdminUsersPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 self-end sm:self-center">
+                <div className="flex items-center justify-between w-full sm:w-auto gap-3 self-auto sm:self-center border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800">
                   {isPlayer && (
                     <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                       Unlocks:{' '}
@@ -171,8 +171,8 @@ export const AdminUsersPage: React.FC = () => {
 
       {/* User Details Inspection Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs">
+          <div className="w-full max-w-lg max-h-[calc(100dvh-1.5rem)] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 sm:p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div
