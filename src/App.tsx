@@ -54,14 +54,18 @@ function MainApp() {
   useEffect(() => { const onPopState = () => setPath(window.location.pathname); window.addEventListener('popstate', onPopState); return () => window.removeEventListener('popstate', onPopState); }, []);
   useEffect(() => {
     if (isLoading) return;
-    if (currentUser && (path === '/' || path === '/login')) navigate(defaultPath(isAdmin), true);
+    // The public landing page remains available after sign-in; only the dedicated
+    // login route is skipped for an authenticated trainer or administrator.
+    if (currentUser && path === '/login') navigate(defaultPath(isAdmin), true);
     if (!currentUser && isVaultPath(path)) navigate('/login', true);
     if (currentUser && activeTab && (isAdmin !== activeTab.startsWith('admin-'))) navigate(defaultPath(isAdmin), true);
   }, [currentUser, isAdmin, isLoading, path]);
 
-  if (isLoading) return <LoadingHandoff />;
+  // The public home page should always be immediately browsable. The handoff
+  // loader is reserved for authenticated vault and admin destinations.
+  if (isLoading && path !== '/') return <LoadingHandoff />;
   if (currentUser && activeTab) return <AuthenticatedWorkspace activeTab={activeTab} onTabChange={(tab) => navigate(tabPaths[tab])} onReturnToLanding={() => navigate('/')} />;
-  if (currentUser) return <LoadingHandoff />;
+  if (currentUser && path !== '/') return <LoadingHandoff />;
 
   return <div className="min-h-screen w-full bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100"><AnimatePresence mode="wait">
     {path === '/login' ? <motion.div key="login" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><LoginPage onBackToLanding={() => navigate('/')} onLoginSuccess={() => {}} /></motion.div>

@@ -8,6 +8,7 @@ import storageService from '../services/storageService';
 interface AuthContextType {
   currentUser: AppUser | null;
   isLoading: boolean;
+  isAuthenticated: boolean;
   isPlayer: boolean;
   isAdmin: boolean;
   logout: () => Promise<void>;
@@ -29,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (profile.role === 'admin') return { ...base, role: 'admin', department: profile.department ?? 'Administration' };
     return { ...base, role: 'player', unlockedPokemonIds: [], stats: { totalGuesses: 0, correctGuesses: 0, arenaWins: 0 } };
   }, [profile]);
-  const value = useMemo<AuthContextType>(() => ({ currentUser, isLoading: isLoading || (isAuthenticated && profile === undefined), isPlayer: currentUser?.role === 'player', isAdmin: currentUser?.role === 'admin', logout: signOut, switchUser: () => {}, updateCurrentUserProfile: () => {}, availableUsers }), [availableUsers, currentUser, isAuthenticated, isLoading, profile, signOut]);
+  const value = useMemo<AuthContextType>(() => ({ currentUser, isLoading: isLoading || (isAuthenticated && profile === undefined), isAuthenticated, isPlayer: currentUser?.role === 'player', isAdmin: currentUser?.role === 'admin', logout: signOut, switchUser: () => {}, updateCurrentUserProfile: () => {}, availableUsers }), [availableUsers, currentUser, isAuthenticated, isLoading, profile, signOut]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

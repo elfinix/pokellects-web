@@ -284,7 +284,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               <div>
                 <div
                   className={`text-3xl sm:text-4xl font-black font-display tracking-tight transition-colors duration-300 ${
-                    isHovered ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'
+                    isHovered ? 'text-white' : 'text-slate-900 dark:text-white'
                   }`}
                 >
                   {stats.completionRatePercent}%

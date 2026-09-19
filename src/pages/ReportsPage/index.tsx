@@ -39,10 +39,43 @@ import { useTheme } from '../../context/ThemeContext';
 import { POKEMON_TYPE_THEMES } from '../../styles/theme';
 import { Pokemon } from '../../types/pokemon';
 
+interface RegionalTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload?: { name: string; value: number; color: string } }>;
+  isDark: boolean;
+}
+
+const RegionalDistributionTooltip: React.FC<RegionalTooltipProps> = ({ active, payload, isDark }) => {
+  const region = payload?.[0]?.payload;
+  if (!active || !region) return null;
+
+  return (
+    <div
+      className="rounded-xl px-3 py-2 text-xs font-semibold shadow-lg"
+      style={{
+        backgroundColor: isDark ? '#0f172a' : '#ffffff',
+        border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
+        color: isDark ? '#e2e8f0' : '#334155',
+      }}
+    >
+      <span style={{ color: region.color }}>{region.name}: {region.value} registered</span>
+    </div>
+  );
+};
+
 export const ReportsPage: React.FC = () => {
   const { currentUser } = useAuth();
   const { stats, allPokemon, unlockedIds } = usePokedex();
   const { isDark } = useTheme();
+  const chartTooltipStyle = {
+    backgroundColor: isDark ? '#0f172a' : '#ffffff',
+    border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
+    borderRadius: '12px',
+    boxShadow: isDark ? '0 12px 28px rgba(0, 0, 0, 0.35)' : '0 10px 24px rgba(15, 23, 42, 0.12)',
+    color: isDark ? '#e2e8f0' : '#334155',
+    padding: '10px 12px',
+  };
+  const chartTooltipTextStyle = { color: isDark ? '#e2e8f0' : '#334155', fontSize: 12, fontWeight: 600 };
 
   // Unlocked Pokémon Array
   const unlockedList = useMemo(() => {
@@ -373,6 +406,9 @@ export const ReportsPage: React.FC = () => {
                   <Tooltip
                     isAnimationActive={false}
                     wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
+                    contentStyle={chartTooltipStyle}
+                    labelStyle={chartTooltipTextStyle}
+                    itemStyle={chartTooltipTextStyle}
                   />
                 </RadarChart>
               </ResponsiveContainer>
@@ -430,10 +466,7 @@ export const ReportsPage: React.FC = () => {
                   </Pie>
                   <Tooltip
                     isAnimationActive={false}
-                    formatter={(value: any, name: any, item: any) => [
-                      `${value} registered (${item.payload.total} total)`,
-                      `${item.payload.name} (${item.payload.gen})`,
-                    ]}
+                    content={<RegionalDistributionTooltip isDark={isDark} />}
                     wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
                   />
                 </PieChart>
@@ -491,6 +524,9 @@ export const ReportsPage: React.FC = () => {
                 <Tooltip
                   isAnimationActive={false}
                   wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
+                  contentStyle={chartTooltipStyle}
+                  labelStyle={chartTooltipTextStyle}
+                  itemStyle={chartTooltipTextStyle}
                 />
                 <Bar dataKey="wins" name="Victories" radius={[0, 6, 6, 0]}>
                   {minigamesData.map((entry, index) => (
@@ -536,6 +572,9 @@ export const ReportsPage: React.FC = () => {
                 <Tooltip
                   isAnimationActive={false}
                   wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
+                  contentStyle={chartTooltipStyle}
+                  labelStyle={chartTooltipTextStyle}
+                  itemStyle={chartTooltipTextStyle}
                 />
                 <Area
                   type="monotone"
@@ -601,6 +640,9 @@ export const ReportsPage: React.FC = () => {
                   isAnimationActive={false}
                   cursor={{ strokeDasharray: '3 3' }}
                   wrapperStyle={{ outline: 'none', zIndex: 50, pointerEvents: 'none' }}
+                  contentStyle={chartTooltipStyle}
+                  labelStyle={chartTooltipTextStyle}
+                  itemStyle={chartTooltipTextStyle}
                 />
                 <Scatter name="Species" data={scatterData}>
                   {scatterData.map((entry, index) => (
@@ -621,4 +663,3 @@ export const ReportsPage: React.FC = () => {
 };
 
 export default ReportsPage;
-

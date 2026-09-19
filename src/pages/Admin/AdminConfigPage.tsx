@@ -15,6 +15,7 @@ import storageService from '../../services/storageService';
 import { GameConfiguration, FeatureFlags } from '../../types/game';
 import { AdminDisplayConfiguration } from '../../services/storageService';
 import { REGION_METADATA } from '../../services/pokemonIndex';
+import { useTheme } from '../../context/ThemeContext';
 
 const ToggleRow = ({ label, description, enabled, onToggle }: {
   label: string;
@@ -34,6 +35,7 @@ const ToggleRow = ({ label, description, enabled, onToggle }: {
 );
 
 export const AdminConfigPage: React.FC = () => {
+  const { setAdminTheme } = useTheme();
   const [config, setConfig] = useState<GameConfiguration>(() => storageService.getGameConfig());
   const [flags, setFlags] = useState<FeatureFlags>(() => storageService.getFeatureFlags());
   const [displayConfig, setDisplayConfig] = useState<AdminDisplayConfiguration>(() => storageService.getAdminDisplayConfig());
@@ -44,6 +46,7 @@ export const AdminConfigPage: React.FC = () => {
     storageService.updateGameConfig(config);
     storageService.updateFeatureFlags(flags);
     storageService.updateAdminDisplayConfig(displayConfig);
+    setAdminTheme(displayConfig.theme);
     setSavedNotice(true);
     setTimeout(() => setSavedNotice(false), 2500);
   };

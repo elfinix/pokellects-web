@@ -3,6 +3,7 @@ import { motion, useScroll, useMotionValueEvent } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { Sun, Moon } from 'lucide-react';
 import { PokellectsLogo } from '../../../components/common/PokellectsLogo';
+import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 
 interface HeaderProps {
@@ -13,7 +14,10 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
   const lenis = useLenis();
-  const { isDark, toggleTheme } = useTheme();
+  const { currentUser, isAuthenticated } = useAuth();
+  const { publicTheme, togglePublicTheme, isDark } = useTheme();
+  const hasActiveSession = isAuthenticated || Boolean(currentUser);
+  const pageIsDark = hasActiveSession ? isDark : publicTheme === 'dark';
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     setIsScrolled(latest > 20);
@@ -94,11 +98,11 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            onClick={toggleTheme}
-            aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            onClick={togglePublicTheme}
+            aria-label={pageIsDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             className="w-9 h-9 shrink-0 rounded-xl inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/80 dark:border-slate-700 shadow-2xs cursor-pointer"
           >
-            {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+            {pageIsDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
           </button>
 
           <motion.button
@@ -109,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigateToLogin }) => {
             transition={{ type: 'spring', stiffness: 450, damping: 25 }}
             className="group relative h-9 px-4 shrink-0 rounded-xl border border-slate-300/90 dark:border-slate-700 bg-transparent hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-800 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer inline-flex items-center justify-center gap-2 shadow-2xs hover:shadow-xs"
           >
-            <span className="relative z-10 leading-none">Get Started</span>
+            <span className="relative z-10 leading-none">{hasActiveSession ? 'Continue' : 'Get Started'}</span>
             {/* Animated Pokéball that spins and scales on hover */}
             <svg
               viewBox="0 0 24 24"

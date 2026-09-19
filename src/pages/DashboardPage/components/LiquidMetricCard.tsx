@@ -30,7 +30,7 @@ export const LiquidMetricCard: React.FC<LiquidMetricCardProps> = ({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-5 border transition-all duration-500 cursor-default select-none group isolate ${
+      className={`relative min-h-[180px] overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-5 border transition-all duration-500 cursor-default select-none group isolate ${
         isHovered
           ? `border-transparent shadow-xl ${shadowColor} -translate-y-1`
           : 'border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300/80 dark:hover:border-slate-700'
@@ -67,7 +67,7 @@ export const LiquidMetricCard: React.FC<LiquidMetricCardProps> = ({
         <div className="absolute -top-6 left-0 w-[200%] h-7 pointer-events-none overflow-visible">
           {/* Secondary Back Wave (translucent for liquid depth) */}
           <svg
-            className="absolute top-0 left-0 w-full h-full text-white/30 fill-current animate-liquid-wave-2"
+            className="absolute top-0 left-0 w-full h-full text-white/30 dark:text-slate-900 fill-current animate-liquid-wave-2"
             viewBox="0 0 1200 120"
             preserveAspectRatio="none"
           >
