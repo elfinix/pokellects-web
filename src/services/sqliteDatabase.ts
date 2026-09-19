@@ -11,6 +11,7 @@ export interface LocalDbState {
   pokedexEntries: any[];
   arenaSessions: any[];
   achievements: any[];
+  userSettings: any[];
   systemConfigs: Record<string, any>;
   sessionState: Record<string, string>;
 }
@@ -20,12 +21,23 @@ let memoryState: LocalDbState = {
   pokedexEntries: [],
   arenaSessions: [],
   achievements: [],
+  userSettings: [],
   systemConfigs: {},
   sessionState: {},
 };
 
 let isInitialized = false;
 let initPromise: Promise<void> | null = null;
+const databaseListeners = new Set<() => void>();
+
+export function subscribeToDatabase(listener: () => void): () => void {
+  databaseListeners.add(listener);
+  return () => databaseListeners.delete(listener);
+}
+
+function notifyDatabaseListeners(): void {
+  databaseListeners.forEach((listener) => listener());
+}
 
 /**
  * Completely purges browser localStorage, sessionStorage, and IndexedDB storage.
@@ -93,7 +105,7 @@ export async function getSqliteDatabase(): Promise<void> {
  */
 export async function refreshMemoryState(): Promise<void> {
   try {
-    const [usersRes, dexRes, arenaRes, achRes, configRes, sessionRes] = await Promise.all([
+    const [usersRes, dexRes, arenaRes, achRes, userSettingsRes, configRes, sessionRes] = await Promise.all([
       fetch('/api/sqlite/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -117,6 +129,11 @@ export async function refreshMemoryState(): Promise<void> {
       fetch('/api/sqlite/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sql: 'SELECT * FROM user_settings ORDER BY user_id ASC', params: [] }),
+      }).then((r) => (r.ok ? r.json() : { rows: [] })),
+      fetch('/api/sqlite/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sql: 'SELECT * FROM system_configs', params: [] }),
       }).then((r) => (r.ok ? r.json() : { rows: [] })),
       fetch('/api/sqlite/query', {
@@ -130,6 +147,7 @@ export async function refreshMemoryState(): Promise<void> {
     if (dexRes?.rows) memoryState.pokedexEntries = dexRes.rows;
     if (arenaRes?.rows) memoryState.arenaSessions = arenaRes.rows;
     if (achRes?.rows) memoryState.achievements = achRes.rows;
+    if (userSettingsRes?.rows) memoryState.userSettings = userSettingsRes.rows;
 
     if (configRes?.rows) {
       const cfgObj: Record<string, any> = {};
@@ -150,6 +168,7 @@ export async function refreshMemoryState(): Promise<void> {
       }
       memoryState.sessionState = sessObj;
     }
+    notifyDatabaseListeners();
   } catch (err) {
     console.error('Failed to load SQLite data from server file:', err);
   }

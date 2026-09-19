@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
+import storageService from '../services/storageService';
+import { useDatabaseVersion } from '../hooks/useDatabaseVersion';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -12,19 +15,18 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<ThemeMode>(() => {
-    const saved = localStorage.getItem('pokellects_theme');
-    if (saved === 'dark' || saved === 'light') {
-      return saved;
-    }
+  const { currentUser } = useAuth();
+  const databaseVersion = useDatabaseVersion();
+  const [theme, setThemeState] = useState<ThemeMode>('light');
 
-    // Start new sessions in light mode; users can explicitly opt into dark mode in Settings.
-    return 'light';
-  });
+  useEffect(() => {
+    if (!currentUser) return;
+    setThemeState(storageService.getUserSettings(currentUser.id).theme);
+  }, [currentUser?.id, databaseVersion]);
 
   const setTheme = (newTheme: ThemeMode) => {
     setThemeState(newTheme);
-    localStorage.setItem('pokellects_theme', newTheme);
+    if (currentUser) storageService.updateUserSettings(currentUser.id, { theme: newTheme });
   };
 
   const toggleTheme = () => {

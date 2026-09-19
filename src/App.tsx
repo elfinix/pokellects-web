@@ -142,15 +142,15 @@ function MainApp() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <SmoothScrollProvider>
-        <AuthProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <SmoothScrollProvider>
           <PokedexProvider>
             <MainApp />
           </PokedexProvider>
-        </AuthProvider>
-      </SmoothScrollProvider>
-    </ThemeProvider>
+        </SmoothScrollProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

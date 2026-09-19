@@ -21,6 +21,7 @@ import { useAuth } from '../../context/AuthContext';
 import storageService, { ArenaSessionRecord } from '../../services/storageService';
 import { ARENA_GAMES_METADATA } from '../../services/mockdata';
 import { GameMetadata, ArenaGameType } from '../../types/game';
+import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
 import WhosThatPokemon from './WhosThatPokemon';
 import Hangmon from './Hangmon';
 import Identicry from './Identicry';
@@ -134,37 +135,46 @@ const GAME_THEMES: Record<ArenaGameType, GameCustomTheme> = {
 
 export const MinigamesPage: React.FC<MinigamesPageProps> = ({ onPlayGame }) => {
   const { currentUser } = useAuth();
+  const databaseVersion = useDatabaseVersion();
   const [selectedGame, setSelectedGame] = useState<GameMetadata | null>(null);
   const [activeGame, setActiveGame] = useState<ArenaGameType | null>(null);
   const [search, setSearch] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'row'>(() => {
-    return (localStorage.getItem('pokellects_minigames_view') as 'grid' | 'row') || 'grid';
-  });
+  const [viewMode, setViewMode] = useState<'grid' | 'row'>('grid');
   const [sessions, setSessions] = useState<ArenaSessionRecord[]>([]);
 
   const handleViewModeChange = (mode: 'grid' | 'row') => {
     setViewMode(mode);
-    localStorage.setItem('pokellects_minigames_view', mode);
+    if (currentUser) storageService.updateUserSettings(currentUser.id, { minigamesView: mode });
   };
 
   useEffect(() => {
     const records = storageService.getArenaSessions(currentUser?.id);
     setSessions(records);
-  }, [currentUser]);
+    if (currentUser) setViewMode(storageService.getUserSettings(currentUser.id).minigamesView);
+  }, [currentUser?.id, databaseVersion]);
 
   const totalVictories = useMemo(() => sessions.filter((s) => s.isWon).length, [sessions]);
   const totalPlayed = useMemo(() => sessions.length, [sessions]);
 
   const filteredGames = useMemo(() => {
-    if (!search.trim()) return ARENA_GAMES_METADATA;
+    const flags = storageService.getFeatureFlags();
+    const games = ARENA_GAMES_METADATA.map((game) => ({
+      ...game,
+      isAvailable: game.id === 'whos_that_pokemon' ? flags.enableWhosThatPokemon
+        : game.id === 'hangmon' ? flags.enableHangmon
+        : game.id === 'identicry' ? flags.enableIdenticry
+        : game.id === 'pokedle' ? flags.enablePokedlePreview && game.isAvailable
+        : game.isAvailable,
+    }));
+    if (!search.trim()) return games;
     const q = search.toLowerCase();
-    return ARENA_GAMES_METADATA.filter(
+    return games.filter(
       (game) =>
         game.title.toLowerCase().includes(q) ||
         game.description.toLowerCase().includes(q) ||
         game.tagline.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [search, databaseVersion]);
 
   const handleLaunchGame = (gameId: ArenaGameType) => {
     setSelectedGame(null);

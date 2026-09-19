@@ -68,6 +68,15 @@ function initSchemaAndSeed(database: DatabaseSync) {
       unlocked_at TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS user_settings (
+      user_id TEXT PRIMARY KEY,
+      theme TEXT NOT NULL DEFAULT 'light',
+      minigames_view TEXT NOT NULL DEFAULT 'grid',
+      sound_enabled INTEGER NOT NULL DEFAULT 1,
+      reduced_motion INTEGER NOT NULL DEFAULT 0,
+      updated_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS system_configs (
       key TEXT PRIMARY KEY,
       value_json TEXT NOT NULL,
@@ -92,6 +101,7 @@ export function seedDatabase(database: DatabaseSync) {
     DELETE FROM pokedex_entries;
     DELETE FROM arena_sessions;
     DELETE FROM achievements;
+    DELETE FROM user_settings;
     DELETE FROM system_configs;
     DELETE FROM session_state;
     DELETE FROM users;
@@ -185,15 +195,21 @@ export function seedDatabase(database: DatabaseSync) {
     }
   }
 
+  const insertUserSettings = database.prepare('INSERT INTO user_settings (user_id, theme, minigames_view, sound_enabled, reduced_motion, updated_at) VALUES (?, ?, ?, ?, ?, ?)');
+  for (const user of [...players, admin]) {
+    insertUserSettings.run(user.id, 'light', 'grid', 1, 0, new Date().toISOString());
+  }
+
   // Active Session
   database.prepare('INSERT INTO session_state (key, value) VALUES (?, ?)').run('active_user_id', 'usr-player-1');
 
   // Configs
   const defaultConfig = {
-    whosThatPokemon: { timerSeconds: 15, showTypeHint: true, showGenerationHint: true, maxAttempts: 3 },
+    whosThatPokemon: { timerSeconds: 15, showTypeHint: true, showGenerationHint: true, maxAttempts: 3, imageSize: 'normal' },
     hangmon: { maxStrikes: 6, showCategoryHint: true, timerSeconds: 45 },
-    identicry: { replayCryLimit: 3, timerSeconds: 20, multipleChoiceOptions: 4 },
-    general: { allowAnyGeneration: true, enabledGenerations: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
+    identicry: { replayCryLimit: 3, timerSeconds: 20, multipleChoiceOptions: 4, showHints: true },
+    biologist: { showHints: true },
+    general: { allowAnyGeneration: true, enabledGenerations: [1, 2, 3, 4, 5, 6, 7, 8, 9], pokemonFetch: 'undiscovered' },
   };
 
   const defaultFlags = {

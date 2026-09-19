@@ -176,10 +176,20 @@ export function getRandomUndiscoveredPokemon(unlockedIds: number[]): Pokemon | n
 /** Selects from either a trainer's undiscovered roster or the complete Pokédex. */
 export function getRandomPokemonForGame(
   unlockedIds: number[],
-  fetchMode: 'undiscovered' | 'all' = 'undiscovered'
+  fetchMode: 'undiscovered' | 'all' = 'undiscovered',
+  enabledGenerations: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 ): Pokemon | null {
-  if (fetchMode === 'undiscovered') return getRandomUndiscoveredPokemon(unlockedIds);
-  const id = Math.floor(Math.random() * 1025) + 1;
+  const allowedIds = Array.from({ length: 1025 }, (_, index) => index + 1)
+    .filter((id) => enabledGenerations.includes(getGenerationFromId(id)));
+  if (allowedIds.length === 0) return null;
+  if (fetchMode === 'undiscovered') {
+    const unlockedSet = new Set(unlockedIds);
+    const eligibleIds = allowedIds.filter((id) => !unlockedSet.has(id));
+    if (eligibleIds.length === 0) return null;
+    const id = eligibleIds[Math.floor(Math.random() * eligibleIds.length)];
+    return dynamicRegistry.get(id) || createPokemonStub(id);
+  }
+  const id = allowedIds[Math.floor(Math.random() * allowedIds.length)];
   return dynamicRegistry.get(id) || createPokemonStub(id);
 }
 

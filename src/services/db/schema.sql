@@ -63,6 +63,17 @@ CREATE TABLE IF NOT EXISTS user_achievements (
     UNIQUE (user_id, achievement_key)
 );
 
+-- 6. Per-user display and accessibility preferences
+CREATE TABLE IF NOT EXISTS user_settings (
+    user_id TEXT PRIMARY KEY,
+    theme TEXT NOT NULL DEFAULT 'light',
+    minigames_view TEXT NOT NULL DEFAULT 'grid',
+    sound_enabled INTEGER NOT NULL DEFAULT 1,
+    reduced_motion INTEGER NOT NULL DEFAULT 0,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Indexing for high-performance lookups
 CREATE INDEX IF NOT EXISTS idx_pokedex_user ON pokedex_entries(user_id);
 CREATE INDEX IF NOT EXISTS idx_pokedex_pokemon ON pokedex_entries(pokemon_id);

@@ -12,6 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 import storageService from '../../services/storageService';
 import { REGION_METADATA } from '../../services/pokemonIndex';
 import { WorkspaceTab } from '../../components/common/AppShell';
+import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface AdminDashboardPageProps {
@@ -20,12 +21,13 @@ interface AdminDashboardPageProps {
 
 export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNavigate }) => {
   const { currentUser, availableUsers } = useAuth();
+  const databaseVersion = useDatabaseVersion();
 
   // Live storage queries
-  const allDexEntries = useMemo(() => storageService.getAllPokedexEntries(), []);
-  const allSessions = useMemo(() => storageService.getArenaSessions(), []);
-  const config = useMemo(() => storageService.getGameConfig(), []);
-  const flags = useMemo(() => storageService.getFeatureFlags(), []);
+  const allDexEntries = useMemo(() => storageService.getAllPokedexEntries(), [databaseVersion]);
+  const allSessions = useMemo(() => storageService.getArenaSessions(), [databaseVersion]);
+  const config = useMemo(() => storageService.getGameConfig(), [databaseVersion]);
+  const flags = useMemo(() => storageService.getFeatureFlags(), [databaseVersion]);
 
   // Aggregated platform stats
   const playersCount = availableUsers.filter((u) => u.role === 'player').length;
@@ -175,7 +177,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
               <span>data/pokellects.db</span>
             </div>
             <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-              6 tables active & synchronized
+              Live records synchronized from SQLite
             </div>
           </div>
         </div>

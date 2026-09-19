@@ -228,7 +228,7 @@ export const Biologist: React.FC<BiologistProps> = ({ onBack }) => {
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
     const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
-    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode, storageService.getGameConfig().general.enabledGenerations);
 
     if (!picked) {
       const total = allPokemon.length > 0 ? allPokemon.length : 1025;

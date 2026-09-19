@@ -3,9 +3,11 @@ import { Search, BookOpen, UserCheck, X, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { AppUser, PlayerUser, AdminUser } from '../../types/user';
 import { ALL_KNOWN_POKEMON_MAP } from '../../services/pokemonIndex';
+import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
 
 export const AdminUsersPage: React.FC = () => {
   const { availableUsers, currentUser, switchUser } = useAuth();
+  useDatabaseVersion();
   const [search, setSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState<AppUser | null>(null);
 

@@ -11,15 +11,16 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import storageService from '../../services/storageService';
+import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
 
 export const SettingsPage: React.FC = () => {
   const { currentUser } = useAuth();
   const { theme, setTheme } = useTheme();
+  const databaseVersion = useDatabaseVersion();
 
   // 1. Minigames View Mode (Grid vs Row) Draft
-  const [minigamesView, setMinigamesView] = useState<'grid' | 'row'>(() => {
-    return (localStorage.getItem('pokellects_minigames_view') as 'grid' | 'row') || 'grid';
-  });
+  const [minigamesView, setMinigamesView] = useState<'grid' | 'row'>('grid');
 
   // 2. Appearance Theme (Light vs Dark) Draft
   const [appearance, setAppearance] = useState<'light' | 'dark'>(theme);
@@ -29,32 +30,36 @@ export const SettingsPage: React.FC = () => {
   }, [theme]);
 
   // 3. Audio Cries & SFX Draft
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
-    return localStorage.getItem('pokellects_sound_enabled') !== 'false';
-  });
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   // 4. Reduced Motion Draft
-  const [reducedMotion, setReducedMotion] = useState<boolean>(() => {
-    return localStorage.getItem('pokellects_reduced_motion') === 'true';
-  });
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   const [savedToast, setSavedToast] = useState(false);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    const settings = storageService.getUserSettings(currentUser.id);
+    setMinigamesView(settings.minigamesView);
+    setSoundEnabled(settings.soundEnabled);
+    setReducedMotion(settings.reducedMotion);
+    setAppearance(settings.theme);
+  }, [currentUser?.id, databaseVersion]);
 
   // Save and Apply All Preferences
   const handleSavePreferences = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1. Minigames View Mode
-    localStorage.setItem('pokellects_minigames_view', minigamesView);
+    if (!currentUser) return;
 
-    // 2. Theme
+    storageService.updateUserSettings(currentUser.id, {
+      theme: appearance,
+      minigamesView,
+      soundEnabled,
+      reducedMotion,
+    });
+
     setTheme(appearance);
-
-    // 3. Sound
-    localStorage.setItem('pokellects_sound_enabled', String(soundEnabled));
-
-    // 4. Reduced Motion
-    localStorage.setItem('pokellects_reduced_motion', String(reducedMotion));
 
     // Show save indicator
     setSavedToast(true);

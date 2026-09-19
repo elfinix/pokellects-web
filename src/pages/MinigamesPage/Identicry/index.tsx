@@ -82,6 +82,8 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
 
   // Play audio cry
   const playCry = useCallback((pokemonId: number) => {
+    const playerId = currentUser?.id || 'usr-player-1';
+    if (!storageService.getUserSettings(playerId).soundEnabled) return;
     try {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -101,7 +103,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
     } catch {
       setIsPlayingCry(false);
     }
-  }, []);
+  }, [currentUser?.id]);
 
   // Pick next Pokémon: ALWAYS prioritize unregistered Pokémon
   const loadNextRound = useCallback(async () => {
@@ -122,7 +124,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
     const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
-    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode, storageService.getGameConfig().general.enabledGenerations);
 
     // Fallback only if player has unlocked all 1,025 Pokémon
     if (!picked) {

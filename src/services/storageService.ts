@@ -26,6 +26,15 @@ export interface ArenaSessionRecord {
   playedAt: string;
 }
 
+export interface UserSettings {
+  userId: string;
+  theme: 'light' | 'dark';
+  minigamesView: 'grid' | 'row';
+  soundEnabled: boolean;
+  reducedMotion: boolean;
+  updatedAt: string;
+}
+
 /**
  * SQLite Local File Database Repository.
  * Powered by local SQLite database file (`data/pokellects.db`) on disk,
@@ -296,12 +305,29 @@ class StorageService {
   // --- CONFIGURATIONS & FEATURE FLAGS (SQLite: system_configs) ---
   public getGameConfig(): GameConfiguration {
     const { systemConfigs } = getMemoryState();
-    return systemConfigs['game_config'] || DEFAULT_GAME_CONFIG;
+    const stored = systemConfigs['game_config'] || {};
+    return {
+      ...DEFAULT_GAME_CONFIG,
+      ...stored,
+      whosThatPokemon: { ...DEFAULT_GAME_CONFIG.whosThatPokemon, ...stored.whosThatPokemon },
+      hangmon: { ...DEFAULT_GAME_CONFIG.hangmon, ...stored.hangmon },
+      identicry: { ...DEFAULT_GAME_CONFIG.identicry, ...stored.identicry },
+      biologist: { ...DEFAULT_GAME_CONFIG.biologist, ...stored.biologist },
+      general: { ...DEFAULT_GAME_CONFIG.general, ...stored.general },
+    };
   }
 
   public updateGameConfig(config: Partial<GameConfiguration>): GameConfiguration {
     const current = this.getGameConfig();
-    const updated = { ...current, ...config };
+    const updated = {
+      ...current,
+      ...config,
+      whosThatPokemon: { ...current.whosThatPokemon, ...config.whosThatPokemon },
+      hangmon: { ...current.hangmon, ...config.hangmon },
+      identicry: { ...current.identicry, ...config.identicry },
+      biologist: { ...current.biologist, ...config.biologist },
+      general: { ...current.general, ...config.general },
+    };
     getMemoryState().systemConfigs['game_config'] = updated;
     executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
       'game_config',
@@ -325,6 +351,38 @@ class StorageService {
       JSON.stringify(updated),
       new Date().toISOString(),
     ]);
+    return updated;
+  }
+
+  // --- PER-USER SETTINGS (SQLite: user_settings) ---
+  public getUserSettings(userId: string): UserSettings {
+    const row = getMemoryState().userSettings.find((item: any) => item.user_id === userId);
+    return {
+      userId,
+      theme: row?.theme === 'dark' ? 'dark' : 'light',
+      minigamesView: row?.minigames_view === 'row' ? 'row' : 'grid',
+      soundEnabled: row ? row.sound_enabled === 1 || row.sound_enabled === true : true,
+      reducedMotion: row ? row.reduced_motion === 1 || row.reduced_motion === true : false,
+      updatedAt: row?.updated_at || '',
+    };
+  }
+
+  public updateUserSettings(userId: string, settings: Partial<Omit<UserSettings, 'userId' | 'updatedAt'>>): UserSettings {
+    const current = this.getUserSettings(userId);
+    const updated: UserSettings = { ...current, ...settings, updatedAt: new Date().toISOString() };
+    const rows = getMemoryState().userSettings;
+    const index = rows.findIndex((item: any) => item.user_id === userId);
+    const row = {
+      user_id: userId,
+      theme: updated.theme,
+      minigames_view: updated.minigamesView,
+      sound_enabled: updated.soundEnabled ? 1 : 0,
+      reduced_motion: updated.reducedMotion ? 1 : 0,
+      updated_at: updated.updatedAt,
+    };
+    if (index >= 0) rows[index] = row;
+    else rows.push(row);
+    executeSql('INSERT OR REPLACE INTO user_settings (user_id, theme, minigames_view, sound_enabled, reduced_motion, updated_at) VALUES (?, ?, ?, ?, ?, ?)', [userId, row.theme, row.minigames_view, row.sound_enabled, row.reduced_motion, row.updated_at]);
     return updated;
   }
 

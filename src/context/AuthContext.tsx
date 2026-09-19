@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AppUser, PlayerUser, AdminUser } from '../types/user';
 import storageService from '../services/storageService';
+import { subscribeToDatabase } from '../services/sqliteDatabase';
 import { DEMO_CREDENTIALS } from '../services/mockdata';
 
 interface AuthContextType {
@@ -25,6 +26,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = storageService.getActiveUser();
       setCurrentUser(user);
       setAvailableUsers(storageService.getUsers());
+    });
+    return subscribeToDatabase(() => {
+      const users = storageService.getUsers();
+      setAvailableUsers(users);
+      const activeId = storageService.getActiveUser()?.id;
+      setCurrentUser(users.find((user) => user.id === activeId) || null);
     });
   }, []);
 

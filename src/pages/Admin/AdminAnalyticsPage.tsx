@@ -15,12 +15,14 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import storageService from '../../services/storageService';
 import { ALL_KNOWN_POKEMON, REGION_METADATA } from '../../services/pokemonIndex';
+import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
 
 export const AdminAnalyticsPage: React.FC = () => {
   const { availableUsers } = useAuth();
+  const databaseVersion = useDatabaseVersion();
 
-  const allDexEntries = useMemo(() => storageService.getAllPokedexEntries(), []);
-  const allSessions = useMemo(() => storageService.getArenaSessions(), []);
+  const allDexEntries = useMemo(() => storageService.getAllPokedexEntries(), [databaseVersion]);
+  const allSessions = useMemo(() => storageService.getArenaSessions(), [databaseVersion]);
 
   // 1. Generation Breakdown
   const generationStats = useMemo(() => {

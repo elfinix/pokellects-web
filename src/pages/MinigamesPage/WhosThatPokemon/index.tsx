@@ -97,7 +97,7 @@ export const WhosThatPokemon: React.FC<WhosThatPokemonProps> = ({ onBack }) => {
     const storageUnlocked = storageService.getPlayerUnlockedEntries(playerId).map((e) => e.pokemonId);
     const combinedUnlocked = Array.from(new Set([...unlockedIds, ...storageUnlocked]));
     const fetchMode = storageService.getGameConfig().general.pokemonFetch ?? 'undiscovered';
-    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode);
+    let picked: Pokemon | null = getRandomPokemonForGame(combinedUnlocked, fetchMode, storageService.getGameConfig().general.enabledGenerations);
 
     // Fallback only if player has unlocked all 1,025 Pokémon
     if (!picked) {
