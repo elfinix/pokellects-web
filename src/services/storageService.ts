@@ -165,6 +165,21 @@ class StorageService {
     );
   }
 
+  public deleteUser(userId: string): void {
+    const mem = getMemoryState();
+    mem.users = (mem.users || []).filter((u: any) => u.id !== userId);
+    mem.pokedexEntries = (mem.pokedexEntries || []).filter((e: any) => e.user_id !== userId);
+    mem.arenaSessions = (mem.arenaSessions || []).filter((s: any) => s.user_id !== userId);
+    mem.achievements = (mem.achievements || []).filter((a: any) => a.user_id !== userId);
+    mem.userSettings = (mem.userSettings || []).filter((s: any) => s.user_id !== userId);
+
+    executeSql('DELETE FROM pokedex_entries WHERE user_id = ?', [userId]);
+    executeSql('DELETE FROM arena_sessions WHERE user_id = ?', [userId]);
+    executeSql('DELETE FROM user_achievements WHERE user_id = ?', [userId]);
+    executeSql('DELETE FROM user_settings WHERE user_id = ?', [userId]);
+    executeSql('DELETE FROM users WHERE id = ?', [userId]);
+  }
+
   // --- POKEDEX ENTRIES (SQLite: pokedex_entries) ---
   public getPlayerUnlockedEntries(playerId: string): UnlockedPokemonEntry[] {
     const { pokedexEntries } = getMemoryState();

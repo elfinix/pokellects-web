@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { Search, BookOpen, X, Users, RotateCcw, ArrowUpRight } from 'lucide-react';
+import { Search, BookOpen, X, Users, RotateCcw, ArrowUpRight, Trash2 } from 'lucide-react';
+import { useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { useAuth } from '../../context/AuthContext';
 import { AppUser, PlayerUser, AdminUser } from '../../types/user';
 import { REGION_METADATA } from '../../services/pokemonIndex';
 import { useDatabaseVersion } from '../../hooks/useDatabaseVersion';
+import storageService from '../../services/storageService';
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export const AdminUsersPage: React.FC = () => {
@@ -11,6 +14,23 @@ export const AdminUsersPage: React.FC = () => {
   useDatabaseVersion();
   const [search, setSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState<AppUser | null>(null);
+  const deleteConvexUser = useMutation(api.users.deleteUser);
+
+  const handleDeleteUser = async (user: AppUser) => {
+    if (window.confirm(`Are you sure you want to delete @${user.username}? This will permanently cascade-delete all of their Pokédex entries, arena sessions, achievements, and settings.`)) {
+      try {
+        storageService.deleteUser(user.id);
+        try {
+          await deleteConvexUser({ userId: user.id as any });
+        } catch (err) {
+          console.warn('Convex user deletion notice:', err);
+        }
+        setSelectedUser(null);
+      } catch (err) {
+        console.error('Failed to delete user:', err);
+      }
+    }
+  };
 
   const filteredUsers = useMemo(() => {
     return availableUsers.filter((u) => {
@@ -271,6 +291,16 @@ export const AdminUsersPage: React.FC = () => {
                 Close
               </button>
 
+              {currentUser?.id !== selectedUser.id && (
+                <button
+                  type="button"
+                  onClick={() => handleDeleteUser(selectedUser)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-red-200/80 dark:border-red-900/60 bg-red-50/80 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete Trainer
+                </button>
+              )}
             </div>
           </div>
         </div>
