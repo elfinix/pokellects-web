@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   BookOpen,
   Keyboard,
@@ -11,6 +11,27 @@ import { TOTAL_POKEMON_COUNT } from '../../../services/pokemonIndex';
 
 export const AboutSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mobileCarouselRef = useRef<HTMLDivElement>(null);
+  const [activeMobileCard, setActiveMobileCard] = useState(0);
+
+  const handleMobileScroll = () => {
+    if (!mobileCarouselRef.current) return;
+    const { scrollLeft, clientWidth } = mobileCarouselRef.current;
+    if (clientWidth > 0) {
+      const idx = Math.round(scrollLeft / clientWidth);
+      setActiveMobileCard(Math.min(2, Math.max(0, idx)));
+    }
+  };
+
+  const scrollToMobileCard = (index: number) => {
+    if (!mobileCarouselRef.current) return;
+    const clientWidth = mobileCarouselRef.current.clientWidth;
+    mobileCarouselRef.current.scrollTo({
+      left: index * clientWidth,
+      behavior: 'smooth',
+    });
+    setActiveMobileCard(index);
+  };
 
   // Track scroll progress within this 290vh runway (Lenis handles smooth wheel scrolling globally)
   const { scrollYProgress } = useScroll({
@@ -72,11 +93,173 @@ export const AboutSection: React.FC = () => {
   );
 
   return (
-    <section
-      id="about"
-      ref={containerRef}
-      className="relative h-[250vh] sm:h-[290vh]"
-    >
+    <section id="about" className="relative">
+      {/* ================= MOBILE VIEW (Horizontal Swipeable Cards + Dot Indicators) ================= */}
+      <div className="block sm:hidden py-10 px-4 w-full">
+        {/* Mobile Section Title */}
+        <div className="text-center mb-6 space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/60">
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Architecture & Features</span>
+          </div>
+          <h2 className="text-2xl font-black font-display tracking-tight text-slate-900 dark:text-white">
+            Built for Serious Collectors
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+            Swipe through the cards below to explore Pokellects core capabilities
+          </p>
+        </div>
+
+        {/* Swipeable Horizontal Cards Track */}
+        <div
+          ref={mobileCarouselRef}
+          onScroll={handleMobileScroll}
+          className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 w-full scrollbar-none touch-pan-x"
+          style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+        >
+          {/* Mobile Card 0: Persistent Ledger */}
+          <div className="w-full shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-7 relative overflow-hidden flex flex-col space-y-4">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 via-rose-400 to-amber-400" />
+            
+            <div className="space-y-2.5 text-left pt-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 border border-red-200/80 dark:border-red-900/60">
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>01 • Persistent Ledger</span>
+              </div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white font-display tracking-tight leading-snug">
+                A Pokédex That <span className="text-red-600 dark:text-red-500">Never Resets</span>.
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                Traditional trivia quizzes discard your progress the second you close the tab.
+                Pokellects gives your Pokémon knowledge permanence, archiving every species into an
+                immutable national ledger.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                <span>{TOTAL_POKEMON_COUNT.toLocaleString()} Species National Roster</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                <span>Permanent Cloud & Local Sync</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                <span>Zero Session Loss Guarantee</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-red-500 shrink-0" />
+                <span>Real-time Regional Breakdown</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Card 1: Rapid Input Engine */}
+          <div className="w-full shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-7 relative overflow-hidden flex flex-col space-y-4">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500" />
+            
+            <div className="space-y-2.5 text-left pt-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200/80 dark:border-blue-900/60">
+                <Keyboard className="w-3.5 h-3.5" />
+                <span>02 • Rapid Input Engine</span>
+              </div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white font-display tracking-tight leading-snug">
+                Continuous <span className="text-blue-600 dark:text-blue-400">Fast Recall</span>.
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                Engineered specifically for lightning-fast memory recall. Type any species name
+                into the floating omnibar, inspect typing multipliers, and rapidly populate your collection.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <span>Instant Keystroke Fuzzy Match</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <span>Esc Key Instant Focus Reset</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <span>Zero-Mouse Workflow Tuning</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <span>Live Type Multiplier Matrix</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Card 2: Minigame Discovery */}
+          <div className="w-full shrink-0 snap-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.04] dark:shadow-black/20 p-6 sm:p-7 relative overflow-hidden flex flex-col space-y-4">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 via-pink-400 to-amber-400" />
+            
+            <div className="space-y-2.5 text-left pt-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-200/80 dark:border-purple-900/60">
+                <Trophy className="w-3.5 h-3.5" />
+                <span>03 • Minigame Discovery</span>
+              </div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white font-display tracking-tight leading-snug">
+                Game-Driven <span className="text-purple-600 dark:text-purple-400">Smart Unlocks</span>.
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
+                Challenges in Pokellects carry permanent progression. Every victory in our minigames
+                algorithmically rewards a guaranteed undiscovered species directly into your ledger.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                <span>Guaranteed Undiscovered Unlocks</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                <span>Streak Multiplier Bonuses</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                <span>Deduction & Acoustic Mechanics</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <CheckCircle2 className="w-3.5 h-3.5 text-purple-500 shrink-0" />
+                <span>Mythical & Legendary Milestones</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Visual Cue: 3-Dot Indicator for Current Swipe Position */}
+        <div className="flex items-center justify-center gap-2 pt-4">
+          {[0, 1, 2].map((idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => scrollToMobileCard(idx)}
+              aria-label={`Go to feature slide ${idx + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                activeMobileCard === idx
+                  ? idx === 0
+                    ? 'w-7 bg-red-600 dark:bg-red-500 shadow-xs shadow-red-500/30'
+                    : idx === 1
+                    ? 'w-7 bg-blue-600 dark:bg-blue-500 shadow-xs shadow-blue-500/30'
+                    : 'w-7 bg-purple-600 dark:bg-purple-500 shadow-xs shadow-purple-500/30'
+                  : 'w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ================= DESKTOP VIEW (Pinned Scroll Deck) ================= */}
+      <div
+        ref={containerRef}
+        className="hidden sm:block relative h-[290vh]"
+      >
       {/* Pinned Full-Screen Viewport Stage covering entire screen height below sticky header */}
       <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-center items-center pt-14 sm:pt-18 pb-4 sm:pb-6 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Soft ambient background aura */}
@@ -430,7 +613,8 @@ export const AboutSection: React.FC = () => {
           </motion.div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   );
 };
 

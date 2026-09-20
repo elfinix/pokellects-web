@@ -1564,10 +1564,6 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                     Family tree and branch progression requirements:
                   </p>
                 </div>
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold text-slate-500 dark:text-slate-400 border border-slate-200/70 dark:border-slate-700">
-                  <Lock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
-                  <span>Undiscovered species concealed</span>
-                </div>
               </div>
 
               {/* Main Evolution Canvas — perfectly centered for standard lineages, smoothly scrollable for multi-branch trees */}

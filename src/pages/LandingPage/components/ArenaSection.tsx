@@ -25,7 +25,28 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
   const handleLaunch = onLaunchMinigames || onNavigateToLogin;
   const [hoveredCard, setHoveredCard] = useState<GameMode | null>(null);
   const [isPlayingCry, setIsPlayingCry] = useState(false);
+  const [activeMobileCard, setActiveMobileCard] = useState(0);
   const cryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mobileCarouselRef = useRef<HTMLDivElement>(null);
+
+  const handleMobileScroll = () => {
+    if (!mobileCarouselRef.current) return;
+    const { scrollLeft, clientWidth } = mobileCarouselRef.current;
+    if (clientWidth > 0) {
+      const idx = Math.round(scrollLeft / clientWidth);
+      setActiveMobileCard(Math.min(3, Math.max(0, idx)));
+    }
+  };
+
+  const scrollToMobileCard = (index: number) => {
+    if (!mobileCarouselRef.current) return;
+    const clientWidth = mobileCarouselRef.current.clientWidth;
+    mobileCarouselRef.current.scrollTo({
+      left: index * clientWidth,
+      behavior: 'smooth',
+    });
+    setActiveMobileCard(index);
+  };
 
   // Web Audio Synthesizer for Identicry Hover Effect
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -126,8 +147,13 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
           </p>
         </motion.div>
 
-        {/* 2x2 Interactive Action Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-7 sm:gap-8 lg:gap-8">
+        {/* Interactive Action Cards Grid (Swipeable on Mobile, 2x2 Grid on Desktop) */}
+        <div
+          ref={mobileCarouselRef}
+          onScroll={handleMobileScroll}
+          className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none gap-4 md:gap-7 lg:gap-8 pb-3 md:pb-0 w-full scrollbar-none touch-pan-x md:grid-cols-2"
+          style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+        >
           {/* ================= CARD 1: WHO'S THAT POKÉMON? ================= */}
           <div
             onMouseEnter={() => setHoveredCard('silhouette')}
@@ -135,7 +161,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
             onClick={() => setHoveredCard((current) => current === 'silhouette' ? null : 'silhouette')}
             role="button"
             tabIndex={0}
-            className="group relative min-h-[380px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
+            className="group relative min-h-[380px] w-full shrink-0 snap-center md:shrink md:snap-align-none rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-transparent" />
@@ -244,7 +270,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
             onClick={() => setHoveredCard((current) => current === 'hangmon' ? null : 'hangmon')}
             role="button"
             tabIndex={0}
-            className="group relative min-h-[380px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
+            className="group relative min-h-[380px] w-full shrink-0 snap-center md:shrink md:snap-align-none rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-transparent" />
@@ -342,7 +368,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
             onClick={() => hoveredCard === 'identicry' ? handleIdenticryLeave() : handleIdenticryEnter()}
             role="button"
             tabIndex={0}
-            className="group relative min-h-[380px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
+            className="group relative min-h-[380px] w-full shrink-0 snap-center md:shrink md:snap-align-none rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-amber-300 dark:hover:border-amber-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
@@ -438,7 +464,7 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
             onClick={() => setHoveredCard((current) => current === 'biologist' ? null : 'biologist')}
             role="button"
             tabIndex={0}
-            className="group relative min-h-[380px] w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
+            className="group relative min-h-[380px] w-full shrink-0 snap-center md:shrink md:snap-align-none rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-teal-300 dark:hover:border-teal-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out p-5 sm:p-6 flex flex-col justify-between overflow-hidden cursor-pointer"
           >
             {/* Top Accent Gradient Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-transparent" />
@@ -511,6 +537,29 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Mobile Swipe Position Indicator (4 Dots) */}
+        <div className="flex md:hidden items-center justify-center gap-2 pt-1 pb-2">
+          {[0, 1, 2, 3].map((idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => scrollToMobileCard(idx)}
+              aria-label={`Go to minigame slide ${idx + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                activeMobileCard === idx
+                  ? idx === 0
+                    ? 'w-7 bg-purple-600 dark:bg-purple-500 shadow-xs shadow-purple-500/30'
+                    : idx === 1
+                    ? 'w-7 bg-blue-600 dark:bg-blue-500 shadow-xs shadow-blue-500/30'
+                    : idx === 2
+                    ? 'w-7 bg-amber-500 dark:bg-amber-400 shadow-xs shadow-amber-500/30'
+                    : 'w-7 bg-teal-500 dark:bg-teal-400 shadow-xs shadow-teal-500/30'
+                  : 'w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600'
+              }`}
+            />
+          ))}
         </div>
 
         {/* Bottom Minigame Feature Badges & Direct Launch CTA */}

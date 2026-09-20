@@ -24,6 +24,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
 import { useTheme } from '../../context/ThemeContext';
+import { Pokemon } from '../../types/pokemon';
 import { POKEMON_TYPE_THEMES } from '../../styles/theme';
 import { WorkspaceTab } from '../../components/common/AppShell';
 import { LiquidMetricCard } from './components/LiquidMetricCard';
@@ -89,9 +90,20 @@ const CustomTypeTooltip = ({ active, payload }: any) => {
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const { currentUser } = useAuth();
   const { isDark } = useTheme();
-  const { allPokemon, unlockedIds, stats, openDetailModal } = usePokedex();
+  const { allPokemon, unlockedIds, unlockedEntries, stats, openDetailModal } = usePokedex();
 
   const unlockedPokemonList = allPokemon.filter((p) => unlockedIds.includes(p.id));
+
+  // Sort by date acquired (descending: newest first)
+  const recentlyRegisteredList = React.useMemo(() => {
+    const sortedEntries = [...unlockedEntries].sort(
+      (a, b) => new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime()
+    );
+    const pokemonMap = new Map(allPokemon.map((p) => [p.id, p]));
+    return sortedEntries
+      .map((entry) => pokemonMap.get(entry.pokemonId))
+      .filter((p): p is Pokemon => Boolean(p));
+  }, [unlockedEntries, allPokemon]);
 
   // 1. Generation Breakdown Data for Recharts Bar Chart
   const genData = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((gen) => {
@@ -553,33 +565,39 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {unlockedPokemonList.slice(0, 6).map((poke) => (
-            <button
-              key={poke.id}
-              type="button"
-              onClick={() => openDetailModal(poke)}
-              className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-xs transition-all text-center flex flex-col items-center justify-between cursor-pointer group"
-            >
-              <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                #{String(poke.id).padStart(4, '0')}
-              </span>
-              <img
-                src={poke.spriteUrl}
-                alt={poke.displayName}
-                className="w-14 h-14 object-contain my-1.5 group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform duration-300 drop-shadow-xs"
-              />
-              <div className="w-full">
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate block group-hover:text-slate-950 dark:group-hover:text-white">
-                  {poke.displayName}
+        {recentlyRegisteredList.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {recentlyRegisteredList.slice(0, 6).map((poke) => (
+              <button
+                key={poke.id}
+                type="button"
+                onClick={() => openDetailModal(poke)}
+                className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-xs transition-all text-center flex flex-col items-center justify-between cursor-pointer group"
+              >
+                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                  #{String(poke.id).padStart(4, '0')}
                 </span>
-                <span className="text-[9px] text-red-600 dark:text-red-400 font-semibold uppercase tracking-wider">
-                  {poke.types[0]}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
+                <img
+                  src={poke.spriteUrl}
+                  alt={poke.displayName}
+                  className="w-14 h-14 object-contain my-1.5 group-hover:scale-110 group-hover:-translate-y-0.5 transition-transform duration-300 drop-shadow-xs"
+                />
+                <div className="w-full">
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate block group-hover:text-slate-950 dark:group-hover:text-white">
+                    {poke.displayName}
+                  </span>
+                  <span className="text-[9px] text-red-600 dark:text-red-400 font-semibold uppercase tracking-wider">
+                    {poke.types[0]}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-xs text-slate-400 dark:text-slate-500 italic">
+            No Pokémon registered yet. Explore the Pokédex or play minigames to start your collection!
+          </div>
+        )}
       </div>
     </div>
   );
