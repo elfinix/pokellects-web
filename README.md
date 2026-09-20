@@ -1,11 +1,9 @@
 <h1 align="center">
   <img src="public/logo.svg" width="42" height="42" valign="middle" alt="Pokéllects Logo" /> Pokéllects
 </h1>
-
 <p align="center">
   <strong>A permanent National Pokédex companion, rapid memory engine, and minigame discovery vault.</strong>
 </p>
-
 <p align="center">
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5" /></a>
@@ -13,7 +11,6 @@
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS v4" /></a>
   <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
 </p>
-
 <p align="center">
   <img src="https://img.shields.io/badge/PokéAPI-v2-EF5350?style=flat-square&logo=pokemon&logoColor=white" alt="PokéAPI v2" />
   <img src="https://img.shields.io/badge/Status-Beta_Release-22c55e?style=flat-square" alt="Status: Beta Release" />
@@ -38,18 +35,6 @@ Test your knowledge across all 9 generations, unlock entries permanently into yo
 - 📱 **Adaptive UI Responsiveness** — Crafted from the ground up for seamless navigation across slim smartphones, foldable devices, tablets, iPads, and ultra-wide desktop monitors.
 - 🎨 **Tailored Light and Dark Themes** — Type-harmonized color system with accessible high-contrast modes, ambient glow effects, and reduced-motion support.
 - ☁️ **Real-Time Cloud Persistence** — Backed by Convex for sub-millisecond reactive subscriptions, secure auth, and atomic cascading data synchronization.
-
----
-
-## 📸 Screenshots
-
-| 📕 Pokédex Vault Explorer                                              | 🎮 Interactive Minigames                                        |
-| ---------------------------------------------------------------------- | --------------------------------------------------------------- |
-| _Visual National Pokédex grid with 9 generations and stamp indicators_ | _Dynamic game modes drawn exclusively from undiscovered roster_ |
-
-| 📊 Trainer Dashboard & Analytics                                 | 🔬 Biolo-gist Knowledge Mode                                    |
-| ---------------------------------------------------------------- | --------------------------------------------------------------- |
-| _Regional completion metrics and interactive achievement badges_ | _Bulbapedia passage comprehension with redacted identity clues_ |
 
 ---
 
