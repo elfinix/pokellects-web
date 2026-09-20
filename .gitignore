@@ -28,3 +28,6 @@ spec/*
 data/*
 .vercel
 .env*
+
+# Learnings
+learnings/
