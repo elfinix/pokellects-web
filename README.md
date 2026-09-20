@@ -1,78 +1,127 @@
+<h1 align="center">
+  <img src="public/logo.svg" width="42" height="42" valign="middle" alt="Pokéllects Logo" /> Pokéllects
+</h1>
+
+<p align="center">
+  <strong>A permanent National Pokédex companion, rapid memory engine, and minigame discovery vault.</strong>
+</p>
+
+<p align="center">
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5" /></a>
+  <a href="https://www.convex.dev/"><img src="https://img.shields.io/badge/Convex-F35D25?style=for-the-badge&logo=convex&logoColor=white" alt="Convex Cloud" /></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS v4" /></a>
+  <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/PokéAPI-v2-EF5350?style=flat-square&logo=pokemon&logoColor=white" alt="PokéAPI v2" />
+  <img src="https://img.shields.io/badge/Status-Beta_Release-22c55e?style=flat-square" alt="Status: Beta Release" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" />
+</p>
+
 ---
-## What is Pokéllects
 
-Unlike typical trivia quizzes where scores and answers vanish once the browser tab closes, **Pokéllects** turns identification, memory, and trivia into a permanent personal Pokédex ledger. Test your knowledge across all 9 generations, unlock entries permanently into your collection, and tackle challenges across interactive minigames.
----
+## 📖 What is Pokéllects
 
-## Core Features
+Unlike typical trivia quizzes where scores and answers vanish once the browser tab closes, **Pokéllects** turns identification, memory, and trivia into a **permanent personal Pokédex ledger**.
 
-- **Interactive 3D WebGL Companion** — Real-time 3D Pokéball with physics interaction, drag-to-inspect gestures, and instant random sprite summon effects.
-- **National Pokédex Explorer** — Comprehensive directory spanning 1,025 species with 9 generation tabs, dual-type filtering, search omnibar, and collectible chalk stamps.
-- **Continuous Floating Omnibar** — Speed-focused, keyboard-first registration bar that lets trainers identify, submit, and inspect entries without losing focus.
-- **Trainer Dashboard and Analytics** — Live regional completion progress charts, elemental affinity breakdowns, and milestone achievement unlock tracking.
-- **Adaptive UI Responsiveness** — Crafted from the ground up for seamless navigation across slim smartphones, foldable devices, tablets, iPads, and ultra-wide desktop monitors.
-- **Tailored Light and Dark Themes** — Type-harmonized color system with accessible high-contrast modes, sound toggles, and reduced-motion support.
-- **Real-Time Cloud Persistence** — Backed by Convex for sub-millisecond reactive subscriptions, secure credential auth, and atomic cascading data management.
+Test your knowledge across all 9 generations, unlock entries permanently into your collection, and tackle challenges across interactive minigames designed to accelerate complete National Dex discovery.
 
 ---
 
-## Screenshots
+## ⚡ Core Features
 
-| Pokédex Vault Explorer                                                 | Interactive Minigames                                           |
+- 📕 **National Pokédex Explorer** — Comprehensive directory spanning 1,025 species with 9 generation tabs, dual-type filtering, search omnibar, and collectible status badges.
+- ⚡ **Continuous Floating Omnibar** — Speed-focused, keyboard-first registration bar (`Esc` / `/`) that lets trainers rapidly type, submit, and inspect entries without losing focus.
+- 📊 **Trainer Dashboard and Analytics** — Live regional completion progress charts, elemental affinity matrix breakdowns, and milestone achievement tracking.
+- 📱 **Adaptive UI Responsiveness** — Crafted from the ground up for seamless navigation across slim smartphones, foldable devices, tablets, iPads, and ultra-wide desktop monitors.
+- 🎨 **Tailored Light and Dark Themes** — Type-harmonized color system with accessible high-contrast modes, ambient glow effects, and reduced-motion support.
+- ☁️ **Real-Time Cloud Persistence** — Backed by Convex for sub-millisecond reactive subscriptions, secure auth, and atomic cascading data synchronization.
+
+---
+
+## 📸 Screenshots
+
+| 📕 Pokédex Vault Explorer                                              | 🎮 Interactive Minigames                                        |
 | ---------------------------------------------------------------------- | --------------------------------------------------------------- |
 | _Visual National Pokédex grid with 9 generations and stamp indicators_ | _Dynamic game modes drawn exclusively from undiscovered roster_ |
 
-| Trainer Dashboard & Analytics                                    | Biolo-gist Knowledge Mode                                       |
+| 📊 Trainer Dashboard & Analytics                                 | 🔬 Biolo-gist Knowledge Mode                                    |
 | ---------------------------------------------------------------- | --------------------------------------------------------------- |
 | _Regional completion metrics and interactive achievement badges_ | _Bulbapedia passage comprehension with redacted identity clues_ |
 
 ---
 
-## Minigames
+## 🎮 Minigames
 
 All minigames dynamically select Pokémon from your **undiscovered roster**. Successfully clearing a round directly registers that species into your personal Pokédex.
 
-### 1. Who's That Pokémon
+### 1. 👁️ Who's That Pokémon
 
-The iconic silhouette recognition challenge. Study the silhouette, note elemental type hints, and identify the mystery Pokémon before time runs out.
+The iconic silhouette recognition challenge. Study the shadow outline, note elemental type hints, and identify the mystery Pokémon before time runs out.
 
-### 2. Hangmon
+### 2. 🔤 Hangmon
 
-Classic hangman word-puzzle with a trainer twist. Guess letter by letter while monitoring remaining attempts, generation indicators, and unique letter counts.
+Classic hangman letter deduction with a trainer twist. Guess letter by letter while monitoring remaining attempts, generation indicators, and unique letter counts.
 
-### 3. Identicry
+### 3. 🔊 Identicry
 
 Auditory memory challenge. Listen to authentic Pokémon sound cries sourced from the official games and type the corresponding species name.
 
-### 4. Biolo-gist
+### 4. 📜 Biolo-gist
 
 Scientific reading comprehension. Read through authentic Bulbapedia biology descriptions with dynamically redacted species names and deduce the Pokémon from behavioral traits and habitat notes.
 
-### 5. Pokédle
+### 5. 🟩 Pokédle
 
-Wordle-style numerical and categorical deduction. Guess species and receive immediate feedback on Generation, Primary Type, Secondary Type, Height, and Weight comparisons.
-
----
-
-## Tech Stack and Architecture
-
-- **Frontend Framework:** React 19 + TypeScript
-- **Styling and Theming:** Tailwind CSS v4 + Vanilla CSS Design Tokens
-- **3D Graphics:** Three.js with WebGL canvas rendering
-- **Animations:** Motion (Framer Motion) + Canvas Confetti
-- **Charts and Data Visualization:** Recharts
-- **Backend and Real-time Database:** Convex Cloud (`convex/` reactive platform)
-- **Authentication:** `@convex-dev/auth` (Passkeys / Credentials)
-- **Data Pipeline:** PokéAPI + Bulbapedia dataset
+Wordle-style numerical and categorical deduction. Guess species and receive immediate color-coded feedback on Generation, Primary Type, Secondary Type, Height, and Weight comparisons.
 
 ---
 
-## Getting Started
+## 🛠️ Tech Stack and Architecture
+
+### 🎨 Frontend & UI Layer
+
+- **Framework:** React 19 + TypeScript (strict mode)
+- **Styling:** Tailwind CSS v4 + Vanilla CSS Design Tokens
+- **Animations & Micro-interactions:** Motion (Framer Motion) + Canvas Confetti
+- **Smooth Navigation:** Lenis Smooth Scroll Provider
+- **Icons & Typography:** Lucide React + Plus Jakarta Sans & Outfit fonts
+- **Data Visualization:** Recharts for completion analytics and elemental breakdown charts
+
+### ⚡ Backend & Real-Time Cloud (Convex)
+
+- **Platform:** Convex (`convex/` reactive TypeScript serverless backend)
+- **Database:** Serverless document database with transactional atomicity
+- **Authentication:** `@convex-dev/auth` with credential validation
+- **Real-Time Reactivity:** Reactive queries with live sub-millisecond data subscriptions
+- **Cascade Handlers:** Atomic user deletion and pokedex entry cleanup mutations
+
+### 📡 Data Pipeline & APIs
+
+- **PokéAPI v2:** Complete 1,025 species dataset, official artwork, crying frequencies, and evolution chains
+- **Bulbapedia Corpus:** Rich field literature excerpts and biological descriptions
+- **Client Cache:** Dual-layer in-memory registry with instant stub lookups
+
+### 🏗️ Architecture Flow
+
+```mermaid
+graph TD
+    A[Trainer Browser UI] -->|Interactive Input / Omnibar| B[React 19 Application]
+    B -->|Reactive Query Subscriptions| C[Convex Cloud Backend]
+    C -->|Persistent Dex Entries| D[(Convex Database)]
+    B -->|Preloaded Cache & Media| E[PokéAPI v2 & Bulbapedia CDN]
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js 18.0 or newer
-- npm or pnpm
+- npm, pnpm, or yarn
 
 ### Installation
 
@@ -98,16 +147,16 @@ Wordle-style numerical and categorical deduction. Guess species and receive imme
 
 ---
 
-## Points for Improvement
+## 🌟 Points for Improvement
 
 The following areas are actively considered for upcoming iterations:
 
-- **Regional Variants and Forms** — Extending the database schema to support Alolan, Galarian, Hisuian, and Paldean regional forms as distinct collectible entries.
-- **Deeper Pokémon Details** — Expanding species modals to include base stats distributions, evolution chains, movepools, and shiny sprite toggles.
-- **Additional Minigame Modes** — Developing new game formats including Type Matchup Battle Quiz, Height/Weight Balance Scale, and Silhouette Speed Run.
+- 🧬 **Regional Variants and Forms** — Extending the database schema to support Alolan, Galarian, Hisuian, and Paldean regional forms as distinct collectible entries.
+- 🔍 **Deeper Pokémon Details** — Expanding species modals to include base stats distributions, evolution chains, movepools, and shiny sprite toggles.
+- 🎯 **Additional Minigame Modes** — Developing new game formats including Type Matchup Battle Quiz, Height/Weight Balance Scale, and Silhouette Speed Run.
 
 ---
 
-## Disclaimer and Credits
+## ⚖️ Disclaimer and Credits
 
 _Pokéllects is a fan-made, non-commercial open-source project. Pokémon and Pokémon character names, sprites, audio cries, and related media are trademarks and copyright of Nintendo, Creatures Inc., and GAME FREAK inc. Pokémon data is sourced via PokeAPI._
