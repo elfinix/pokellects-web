@@ -97,17 +97,42 @@ export const ProfilePage: React.FC = () => {
   const partnerTypeTheme = POKEMON_TYPE_THEMES[partnerPrimaryType] || POKEMON_TYPE_THEMES.normal;
   const partnerBloomHex = partnerTypeTheme.accentHex;
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.firstName !== undefined) setFirstName(currentUser.firstName);
+      if (currentUser.lastName !== undefined) setLastName(currentUser.lastName);
+      if (currentUser.bio !== undefined) setBio(currentUser.bio);
+      if (currentUser.favoriteType !== undefined) setFavoriteType(currentUser.favoriteType as PokemonType);
+      if (currentUser.favoriteRegion !== undefined) setFavoriteRegion(currentUser.favoriteRegion);
+      if (currentUser.leadPartnerId !== undefined && allPokemon.some((p) => p.id === currentUser.leadPartnerId)) {
+        setSelectedPartnerId(currentUser.leadPartnerId);
+      }
+    }
+  }, [currentUser, allPokemon]);
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (updateCurrentUserProfile) {
-      updateCurrentUserProfile({
-        firstName,
-        lastName,
-        ...({ bio, favoriteType, favoriteRegion, leadPartnerId: selectedPartnerId } as any),
-      });
+      setIsSaving(true);
+      try {
+        await updateCurrentUserProfile({
+          firstName,
+          lastName,
+          bio,
+          favoriteType,
+          favoriteRegion,
+          leadPartnerId: selectedPartnerId,
+        });
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 2500);
+      } catch (err) {
+        console.error('Failed to update profile:', err);
+      } finally {
+        setIsSaving(false);
+      }
     }
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2500);
   };
 
   const userInitials = React.useMemo(() => {
@@ -347,7 +372,7 @@ export const ProfilePage: React.FC = () => {
                 <span className="text-sm font-bold text-white block mt-0.5">
                   {partnerPokemon.displayName}
                 </span>
-                <span className="text-[10px] font-mono font-semibold block" style={{ color: partnerBloomHex }}>
+                <span className="text-[10px] font-mono font-medium text-slate-300 dark:text-slate-400 block">
                   #{String(partnerPokemon.id).padStart(4, '0')}
                 </span>
               </div>
@@ -717,10 +742,16 @@ export const ProfilePage: React.FC = () => {
 
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-red-600/20 shrink-0 whitespace-nowrap self-end sm:self-auto"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-red-600/20 shrink-0 whitespace-nowrap self-end sm:self-auto"
           >
-            <Save className="w-4 h-4 shrink-0" />
-            <span className="whitespace-nowrap">Save Profile</span>
+            {isSaving ? (
+              <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin shrink-0" />
+            ) : (
+              <Save className="w-4 h-4 shrink-0" />
+            )}
+            <span className="whitespace-nowrap">{isSaving ? 'Saving...' : 'Save Profile'}</span>
           </button>
         </div>
       </form>

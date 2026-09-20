@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -132,8 +132,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
     }))
     .sort((a, b) => b.value - a.value);
 
-  // Partner / Featured Pokémon (default to first unlocked or Pikachu)
-  const featuredPokemon = unlockedPokemonList[0] || allPokemon[0];
+  // Partner / Featured Pokémon (prioritize saved leadPartnerId, fallback to first unlocked or first available)
+  const featuredPokemon = useMemo(() => {
+    if (currentUser?.leadPartnerId) {
+      const partner = allPokemon.find((p) => p.id === currentUser.leadPartnerId);
+      if (partner) return partner;
+    }
+    return unlockedPokemonList[0] || allPokemon[0];
+  }, [allPokemon, currentUser?.leadPartnerId, unlockedPokemonList]);
 
   return (
     <div className="space-y-7 sm:space-y-8 pb-6 w-full">

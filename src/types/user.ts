@@ -12,6 +12,10 @@ export interface BaseUser {
   birthday: string; // YYYY-MM-DD
   role: UserRole;
   createdAt: string;
+  bio?: string;
+  favoriteType?: string;
+  favoriteRegion?: string;
+  leadPartnerId?: number;
 }
 
 export interface PlayerUser extends BaseUser {

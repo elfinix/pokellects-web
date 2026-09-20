@@ -49,6 +49,10 @@ export default defineSchema({
     role: v.optional(userRole),
     department: v.optional(v.string()),
     createdAt: v.optional(v.number()),
+    bio: v.optional(v.string()),
+    favoriteType: v.optional(v.string()),
+    favoriteRegion: v.optional(v.string()),
+    leadPartnerId: v.optional(v.number()),
   })
     .index("by_authSubject", ["authSubject"])
     .index("by_legacyId", ["legacyId"])

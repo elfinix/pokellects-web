@@ -84,8 +84,15 @@ class StorageService {
     const idx = this.users.findIndex((u) => u.id === updated.id);
     if (idx >= 0) {
       this.users[idx] = updated;
-      notifyListeners();
+    } else {
+      this.users.push(updated);
     }
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(`pokellects_profile_${updated.id}`, JSON.stringify(updated));
+      } catch {}
+    }
+    notifyListeners();
   }
 
   public deleteUser(userId: string): void {

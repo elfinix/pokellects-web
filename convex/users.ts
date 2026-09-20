@@ -13,6 +13,33 @@ export const current = query({
   },
 });
 
+export const updateProfile = mutation({
+  args: {
+    firstName: v.optional(v.string()),
+    lastName: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    favoriteType: v.optional(v.string()),
+    favoriteRegion: v.optional(v.string()),
+    leadPartnerId: v.optional(v.number()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Unauthorized: Sign in required.");
+    }
+    await ctx.db.patch(userId, {
+      ...(args.firstName !== undefined && { firstName: args.firstName }),
+      ...(args.lastName !== undefined && { lastName: args.lastName }),
+      ...(args.bio !== undefined && { bio: args.bio }),
+      ...(args.favoriteType !== undefined && { favoriteType: args.favoriteType }),
+      ...(args.favoriteRegion !== undefined && { favoriteRegion: args.favoriteRegion }),
+      ...(args.leadPartnerId !== undefined && { leadPartnerId: args.leadPartnerId }),
+    });
+    return null;
+  },
+});
+
 export const deleteUser = mutation({
   args: {
     userId: v.id("users"),
