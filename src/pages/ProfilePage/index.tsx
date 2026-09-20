@@ -19,6 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
 import { POKEMON_TYPE_THEMES } from '../../styles/theme';
 import { PokemonType } from '../../types/pokemon';
+import { TrainerAvatar } from '../../components/common/TrainerAvatar';
 
 export const ProfilePage: React.FC = () => {
   const { currentUser, updateCurrentUserProfile } = useAuth();
@@ -303,9 +304,12 @@ export const ProfilePage: React.FC = () => {
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 pb-5 sm:pb-6 border-b border-slate-700/80">
           <div className="flex items-center gap-4 sm:gap-5">
             {/* Avatar Pill */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-red-600 to-rose-400 flex items-center justify-center text-xl sm:text-2xl font-black text-white shadow-lg shadow-red-600/30 border-2 border-white/30 shrink-0 font-mono select-none">
-              {userInitials}
-            </div>
+            <TrainerAvatar
+              initials={userInitials}
+              size="xl"
+              shape="rounded"
+              className="shrink-0 drop-shadow-xl"
+            />
 
             <div className="space-y-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">

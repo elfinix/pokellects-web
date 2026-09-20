@@ -375,7 +375,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     : 'text-amber-700 dark:text-amber-300 bg-amber-50/60 dark:bg-amber-950/40 border border-amber-100/60 dark:border-amber-800/40'
                 }`}
               >
-                5-Win Streak Active
+                4 minigames available!
               </div>
             </div>
           )}

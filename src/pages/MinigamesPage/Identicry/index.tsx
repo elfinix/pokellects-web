@@ -245,6 +245,11 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
     }
   };
 
+  const handleSkip = () => {
+    setStreak(0);
+    loadNextRound();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isRevealed) {
@@ -549,7 +554,7 @@ export const Identicry: React.FC<IdenticryProps> = ({ onBack }) => {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       type="button"
-                      onClick={loadNextRound}
+                      onClick={handleSkip}
                       disabled={isLoading}
                       className="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95 disabled:opacity-50"
                       title="Skip this Pokémon"

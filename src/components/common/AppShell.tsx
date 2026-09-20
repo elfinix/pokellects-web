@@ -20,6 +20,7 @@ import { useAuth } from '../../context/AuthContext';
 import { usePokedex } from '../../context/PokedexContext';
 import { globalScrollToTop } from '../../context/SmoothScrollContext';
 import { PokellectsLogo } from './PokellectsLogo';
+import { TrainerAvatar } from './TrainerAvatar';
 
 export type WorkspaceTab =
   | 'dashboard'
@@ -281,42 +282,39 @@ export const AppShell: React.FC<AppShellProps> = ({
               <button
                 type="button"
                 onClick={() => handleNavClick('profile')}
-                className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-black transition-all cursor-pointer select-none shrink-0 ${
-                  activeTab === 'profile'
-                    ? 'bg-red-600 text-white ring-2 ring-red-400 ring-offset-2 dark:ring-offset-slate-900 shadow-sm'
-                    : 'bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-300 shadow-2xs hover:scale-105'
-                }`}
+                className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
                 title={`Trainer Profile: ${currentUser?.firstName} ${currentUser?.lastName || ''} (@${currentUser?.username})`}
               >
-                {userInitials}
+                <TrainerAvatar
+                  initials={userInitials}
+                  size="md"
+                  isActive={activeTab === 'profile'}
+                />
               </button>
             </div>
           ) : (
             <button
               type="button"
               onClick={() => handleNavClick('profile')}
-              className={`w-full flex items-center gap-2.5 p-2 rounded-xl border transition-all text-left cursor-pointer group shadow-2xs overflow-hidden ${
+              className={`w-full flex items-center gap-2.5 p-2 rounded-2xl border transition-all text-left cursor-pointer group shadow-2xs overflow-hidden ${
                 activeTab === 'profile'
                   ? 'bg-red-50/80 dark:bg-red-950/50 border-red-300 dark:border-red-700/80 ring-1 ring-red-400'
                   : 'bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600'
               }`}
               title="View & Edit Trainer Profile"
             >
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 tracking-wider font-mono transition-transform group-hover:scale-105 select-none ${
-                  activeTab === 'profile'
-                    ? 'bg-red-600 text-white shadow-xs'
-                    : 'bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400'
-                }`}
-              >
-                {userInitials}
-              </div>
+              <TrainerAvatar
+                initials={userInitials}
+                size="sm"
+                isActive={activeTab === 'profile'}
+                className="transition-transform group-hover:scale-105"
+              />
               <div className="min-w-0 flex-1 text-left leading-tight overflow-hidden">
                 <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-red-700 dark:group-hover:text-red-400 transition-colors truncate whitespace-nowrap">
                   {currentUser?.firstName} {currentUser?.lastName || ''}
                 </div>
                 <div className="text-[10px] text-slate-400 font-mono truncate whitespace-nowrap">
-                  @{currentUser?.username} • <span className="text-red-500 font-medium">Profile</span>
+                  @{currentUser?.username}
                 </div>
               </div>
             </button>
@@ -378,14 +376,14 @@ export const AppShell: React.FC<AppShellProps> = ({
             <button
               type="button"
               onClick={() => handleNavClick('profile')}
-              className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-black transition-all cursor-pointer font-mono select-none ${
-                activeTab === 'profile'
-                  ? 'bg-red-600 text-white ring-2 ring-red-400'
-                  : 'bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 shadow-2xs'
-              }`}
-              title={currentUser?.username}
+              className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
+              title={`Trainer Profile: @${currentUser?.username}`}
             >
-              {userInitials}
+              <TrainerAvatar
+                initials={userInitials}
+                size="md"
+                isActive={activeTab === 'profile'}
+              />
             </button>
           </div>
         </header>
@@ -488,15 +486,17 @@ export const AppShell: React.FC<AppShellProps> = ({
                   <button
                     type="button"
                     onClick={() => handleNavClick('profile')}
-                    className={`w-full flex items-center gap-2.5 p-2 rounded-xl border text-left transition-colors cursor-pointer ${
+                    className={`w-full flex items-center gap-2.5 p-2 rounded-2xl border text-left transition-colors cursor-pointer ${
                       activeTab === 'profile'
                         ? 'bg-red-50 dark:bg-red-950/50 border-red-200 dark:border-red-700 ring-1 ring-red-300'
                         : 'bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200/80 dark:border-slate-700'
                     }`}
                   >
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 font-mono select-none">
-                      {userInitials}
-                    </div>
+                    <TrainerAvatar
+                      initials={userInitials}
+                      size="sm"
+                      isActive={activeTab === 'profile'}
+                    />
                     <div className="min-w-0 flex-1">
                       <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {currentUser?.firstName} {currentUser?.lastName || ''}

@@ -253,6 +253,11 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
     ]
   );
 
+  const handleSkip = () => {
+    setStreak(0);
+    loadNextRound();
+  };
+
   // Physical Keyboard Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -549,7 +554,7 @@ export const Hangmon: React.FC<HangmonProps> = ({ onBack }) => {
 
                   <button
                     type="button"
-                    onClick={loadNextRound}
+                    onClick={handleSkip}
                     disabled={isLoading}
                     className="shrink-0 px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition-colors active:scale-95 disabled:opacity-50"
                   >

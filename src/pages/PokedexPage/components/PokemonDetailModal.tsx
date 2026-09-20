@@ -32,10 +32,9 @@ import {
 import { Pokemon, PokemonType, EvolutionNode } from '../../../types/pokemon';
 import { POKEMON_TYPE_THEMES } from '../../../styles/theme';
 import { useHotkeys } from '../../../hooks/useHotkeys';
-import { fetchSpeciesLore, fetchEvolutionChain, getFrontDefaultSpriteUrl } from '../../../services/pokeapi';
+import { fetchSpeciesLore, fetchEvolutionChain } from '../../../services/pokeapi';
 import { getPokemonById } from '../../../services/pokemonIndex';
 import storageService from '../../../services/storageService';
-import { globalStopScroll, globalStartScroll } from '../../../context/SmoothScrollContext';
 import PokeballChalkMark from '../../../components/common/PokeballChalkMark';
 import ChalkRegisteredStamp from '../../../components/common/ChalkRegisteredStamp';
 import { useTheme } from '../../../context/ThemeContext';
@@ -277,19 +276,6 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
     if (isOpen) onClose();
   });
 
-  // Lock document body scroll and pause Lenis smooth scroll when modal is open
-  useEffect(() => {
-    if (isOpen && typeof document !== 'undefined') {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      globalStopScroll();
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        globalStartScroll();
-      };
-    }
-  }, [isOpen]);
-
   if (!pokemon) return null;
 
   const primaryType = pokemon.types[0];
@@ -350,24 +336,24 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   const regularDamageTypes = allTypes.filter((t) => defensiveMultipliers[t] === 1);
 
   const getEvolutionStage = (tree: EvolutionNode | null, currentId: number): string => {
-    if (!tree) return 'Standalone Taxonomy';
-    if (!tree.evolvesTo || tree.evolvesTo.length === 0) return 'Standalone Species (No Evolutions)';
+    if (!tree) return 'Standalone';
+    if (!tree.evolvesTo || tree.evolvesTo.length === 0) return 'Standalone';
     if (tree.id === currentId) {
-      return 'Base Form (First Stage)';
+      return 'Base Stage';
     }
     for (const child of tree.evolvesTo) {
       if (child.id === currentId) {
-        return child.evolvesTo && child.evolvesTo.length > 0 ? 'Stage 1 Evolution' : 'Final Evolution Stage';
+        return child.evolvesTo && child.evolvesTo.length > 0 ? 'Stage 1' : 'Final Stage';
       }
       if (child.evolvesTo) {
         for (const grandchild of child.evolvesTo) {
           if (grandchild.id === currentId) {
-            return 'Stage 2 (Final)';
+            return 'Stage 2';
           }
         }
       }
     }
-    return 'Evolutionary Lineage';
+    return 'Lineage';
   };
 
   const totalBaseStats = pokemon.stats.reduce((sum, s) => sum + s.baseStat, 0);
@@ -489,7 +475,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.12, ease: 'easeOut' }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-slate-950/60 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-6 md:p-8 bg-slate-950/60 backdrop-blur-xs"
           data-lenis-prevent
           onClick={onClose}
         >
@@ -501,7 +487,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{ willChange: 'transform, opacity' }}
             data-lenis-prevent
-            className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl sm:max-w-3xl w-full p-4 pt-6 sm:p-7 sm:pt-7 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between h-[min(680px,calc(100dvh-1rem))] sm:h-[610px] max-h-[calc(100dvh-1rem)] sm:max-h-[92vh]"
+            className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl sm:max-w-3xl w-full p-4 pt-5 sm:p-6 sm:pt-6 shadow-2xl border border-slate-200/90 dark:border-slate-800 relative overflow-hidden flex flex-col justify-between h-[min(570px,calc(100dvh-2.5rem))] sm:h-[595px] max-h-[calc(100dvh-2.5rem)] sm:max-h-[85vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top Type Accent Border (Supporting mono- or dual-type palette) */}
@@ -635,22 +621,20 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.16, ease: 'easeOut' }}
-                    className="flex flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 py-1 h-full"
+                    className="flex flex-col sm:flex-row items-center sm:items-stretch gap-5 sm:gap-6 py-1 sm:h-full"
                   >
               {/* LEFT COLUMN: Sprite on geometric shape platform + Height & Weight below */}
-              <div className="flex flex-col items-center justify-between gap-3 w-full sm:w-56 shrink-0">
+              <div className="flex flex-col items-center justify-between gap-2.5 w-full sm:w-48 shrink-0">
                 {/* Geometric 360° Rotating Platform Pedestal with Pokémon Sprite (Unobstructed) */}
-                <div className="relative w-48 sm:w-56 h-48 sm:h-52 flex items-center justify-center shrink-0 group">
-
-
+                <div className="relative w-40 sm:w-48 h-40 sm:h-44 flex items-center justify-center shrink-0 group">
                   {/* 3D Tilted Rotating Platform System */}
                   <div
-                    className="absolute bottom-1 w-44 sm:w-52 h-20 flex items-center justify-center pointer-events-none select-none"
+                    className="absolute bottom-1 w-36 sm:w-44 h-16 sm:h-18 flex items-center justify-center pointer-events-none select-none"
                     style={{ perspective: '400px' }}
                   >
                     {/* Base Shadow & Pedestal */}
                     <div
-                      className="w-40 sm:w-48 h-40 sm:h-48 rounded-full flex items-center justify-center relative"
+                      className="w-32 sm:w-40 h-32 sm:h-40 rounded-full flex items-center justify-center relative"
                       style={{
                         transform: 'rotateX(68deg)',
                         transformStyle: 'preserve-3d',
@@ -669,26 +653,26 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                       >
                         {/* Orbital Marker Dots */}
                         <div
-                          className="absolute -top-1 w-2.5 h-2.5 rounded-full shadow-xs"
+                          className="absolute -top-1 w-2 h-2 rounded-full shadow-xs"
                           style={{ backgroundColor: theme.accentHex }}
                         />
                         <div
-                          className="absolute -bottom-1 w-2.5 h-2.5 rounded-full shadow-xs"
+                          className="absolute -bottom-1 w-2 h-2 rounded-full shadow-xs"
                           style={{ backgroundColor: theme.accentHex }}
                         />
                         <div
-                          className="absolute -left-1 w-2.5 h-2.5 rounded-full shadow-xs opacity-60"
+                          className="absolute -left-1 w-2 h-2 rounded-full shadow-xs opacity-60"
                           style={{ backgroundColor: theme.accentHex }}
                         />
                         <div
-                          className="absolute -right-1 w-2.5 h-2.5 rounded-full shadow-xs opacity-60"
+                          className="absolute -right-1 w-2 h-2 rounded-full shadow-xs opacity-60"
                           style={{ backgroundColor: theme.accentHex }}
                         />
                       </div>
 
                       {/* Counter-Rotating Segmented Inner Ring */}
                       <div
-                        className="absolute inset-5 rounded-full border border-dotted border-slate-300/80 dark:border-slate-600/80 flex items-center justify-center animate-[spin_14s_linear_infinite_reverse]"
+                        className="absolute inset-4 rounded-full border border-dotted border-slate-300/80 dark:border-slate-600/80 flex items-center justify-center animate-[spin_14s_linear_infinite_reverse]"
                       >
                         <div
                           className="w-full h-full rounded-full opacity-25"
@@ -699,9 +683,9 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                       </div>
 
                       {/* Center Core Platform */}
-                      <div className="absolute inset-7 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xs flex items-center justify-center">
+                      <div className="absolute inset-6 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xs flex items-center justify-center">
                         <div
-                          className="w-7 h-7 rounded-full opacity-40 shadow-inner"
+                          className="w-5 sm:w-6 h-5 sm:h-6 rounded-full opacity-40 shadow-inner"
                           style={{ backgroundColor: theme.accentHex }}
                         />
                       </div>
@@ -712,40 +696,39 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   <motion.img
                     src={pokemon.spriteUrl}
                     alt={pokemon.displayName}
-                    animate={{ y: [0, -5, 0] }}
+                    animate={{ y: [0, -4, 0] }}
                     transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-                    className="w-38 h-38 sm:w-44 sm:h-44 object-contain drop-shadow-md select-none relative z-10 transition-transform duration-200 group-hover:scale-105 mb-2.5"
+                    className="w-30 h-30 sm:w-36 sm:h-36 object-contain drop-shadow-md select-none relative z-10 transition-transform duration-200 group-hover:scale-105 mb-1.5"
                   />
                 </div>
 
-
                 {/* Height & Weight below sprite */}
-                <div className="grid grid-cols-2 gap-2.5 w-full">
-                  <div className="flex flex-col items-center justify-center p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 text-center shadow-2xs">
-                    <div className="flex items-center gap-1 text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500 font-bold">
+                <div className="grid grid-cols-2 gap-2 w-full">
+                  <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 text-center shadow-2xs">
+                    <div className="flex items-center gap-1 text-[9px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500 font-bold">
                       <Ruler className="w-3 h-3 text-slate-500 dark:text-slate-400" />
                       <span>Height</span>
                     </div>
-                    <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 font-mono mt-0.5 leading-tight">
+                    <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono mt-0.5 leading-tight">
                       {heightM !== null ? `${heightM.toFixed(1)} m` : '—'}
                     </span>
                     {heightImperial && (
-                      <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400 font-medium">
+                      <span className="text-[8px] font-mono text-slate-500 dark:text-slate-400 font-medium truncate">
                         {heightImperial}
                       </span>
                     )}
                   </div>
 
-                  <div className="flex flex-col items-center justify-center p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 text-center shadow-2xs">
-                    <div className="flex items-center gap-1 text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500 font-bold">
+                  <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 text-center shadow-2xs">
+                    <div className="flex items-center gap-1 text-[9px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500 font-bold">
                       <Weight className="w-3 h-3 text-slate-500 dark:text-slate-400" />
                       <span>Weight</span>
                     </div>
-                    <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 font-mono mt-0.5 leading-tight">
+                    <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono mt-0.5 leading-tight">
                       {weightKg !== null ? `${weightKg.toFixed(1)} kg` : '—'}
                     </span>
                     {weightImperial && (
-                      <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400 font-medium">
+                      <span className="text-[8px] font-mono text-slate-500 dark:text-slate-400 font-medium truncate">
                         {weightImperial}
                       </span>
                     )}
@@ -754,7 +737,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               </div>
 
               {/* RIGHT COLUMN: [ type & abilities group ], [ flexible dex entry ], [ pure audio spectrum player ] */}
-              <div className="flex-1 w-full flex flex-col justify-between gap-3 text-left h-full">
+              <div className="flex-1 w-full flex flex-col justify-between gap-3 text-left sm:h-full">
                 {/* Top Group: Type & Abilities with natural compact spacing */}
                 <div className="space-y-2.5 shrink-0">
                   {/* [ type cards ] */}
@@ -907,10 +890,10 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.16, ease: 'easeOut' }}
-              className="space-y-3 sm:space-y-2.5 pt-0.5 h-full flex flex-col justify-between"
+              className="space-y-2.5 sm:space-y-0 pt-0.5 sm:h-full sm:flex sm:flex-col sm:justify-between"
             >
               {/* Chart Body with Left-Stacked Vertical Toolbar */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-2.5 sm:gap-3.5">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-stretch gap-2.5 sm:gap-3.5 sm:flex-1 sm:min-h-0">
                 {/* Vertically Stacked Controls on the Left */}
                 <div className="grid grid-cols-4 sm:flex sm:flex-col items-center sm:justify-start gap-1.5 p-1 rounded-2xl bg-slate-100/90 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shrink-0">
                   {/* Line View Mode Icon */}
@@ -981,7 +964,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </div>
 
                 {/* Main Chart Area on Right with Mode-Switch Crossfade & Transitions */}
-                <div className="flex-1 min-w-0 w-full">
+                <div className="flex-1 min-w-0 w-full sm:h-full">
                   <AnimatePresence mode="wait">
                     {/* MODE 1: LINE (Default) - Animated from Left to Right */}
                     {statViewMode === 'line' && (
@@ -991,7 +974,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.15 }}
-                        className="h-64 sm:h-[268px] w-full px-3 sm:px-5 py-3 bg-slate-50/70 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between"
+                        className="h-60 sm:h-full w-full px-3 sm:px-5 py-2.5 sm:py-3.5 bg-slate-50/70 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between"
                       >
                         {orderedStats.map((stat, idx) => {
                           const percent = Math.min(100, Math.round((stat.value / 255) * 100));
@@ -1048,7 +1031,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.15 }}
-                        className="relative h-64 sm:h-[268px] w-full flex items-end justify-between gap-2 sm:gap-4 px-3 sm:px-6 pt-5 pb-3 bg-slate-50/70 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800"
+                        className="relative h-60 sm:h-full w-full flex items-end justify-between gap-2 sm:gap-4 px-3 sm:px-6 pt-5 pb-3 bg-slate-50/70 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800"
                       >
                         {/* Background horizontal guide lines */}
                         <div className="absolute inset-x-3 sm:inset-x-6 top-6 bottom-8 flex flex-col justify-between pointer-events-none opacity-35">
@@ -1104,7 +1087,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center justify-between p-2 sm:px-3 bg-slate-50/80 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 w-full h-64 sm:h-[268px] relative overflow-hidden"
+                        className="flex items-center justify-between p-2 sm:px-3 bg-slate-50/80 dark:bg-slate-950/60 rounded-2xl border border-slate-200/80 dark:border-slate-800 w-full h-60 sm:h-full relative overflow-hidden"
                       >
                         {/* Left Flank: Best Stat & Physical Total */}
                         <motion.div
@@ -1165,43 +1148,43 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                                       key={frac}
                                       points={pts}
                                       fill={
-                                        idx % 2 === 0
-                                          ? isDark
-                                            ? 'rgba(30, 41, 59, 0.6)'
-                                            : 'rgba(241, 245, 249, 0.7)'
-                                          : isDark
-                                          ? 'rgba(15, 23, 42, 0.7)'
-                                          : 'rgba(255, 255, 255, 0.8)'
+                                        isDark
+                                          ? idx % 2 === 0
+                                            ? '#0f172a'
+                                            : '#1e293b'
+                                          : idx % 2 === 0
+                                          ? '#f1f5f9'
+                                          : '#f8fafc'
                                       }
-                                      stroke={isDark ? '#475569' : '#cbd5e1'}
-                                      strokeWidth={frac === 1 ? '1.5' : '1'}
-                                      strokeDasharray={frac === 1 ? undefined : '3 3'}
-                                    />
-                                  );
-                                })}
-
-                                {/* 6 Radial Spokes */}
-                                {Array.from({ length: 6 }, (_, j) => {
-                                  const a = -Math.PI / 2 + (j * Math.PI) / 3;
-                                  return (
-                                    <line
-                                      key={j}
-                                      x1={170}
-                                      y1={134}
-                                      x2={170 + 96 * Math.cos(a)}
-                                      y2={134 + 96 * Math.sin(a)}
-                                      stroke={isDark ? '#334155' : '#e2e8f0'}
-                                      strokeWidth="1"
+                                      fillOpacity={0.4}
+                                      stroke={isDark ? '#334155' : '#cbd5e1'}
+                                      strokeWidth={1}
+                                      strokeDasharray={idx < 2 ? '3 3' : undefined}
                                     />
                                   );
                                 })}
                               </g>
 
-                              {/* Filled Radar Polygon (Radial Expand from Center Origin) */}
-                              <motion.polygon
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ duration: 0.55, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
+                      {/* Hexagonal Spokes (Axes from Center) */}
+                              <g>
+                                {Array.from({ length: 6 }, (_, j) => {
+                                  const a = -Math.PI / 2 + (j * Math.PI) / 3;
+                                  return (
+                                    <line
+                                      key={j}
+                                      x1="170"
+                                      y1="134"
+                                      x2={170 + 96 * Math.cos(a)}
+                                      y2={134 + 96 * Math.sin(a)}
+                                      stroke={isDark ? '#334155' : '#cbd5e1'}
+                                      strokeWidth={1}
+                                    />
+                                  );
+                                })}
+                              </g>
+
+                              {/* Radar Value Polygon */}
+                              <polygon
                                 style={{
                                   transformOrigin: '170px 134px',
                                   transformBox: 'view-box',
@@ -1324,7 +1307,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               </div>
 
               {/* Bottom Card: Clean, Simple Base Stat Total (BST) */}
-              <div className="p-2 sm:px-3.5 sm:py-2 rounded-2xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <div className="p-2.5 sm:px-4 sm:py-2.5 rounded-2xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex flex-wrap items-center justify-between gap-x-3 gap-y-1 shrink-0">
                 <div className="flex items-center gap-2">
                   <Activity className="w-3.5 h-3.5" style={{ color: theme.accentHex }} />
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Base Stat Total</span>
@@ -1342,7 +1325,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             </motion.div>
           )}
 
-          {/* TAB 3: TYPE MATCHUPS (Full-Height Tactical Battle Matrix) */}
+          {/* TAB 3: TYPE MATCHUPS (Tactical Battle Matrix) */}
           {activeTab === 'matchups' && (
             <motion.div
               key="matchups"
@@ -1350,36 +1333,33 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.16, ease: 'easeOut' }}
-              className="flex flex-col justify-between gap-2.5 h-full text-left pt-0.5"
+              className="flex flex-col sm:justify-between gap-3 text-left pt-0.5 sm:h-full"
             >
-              {/* Header / Summary Bar */}
-              <div className="flex items-center justify-between shrink-0 px-0.5">
+              {/* Header / Summary Bar with Clean Mobile Wrapping */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 shrink-0 px-0.5">
                 <div className="space-y-0.5">
                   <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200">Defensive Type Matchups</h3>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">Damage multipliers when attacked by move types:</p>
                 </div>
-                <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold">
-                  <span className="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60">
-                    {quadWeaknesses.length + doubleWeaknesses.length} Weak
+                <div className="flex items-center gap-1.5 flex-wrap font-mono text-[10px] font-bold shrink-0">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60 whitespace-nowrap shadow-2xs">
+                    <span className="font-extrabold">{quadWeaknesses.length + doubleWeaknesses.length}</span> Weak
                   </span>
-                  <span className="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60">
-                    {quadResistances.length + halfResistances.length} Resist
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60 whitespace-nowrap shadow-2xs">
+                    <span className="font-extrabold">{quadResistances.length + halfResistances.length}</span> Resist
                   </span>
                   {immunities.length > 0 && (
-                    <span className="px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-900/60">
-                      {immunities.length} Immune
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-900/60 whitespace-nowrap shadow-2xs">
+                      <span className="font-extrabold">{immunities.length}</span> Immune
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Dual Column Matrix Spanning Height with Direct Mouse Wheel Scrolling */}
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-0" data-lenis-prevent>
+              {/* Dual Column Matrix — Cards Expand Naturally with Single Unified Parent Scroll */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* LEFT COLUMN: Vulnerabilities */}
-                <div
-                  className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/40 dark:bg-rose-950/20 border border-rose-200/70 dark:border-rose-900/50 flex flex-col gap-2.5 overflow-y-auto overscroll-contain h-full"
-                  data-lenis-prevent
-                >
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-rose-50/40 dark:bg-rose-950/20 border border-rose-200/70 dark:border-rose-900/50 flex flex-col gap-2.5 sm:h-full">
                   <div className="flex items-center justify-between pb-1 border-b border-rose-200/60 dark:border-rose-900/40 shrink-0">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-rose-800 dark:text-rose-300">
                       <Zap className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
@@ -1431,17 +1411,14 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   )}
 
                   {quadWeaknesses.length === 0 && doubleWeaknesses.length === 0 && (
-                    <div className="flex-1 flex items-center justify-center text-center p-3 text-xs text-rose-600/80 dark:text-rose-400/80 italic font-medium">
+                    <div className="flex items-center justify-center text-center p-3 text-xs text-rose-600/80 dark:text-rose-400/80 italic font-medium sm:flex-1">
                       No known elemental weaknesses.
                     </div>
                   )}
                 </div>
 
                 {/* RIGHT COLUMN: Resistances & Immunities */}
-                <div
-                  className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/70 dark:border-emerald-900/50 flex flex-col gap-2.5 overflow-y-auto overscroll-contain h-full"
-                  data-lenis-prevent
-                >
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/70 dark:border-emerald-900/50 flex flex-col gap-2.5 sm:h-full">
                   <div className="flex items-center justify-between pb-1 border-b border-emerald-200/60 dark:border-emerald-900/40 shrink-0">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
                       <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -1513,7 +1490,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   )}
 
                   {immunities.length === 0 && quadResistances.length === 0 && halfResistances.length === 0 && (
-                    <div className="flex-1 flex items-center justify-center text-center p-3 text-xs text-emerald-600/80 dark:text-emerald-400/80 italic font-medium">
+                    <div className="flex items-center justify-center text-center p-3 text-xs text-emerald-600/80 dark:text-emerald-400/80 italic font-medium sm:flex-1">
                       No elemental resistances or immunities.
                     </div>
                   )}
@@ -1521,7 +1498,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               </div>
 
               {/* BOTTOM BAR: Neutral Damage (1×) Types */}
-              <div className="p-2 sm:px-3.5 sm:py-2 rounded-2xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center justify-between shrink-0 gap-2">
+              <div className="p-2.5 sm:px-3.5 sm:py-2.5 rounded-2xl bg-slate-50/80 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 shrink-0">
                 <div className="flex items-center gap-2 shrink-0">
                   <Scale className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Neutral (1×)</span>
@@ -1530,7 +1507,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 flex-wrap sm:flex-nowrap">
                   {regularDamageTypes.map((t) => (
                     <span
                       key={t}
@@ -1546,7 +1523,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             </motion.div>
           )}
 
-          {/* TAB 4: EVOLUTION (Full-Height Taxonomy & Lineage Tree) */}
+          {/* TAB 4: EVOLUTION (Taxonomy & Lineage Tree) */}
           {activeTab === 'evolution' && (
             <motion.div
               key="evolution"
@@ -1554,7 +1531,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.16, ease: 'easeOut' }}
-              className="flex flex-col justify-between gap-2.5 h-full text-left pt-0.5"
+              className="flex flex-col sm:justify-between gap-3 text-left pt-0.5 sm:h-full"
             >
               {/* Header Bar */}
               <div className="flex items-center justify-between shrink-0 px-0.5">
@@ -1566,46 +1543,45 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 </div>
               </div>
 
-              {/* Main Evolution Canvas — perfectly centered for standard lineages, smoothly scrollable for multi-branch trees */}
-              <div
-                className="flex-1 w-full bg-slate-50/70 dark:bg-slate-950/60 rounded-3xl border border-slate-200/80 dark:border-slate-800 p-3 sm:p-4 min-h-0 overflow-auto overscroll-contain relative flex"
-                data-lenis-prevent
-              >
-                {isLoadingEvolution ? (
-                  <div className="m-auto flex flex-col items-center justify-center gap-3">
-                    <div className="w-7 h-7 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
-                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium font-mono">
-                      Tracing evolutionary lineage...
-                    </span>
-                  </div>
-                ) : evolutionTree && evolutionTree.evolvesTo && evolutionTree.evolvesTo.length > 0 ? (
-                  <div className="m-auto flex items-center justify-center min-w-max min-h-max py-2 px-1">
-                    <EvolutionBranchRenderer
-                      node={evolutionTree}
-                      currentPokemonId={pokemon.id}
-                      unlockedIds={unlockedIds}
-                      activeTabBgColor={activeTabBgColor}
-                      onSelectPokemon={(p) => onNavigatePokemon && onNavigatePokemon(p)}
-                    />
-                  </div>
-                ) : (
-                  <div className="m-auto flex flex-col items-center justify-center text-center p-4 space-y-2 max-w-sm">
-                    <div className="relative w-20 h-20 flex items-center justify-center">
-                      <div className="absolute bottom-2 w-16 h-4 rounded-[50%] bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow-xs" />
-                      <img
-                        src={pokemon.spriteUrl}
-                        alt={pokemon.displayName}
-                        className="w-16 h-16 object-contain drop-shadow-sm relative z-10"
+              {/* Main Evolution Canvas — scrollable horizontally without negative-offset clipping */}
+              <div className="w-full bg-slate-50/70 dark:bg-slate-950/60 rounded-3xl border border-slate-200/80 dark:border-slate-800 overflow-x-auto relative sm:flex-1 min-h-[160px] flex">
+                <div className="w-max min-w-full m-auto flex items-center p-3 sm:p-4 sm:h-full">
+                  {isLoadingEvolution ? (
+                    <div className="m-auto flex flex-col items-center justify-center gap-3 py-6">
+                      <div className="w-7 h-7 rounded-full border-2 border-slate-400 border-t-transparent animate-spin" />
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium font-mono">
+                        Tracing evolutionary lineage...
+                      </span>
+                    </div>
+                  ) : evolutionTree && evolutionTree.evolvesTo && evolutionTree.evolvesTo.length > 0 ? (
+                    <div className="m-auto flex items-center py-2 px-2 shrink-0">
+                      <EvolutionBranchRenderer
+                        node={evolutionTree}
+                        currentPokemonId={pokemon.id}
+                        unlockedIds={unlockedIds}
+                        activeTabBgColor={activeTabBgColor}
+                        onSelectPokemon={(p) => onNavigatePokemon && onNavigatePokemon(p)}
                       />
                     </div>
-                    <div className="space-y-0.5">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">{pokemon.displayName}</h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        This species does not evolve into or from any other Pokémon.
-                      </p>
+                  ) : (
+                    <div className="m-auto flex flex-col items-center justify-center text-center p-4 space-y-2 max-w-sm">
+                      <div className="relative w-20 h-20 flex items-center justify-center">
+                        <div className="absolute bottom-2 w-16 h-4 rounded-[50%] bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shadow-xs" />
+                        <img
+                          src={pokemon.spriteUrl}
+                          alt={pokemon.displayName}
+                          className="w-16 h-16 object-contain drop-shadow-sm relative z-10"
+                        />
+                      </div>
+                      <div className="space-y-0.5">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">{pokemon.displayName}</h4>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                          This species does not evolve into or from any other Pokémon.
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               {/* Bottom Bar: Evolutionary Stage Insight */}
@@ -1636,7 +1612,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               type="button"
               disabled={!prevPokemon}
               onClick={() => prevPokemon && onNavigatePokemon && onNavigatePokemon(prevPokemon)}
-              className={`flex items-center justify-center gap-1 w-16 sm:w-20 h-11 sm:h-12 px-1.5 sm:px-2.5 rounded-2xl border transition-all duration-150 shrink-0 ${
+              className={`flex items-center justify-center gap-1 w-14 sm:w-16 h-9.5 sm:h-10.5 px-1.5 sm:px-2 rounded-2xl border transition-all duration-150 shrink-0 ${
                 prevPokemon
                   ? 'bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer active:scale-95 shadow-2xs'
                   : 'opacity-20 border-dashed border-slate-200 dark:border-slate-800 bg-transparent text-slate-400 dark:text-slate-600 cursor-not-allowed'
@@ -1644,16 +1620,16 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               title={prevPokemon ? `Previous: #${prevPokemon.id} ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
               aria-label={prevPokemon ? `Previous Pokémon: ${prevPokemon.displayName}` : 'No previous registered Pokémon'}
             >
-              <ChevronLeft className="w-4 h-4 shrink-0 text-slate-600 dark:text-slate-400" />
+              <ChevronLeft className="w-3.5 h-3.5 shrink-0 text-slate-500 dark:text-slate-400" />
               {prevPokemon ? (
                 <img
-                  src={prevPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(prevPokemon.id)}
+                  src={prevPokemon.spriteUrl}
                   alt={prevPokemon.displayName}
-                  className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-xs"
+                  className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 object-contain drop-shadow-xs"
                   loading="lazy"
                 />
               ) : (
-                <div className="w-9 h-9 sm:w-10 sm:h-10" />
+                <div className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5" />
               )}
             </button>
 
@@ -1671,7 +1647,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
               type="button"
               disabled={!nextPokemon}
               onClick={() => nextPokemon && onNavigatePokemon && onNavigatePokemon(nextPokemon)}
-              className={`flex items-center justify-center gap-1 w-16 sm:w-20 h-11 sm:h-12 px-1.5 sm:px-2.5 rounded-2xl border transition-all duration-150 shrink-0 ${
+              className={`flex items-center justify-center gap-1 w-14 sm:w-16 h-9.5 sm:h-10.5 px-1.5 sm:px-2 rounded-2xl border transition-all duration-150 shrink-0 ${
                 nextPokemon
                   ? 'bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-100 cursor-pointer active:scale-95 shadow-2xs'
                   : 'opacity-20 border-dashed border-slate-200 dark:border-slate-800 bg-transparent text-slate-400 dark:text-slate-600 cursor-not-allowed'
@@ -1681,15 +1657,15 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
             >
               {nextPokemon ? (
                 <img
-                  src={nextPokemon.frontDefaultUrl || getFrontDefaultSpriteUrl(nextPokemon.id)}
+                  src={nextPokemon.spriteUrl}
                   alt={nextPokemon.displayName}
-                  className="w-9 h-9 sm:w-10 sm:h-10 object-contain drop-shadow-xs"
+                  className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 object-contain drop-shadow-xs"
                   loading="lazy"
                 />
               ) : (
-                <div className="w-9 h-9 sm:w-10 sm:h-10" />
+                <div className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5" />
               )}
-              <ChevronRight className="w-4 h-4 shrink-0 text-slate-600 dark:text-slate-400" />
+              <ChevronRight className="w-3.5 h-3.5 shrink-0 text-slate-500 dark:text-slate-400" />
             </button>
           </>
         ) : (
@@ -1727,7 +1703,7 @@ const EvolutionTriggerBadge: React.FC<{
 
   return (
     <div
-      className="flex items-center justify-center text-[9px] sm:text-[10px] font-bold font-mono text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-xl border border-slate-200/90 dark:border-slate-700 shadow-2xs whitespace-nowrap max-w-[150px] truncate select-none shrink-0"
+      className="flex items-center justify-center text-[8.5px] sm:text-[10px] font-bold font-mono text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl border border-slate-200/90 dark:border-slate-700 shadow-2xs whitespace-nowrap max-w-[110px] sm:max-w-[150px] truncate select-none shrink-0"
       title={text}
     >
       <span>{text}</span>
@@ -1759,7 +1735,7 @@ const EvolutionBranchRenderer: React.FC<{
         <button
           type="button"
           onClick={() => onSelectPokemon(pokemonData)}
-          className={`group p-2.5 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-between text-center w-26 sm:w-28 h-36 sm:h-40 cursor-pointer relative shadow-2xs shrink-0 ${
+          className={`group p-2 sm:p-2.5 rounded-2xl border transition-all duration-200 flex flex-col items-center justify-between text-center w-23 sm:w-28 h-33 sm:h-40 cursor-pointer relative shadow-2xs shrink-0 ${
             isCurrent
               ? 'bg-white dark:bg-slate-800 border-slate-400 dark:border-slate-600 ring-2 ring-offset-1 dark:ring-offset-slate-900 shadow-sm'
               : 'bg-white dark:bg-slate-800/90 hover:bg-slate-50 dark:hover:bg-slate-700/80 border-slate-200/90 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:scale-105'
@@ -1775,20 +1751,20 @@ const EvolutionBranchRenderer: React.FC<{
               Viewing
             </span>
           )}
-          <div className="w-13 h-13 sm:w-15 sm:h-15 relative flex items-center justify-center my-0.5 shrink-0">
-            <div className="absolute bottom-0.5 w-11 sm:w-13 h-3.5 rounded-[50%] bg-slate-100 dark:bg-slate-700 border border-slate-200/60 dark:border-slate-600/60 shadow-2xs" />
+          <div className="w-12 h-12 sm:w-15 sm:h-15 relative flex items-center justify-center my-0.5 shrink-0">
+            <div className="absolute bottom-0.5 w-10 sm:w-13 h-3 sm:h-3.5 rounded-[50%] bg-slate-100 dark:bg-slate-700 border border-slate-200/60 dark:border-slate-600/60 shadow-2xs" />
             <img
               src={pokemonData.spriteUrl}
               alt={pokemonData.displayName}
-              className="w-12 h-12 sm:w-14 sm:h-14 object-contain relative z-10 transition-transform group-hover:scale-105"
+              className="w-11 h-11 sm:w-14 sm:h-14 object-contain relative z-10 transition-transform group-hover:scale-105"
               loading="lazy"
             />
           </div>
           <div className="space-y-0.5 w-full">
-            <span className="text-[11px] font-bold text-slate-900 dark:text-slate-100 block truncate">
+            <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-900 dark:text-slate-100 block truncate">
               {pokemonData.displayName}
             </span>
-            <span className="text-[9px] font-mono font-medium text-slate-400 dark:text-slate-500 block">
+            <span className="text-[8.5px] sm:text-[9px] font-mono font-medium text-slate-400 dark:text-slate-500 block">
               #{String(pokemonData.id).padStart(4, '0')}
             </span>
           </div>
@@ -1796,7 +1772,7 @@ const EvolutionBranchRenderer: React.FC<{
             {pokemonData.types.map((t) => (
               <span
                 key={t}
-                className="px-1.5 py-0.5 rounded text-[8px] font-bold text-white uppercase shadow-2xs"
+                className="px-1.5 py-0.5 rounded text-[7.5px] sm:text-[8px] font-bold text-white uppercase shadow-2xs"
                 style={{ backgroundColor: POKEMON_TYPE_THEMES[t].accentHex }}
               >
                 {t}
@@ -1807,14 +1783,14 @@ const EvolutionBranchRenderer: React.FC<{
       ) : (
         /* Undiscovered Pokémon: Concealed Mystery Slot */
         <div
-          className="p-2.5 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-100/70 dark:bg-slate-800/50 flex flex-col items-center justify-between text-center w-26 sm:w-28 h-36 sm:h-40 select-none shrink-0"
+          className="p-2 sm:p-2.5 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-100/70 dark:bg-slate-800/50 flex flex-col items-center justify-between text-center w-23 sm:w-28 h-33 sm:h-40 select-none shrink-0"
           title="Undiscovered Pokémon — register this species in your Pokédex to unlock"
         >
-          <div className="w-13 h-13 sm:w-15 sm:h-15 rounded-2xl bg-slate-200/60 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 flex items-center justify-center my-0.5 shrink-0">
-            <HelpCircle className="w-7 h-7 text-slate-400 dark:text-slate-500" />
+          <div className="w-12 h-12 sm:w-15 sm:h-15 rounded-2xl bg-slate-200/60 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 flex items-center justify-center my-0.5 shrink-0">
+            <HelpCircle className="w-5 h-5 sm:w-7 sm:h-7 text-slate-400 dark:text-slate-500" />
           </div>
           <div className="space-y-1 w-full mt-0.5">
-            <span className="text-[11px] font-bold text-slate-400 dark:text-slate-500 block font-mono">
+            <span className="text-[10.5px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-500 block font-mono">
               ???
             </span>
             <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-700 text-[8px] font-semibold text-slate-500 dark:text-slate-400">
@@ -1839,11 +1815,11 @@ const EvolutionBranchRenderer: React.FC<{
         {renderCard()}
 
         {/* Linear Connector */}
-        <div className="flex items-center px-1 shrink-0">
-          <div className="w-3 sm:w-4 h-[2px] bg-slate-300 dark:bg-slate-700" />
+        <div className="flex items-center px-0.5 sm:px-1 shrink-0">
+          <div className="w-2 sm:w-3.5 h-[2px] bg-slate-300 dark:bg-slate-700" />
           <EvolutionTriggerBadge child={singleChild} />
-          <div className="w-3 sm:w-4 h-[2px] bg-slate-300 dark:bg-slate-700" />
-          <ArrowRight className="w-3.5 h-3.5 -ml-1 text-slate-400 dark:text-slate-500 shrink-0" />
+          <div className="w-2 sm:w-3.5 h-[2px] bg-slate-300 dark:bg-slate-700" />
+          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 -ml-1 text-slate-400 dark:text-slate-500 shrink-0" />
         </div>
 
         {/* Child Tree */}
@@ -1864,7 +1840,7 @@ const EvolutionBranchRenderer: React.FC<{
       {renderCard()}
 
       {/* Parent Stem to Spine */}
-      <div className="w-3 sm:w-5 h-[2px] bg-slate-300 dark:bg-slate-700 shrink-0" />
+      <div className="w-2.5 sm:w-5 h-[2px] bg-slate-300 dark:bg-slate-700 shrink-0" />
 
       {/* Children Vertical Stack */}
       <div className="flex flex-col shrink-0">
@@ -1873,7 +1849,7 @@ const EvolutionBranchRenderer: React.FC<{
           const isLast = idx === node.evolvesTo!.length - 1;
 
           return (
-            <div key={child.id} className="relative flex items-center py-2 pl-4 sm:pl-6 shrink-0">
+            <div key={child.id} className="relative flex items-center py-1.5 sm:py-2 pl-3 sm:pl-6 shrink-0">
               {/* Continuous Spine Segment */}
               <div
                 className={`absolute left-0 w-[2px] bg-slate-300 dark:bg-slate-700 ${
@@ -1886,13 +1862,13 @@ const EvolutionBranchRenderer: React.FC<{
               />
 
               {/* Horizontal Branch Arm */}
-              <div className="absolute left-0 top-1/2 w-4 sm:w-6 h-[2px] bg-slate-300 dark:bg-slate-700" />
+              <div className="absolute left-0 top-1/2 w-3 sm:w-6 h-[2px] bg-slate-300 dark:bg-slate-700" />
 
               {/* Branch Trigger Badge and Arrow */}
-              <div className="flex items-center px-1 shrink-0">
+              <div className="flex items-center px-0.5 sm:px-1 shrink-0">
                 <EvolutionTriggerBadge child={child} />
-                <div className="w-2 sm:w-3 h-[2px] bg-slate-300 dark:bg-slate-700" />
-                <ArrowRight className="w-3.5 h-3.5 -ml-1 text-slate-400 dark:text-slate-500 shrink-0" />
+                <div className="w-1.5 sm:w-3 h-[2px] bg-slate-300 dark:bg-slate-700" />
+                <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 -ml-1 text-slate-400 dark:text-slate-500 shrink-0" />
               </div>
 
               {/* Child Subtree */}
