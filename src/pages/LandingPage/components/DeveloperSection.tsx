@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Code2, Mail, ExternalLink } from 'lucide-react';
+import { TOTAL_POKEMON_COUNT } from '../../../services/pokemonIndex';
 
 interface BadgeItem {
   id: string;
@@ -16,100 +17,131 @@ const BADGES: BadgeItem[] = [
   {
     id: 'boulder',
     name: 'Boulder Badge',
-    creativeTitle: 'Rock-Solid Architecture',
+    creativeTitle: 'Robust Foundation',
     location: 'Pewter Gym',
     type: 'Rock',
-    color: '#94a3b8',
+    color: '#64748b',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="boulderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#cbd5e1" />
-            <stop offset="50%" stopColor="#94a3b8" />
-            <stop offset="100%" stopColor="#475569" />
-          </linearGradient>
-        </defs>
-        <polygon points="12,4 28,4 36,12 36,28 28,36 12,36 4,28 4,12" fill="url(#boulderGrad)" stroke="#334155" strokeWidth="1.5" />
-        <polygon points="15,10 25,10 30,15 30,25 25,30 15,30 10,25 10,15" fill="#64748b" opacity="0.4" />
-        <polygon points="12,4 20,20 4,12" fill="#ffffff" opacity="0.25" />
+        {/* Outer Octagon */}
+        <polygon
+          points="12,4 28,4 36,12 36,28 28,36 12,36 4,28 4,12"
+          fill="#5a7d7c"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        {/* Inner Octagon */}
+        <polygon
+          points="14.5,10 25.5,10 30,14.5 30,25.5 25.5,30 14.5,30 10,25.5 10,14.5"
+          fill="#4a6b6a"
+          stroke="#1e293b"
+          strokeWidth="1.2"
+        />
+        {/* Facet lines */}
+        <line x1="12" y1="4" x2="14.5" y2="10" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="28" y1="4" x2="25.5" y2="10" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="36" y1="12" x2="30" y2="14.5" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="36" y1="28" x2="30" y2="25.5" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="28" y1="36" x2="25.5" y2="30" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="12" y1="36" x2="14.5" y2="30" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="4" y1="28" x2="10" y2="25.5" stroke="#1e293b" strokeWidth="1.2" />
+        <line x1="4" y1="12" x2="10" y2="14.5" stroke="#1e293b" strokeWidth="1.2" />
       </svg>
     ),
   },
   {
     id: 'cascade',
     name: 'Cascade Badge',
-    creativeTitle: 'Fluid Interaction Flow',
+    creativeTitle: 'Fluid Flow',
     location: 'Cerulean Gym',
     type: 'Water',
     color: '#38bdf8',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="cascadeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#7dd3fc" />
-            <stop offset="40%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#0284c7" />
-          </linearGradient>
-        </defs>
         <path
-          d="M20,4 C20,4 33,18 33,26 C33,33.18 27.18,37 20,37 C12.82,37 7,33.18 7,26 C7,18 20,4 20,4 Z"
-          fill="url(#cascadeGrad)"
-          stroke="#0369a1"
-          strokeWidth="1.5"
+          d="M20,4 C20,4 34,18 34,26.5 C34,33.5 27.5,37 20,37 C12.5,37 6,33.5 6,26.5 C6,18 20,4 20,4 Z"
+          fill="#85c7f2"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
         />
-        <path d="M14,24 C14,19 20,10 20,10 C20,10 26,19 26,24 C26,27.3 23.3,30 20,30 C16.7,30 14,27.3 14,24 Z" fill="#ffffff" opacity="0.3" />
+        <path
+          d="M15,22 C15,17 20,10 20,10 C20,10 25,17 25,22 C25,25.5 22.8,28 20,28 C17.2,28 15,25.5 15,22 Z"
+          fill="#ffffff"
+          opacity="0.35"
+        />
       </svg>
     ),
   },
   {
     id: 'thunder',
     name: 'Thunder Badge',
-    creativeTitle: 'Zero-Latency Velocity',
+    creativeTitle: 'Fast Velocity',
     location: 'Vermilion Gym',
     type: 'Electric',
     color: '#facc15',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="thunderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="45%" stopColor="#facc15" />
-            <stop offset="100%" stopColor="#d97706" />
-          </linearGradient>
-        </defs>
+        {/* Outer 8 Sunburst Points */}
         <polygon
-          points="20,2 24,14 36,14 27,22 31,34 20,27 9,34 13,22 4,14 16,14"
-          fill="url(#thunderGrad)"
-          stroke="#b45309"
-          strokeWidth="1.5"
+          points="20,2 24.5,7.5 32.5,4 32.5,12 38,16.5 34,23.5 37.5,30 30,31.5 28.5,38 21.5,34 15.5,38 12.5,31.5 4,30.5 7,23.5 2.5,17 8.5,12 7.5,4.5 15.5,7.5"
+          fill="#fef08a"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
         />
-        <circle cx="20" cy="20" r="4.5" fill="#fef9c3" stroke="#b45309" strokeWidth="1" />
+        {/* Middle Octagon Ring */}
+        <polygon
+          points="14,9 26,9 31,14 31,26 26,31 14,31 9,26 9,14"
+          fill="#e5983b"
+          stroke="#1e293b"
+          strokeWidth="1.3"
+        />
+        {/* Inner Octagon Core */}
+        <polygon
+          points="16,13 24,13 27,16 27,24 24,27 16,27 13,24 13,16"
+          fill="#d97706"
+          stroke="#1e293b"
+          strokeWidth="1"
+        />
+        {/* Corner Facet Lines */}
+        <line x1="14" y1="9" x2="16" y2="13" stroke="#1e293b" strokeWidth="1" />
+        <line x1="26" y1="9" x2="24" y2="13" stroke="#1e293b" strokeWidth="1" />
+        <line x1="31" y1="14" x2="27" y2="16" stroke="#1e293b" strokeWidth="1" />
+        <line x1="31" y1="26" x2="27" y2="24" stroke="#1e293b" strokeWidth="1" />
+        <line x1="26" y1="31" x2="24" y2="27" stroke="#1e293b" strokeWidth="1" />
+        <line x1="14" y1="31" x2="16" y2="27" stroke="#1e293b" strokeWidth="1" />
+        <line x1="9" y1="26" x2="13" y2="24" stroke="#1e293b" strokeWidth="1" />
+        <line x1="9" y1="14" x2="13" y2="16" stroke="#1e293b" strokeWidth="1" />
       </svg>
     ),
   },
   {
     id: 'rainbow',
     name: 'Rainbow Badge',
-    creativeTitle: 'Prismatic UI Polish',
+    creativeTitle: 'Prismatic UI',
     location: 'Celadon Gym',
     type: 'Grass',
     color: '#34d399',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <radialGradient id="rainbowCenter" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#67e8f9" />
-            <stop offset="100%" stopColor="#06b6d4" />
-          </radialGradient>
-        </defs>
-        <circle cx="20" cy="9" r="6" fill="#f43f5e" />
-        <circle cx="29" cy="14" r="6" fill="#f97316" />
-        <circle cx="31" cy="25" r="6" fill="#eab308" />
-        <circle cx="25" cy="32" r="6" fill="#22c55e" />
-        <circle cx="15" cy="32" r="6" fill="#06b6d4" />
-        <circle cx="9" cy="25" r="6" fill="#3b82f6" />
-        <circle cx="11" cy="14" r="6" fill="#a855f7" />
-        <circle cx="20" cy="20" r="6.5" fill="url(#rainbowCenter)" stroke="#0e7490" strokeWidth="1.2" />
+        {/* 8 Colored Petals */}
+        <polygon points="17,3 23,3 25,10 15,10" fill="#dc2626" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="27,6 32,10 29,17 23,13" fill="#ea580c" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="31,16 36,20 31,25 25,21" fill="#fde047" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="28,26 31,32 24,34 21,27" fill="#86efac" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="17,37 23,37 24,30 16,30" fill="#22c55e" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="9,31 13,35 19,29 14,25" fill="#38bdf8" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="4,20 9,15 15,19 10,24" fill="#a855f7" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+        <polygon points="8,9 13,5 18,12 12,15" fill="#f472b6" stroke="#1e293b" strokeWidth="1.2" strokeLinejoin="round" />
+
+        {/* Center Disc with Floral Cutout */}
+        <circle cx="20" cy="20" r="7.5" fill="#312e81" stroke="#1e293b" strokeWidth="1.3" />
+        <path
+          d="M20,15.5 C20.8,17.5 22.5,19.2 24.5,20 C22.5,20.8 20.8,22.5 20,24.5 C19.2,22.5 17.5,20.8 15.5,20 C17.5,19.2 19.2,17.5 20,15.5 Z"
+          fill="#ffffff"
+        />
       </svg>
     ),
   },
@@ -119,45 +151,43 @@ const BADGES: BadgeItem[] = [
     creativeTitle: 'Passionate Dedication',
     location: 'Fuchsia Gym',
     type: 'Poison',
-    color: '#c084fc',
+    color: '#ec4899',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="soulGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#f0abfc" />
-            <stop offset="50%" stopColor="#c084fc" />
-            <stop offset="100%" stopColor="#7e22ce" />
-          </linearGradient>
-        </defs>
+        {/* Left Heart Half */}
         <path
-          d="M20,6 C13,6 7,12 7,19 C7,27 20,36 20,36 C20,36 33,27 33,19 C33,12 27,6 20,6 Z"
-          fill="url(#soulGrad)"
-          stroke="#6b21a8"
-          strokeWidth="1.5"
+          d="M20,11 C18,7 13.5,5 9,8 C4.5,11 4,17.5 7,23 C10,28.5 20,35.5 20,35.5 Z"
+          fill="#ec4899"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
         />
-        <circle cx="20" cy="18" r="4.5" fill="#faf5ff" stroke="#6b21a8" strokeWidth="1" />
+        {/* Right Heart Half */}
+        <path
+          d="M20,11 C22,7 26.5,5 31,8 C35.5,11 36,17.5 33,23 C30,28.5 20,35.5 20,35.5 Z"
+          fill="#d946ef"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        {/* Center Vertical Crease */}
+        <line x1="20" y1="10.5" x2="20" y2="35.5" stroke="#1e293b" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     ),
   },
   {
     id: 'marsh',
     name: 'Marsh Badge',
-    creativeTitle: 'Deductive Game Logic',
+    creativeTitle: 'Deductive Logic',
     location: 'Saffron Gym',
     type: 'Psychic',
     color: '#eab308',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="marshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fef08a" />
-            <stop offset="60%" stopColor="#eab308" />
-            <stop offset="100%" stopColor="#a16207" />
-          </linearGradient>
-        </defs>
-        <circle cx="20" cy="20" r="16" fill="url(#marshGrad)" stroke="#78350f" strokeWidth="1.5" />
-        <circle cx="20" cy="20" r="10" fill="#fef9c3" stroke="#854d0e" strokeWidth="1.5" />
-        <circle cx="20" cy="20" r="4.5" fill="#eab308" />
+        {/* Outer Gold Ring */}
+        <circle cx="20" cy="20" r="16.5" fill="#eab308" stroke="#1e293b" strokeWidth="1.6" />
+        {/* Inner Gold Disc */}
+        <circle cx="20" cy="20" r="10" fill="#facc15" stroke="#1e293b" strokeWidth="1.6" />
       </svg>
     ),
   },
@@ -170,44 +200,47 @@ const BADGES: BadgeItem[] = [
     color: '#f97316',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="volcanoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fca5a5" />
-            <stop offset="40%" stopColor="#f97316" />
-            <stop offset="100%" stopColor="#dc2626" />
-          </linearGradient>
-        </defs>
-        <polygon points="20,3 36,19 28,37 12,37 4,19" fill="url(#volcanoGrad)" stroke="#991b1b" strokeWidth="1.5" />
-        <polygon points="20,10 28,21 23,31 17,31 12,21" fill="#fef2f2" opacity="0.35" />
+        {/* Outer 3-Spoke Flame Crest */}
+        <path
+          d="M20,5 C21.5,11 25.5,12 28.5,9.5 C29,18 35,16 34.5,25 C34,31.5 28.5,36 20,36 C11.5,36 6,31.5 5.5,25 C5,16 11,18 11.5,9.5 C14.5,12 18.5,11 20,5 Z"
+          fill="#c2410c"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        {/* Inner Red Flame Drop */}
+        <path
+          d="M20,18 C20,18 26,24.5 26,27.5 C26,30.8 23.3,33.5 20,33.5 C16.7,33.5 14,30.8 14,27.5 C14,24.5 20,18 20,18 Z"
+          fill="#b91c1c"
+          stroke="#1e293b"
+          strokeWidth="1.4"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
   {
     id: 'earth',
     name: 'Earth Badge',
-    creativeTitle: 'Enduring Ledger',
+    creativeTitle: 'Enduring Dex',
     location: 'Viridian Gym',
     type: 'Ground',
     color: '#22c55e',
     renderSvg: () => (
       <svg viewBox="0 0 40 40" className="w-full h-full drop-shadow-xs">
-        <defs>
-          <linearGradient id="earthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#86efac" />
-            <stop offset="50%" stopColor="#22c55e" />
-            <stop offset="100%" stopColor="#15803d" />
-          </linearGradient>
-        </defs>
+        {/* Leaf / Feather Body with Ridges */}
         <path
-          d="M20,3 C24,10 32,16 32,25 C32,32 26.5,37 20,37 C13.5,37 8,32 8,25 C8,16 16,10 20,3 Z"
-          fill="url(#earthGrad)"
-          stroke="#166534"
-          strokeWidth="1.5"
+          d="M9,7 L23,7 C23,7 29,10 30,13 L27,14 L32,18 L29,19 L33,24 L29,26 L32,30 L22,30 L22,27 L18,27 L18,24 L14,24 L14,21 L10,21 L10,18 L9,18 Z"
+          fill="#86efac"
+          stroke="#1e293b"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
         />
-        <line x1="20" y1="9" x2="20" y2="34" stroke="#dcfce7" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="20" y1="16" x2="26" y2="13" stroke="#dcfce7" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="20" y1="22" x2="14" y2="19" stroke="#dcfce7" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="20" y1="28" x2="26" y2="25" stroke="#dcfce7" strokeWidth="1.2" strokeLinecap="round" />
+        {/* Stem at bottom right */}
+        <line x1="28" y1="29" x2="34" y2="35" stroke="#166534" strokeWidth="2.2" strokeLinecap="round" />
+        <line x1="28" y1="29" x2="34" y2="35" stroke="#1e293b" strokeWidth="1.2" strokeLinecap="round" />
+        {/* Inner rib segment line */}
+        <path d="M12,10 L26,27" stroke="#1e293b" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
       </svg>
     ),
   },
@@ -234,7 +267,7 @@ export const DeveloperSection: React.FC = () => {
       <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-red-100/20 dark:bg-red-950/10 rounded-full blur-3xl pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-blue-100/15 dark:bg-blue-950/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
-      <div className="max-w-3xl mx-auto space-y-12 sm:space-y-14">
+      <div className="max-w-4xl mx-auto space-y-12 sm:space-y-14">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -318,27 +351,22 @@ export const DeveloperSection: React.FC = () => {
             </div>
 
             {/* Card Interior */}
-            <div className="p-4 sm:p-7 space-y-4 sm:space-y-5">
+            <div className="p-4 sm:p-7 md:p-8 space-y-4 sm:space-y-6">
               {/* Top Identity Block: Avatar & Trainer Credentials */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3.5 sm:gap-5">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
                 {/* Trainer Portrait Frame: Lucario Partner */}
                 <div className="relative shrink-0">
-                  <div className="w-18 h-20 sm:w-24 sm:h-28 rounded-xl sm:rounded-2xl bg-gradient-to-b from-slate-100 to-slate-200/80 dark:from-slate-800 dark:to-slate-900 border-2 border-slate-300/80 dark:border-slate-700 p-1 shadow-inner flex flex-col items-center justify-between overflow-hidden relative">
+                  <div className="w-20 h-22 sm:w-24 sm:h-28 rounded-xl sm:rounded-2xl bg-gradient-to-b from-slate-100 to-slate-200/80 dark:from-slate-800 dark:to-slate-900 border-2 border-slate-300/80 dark:border-slate-700 p-1 shadow-inner flex flex-col items-center justify-between overflow-hidden relative">
                     <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-b from-sky-50 to-blue-50/60 dark:from-sky-950/30 dark:to-blue-950/20 flex flex-col items-center justify-center relative">
                       <img
                         src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png"
                         alt="Partner Lucario"
-                        className="w-14 h-14 sm:w-18 sm:h-18 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+                        className="w-16 h-16 sm:w-18 sm:h-18 object-contain filter drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                       />
                       <span className="absolute bottom-0.5 px-1 py-0.5 rounded text-[8px] sm:text-[9px] font-mono font-bold bg-slate-900/80 dark:bg-black/80 text-white leading-none">
                         #448
                       </span>
                     </div>
-                  </div>
-
-                  {/* Trainer Level Chip */}
-                  <div className="absolute -bottom-1.5 -right-1.5 px-1.5 py-0.5 rounded-full bg-red-600 text-white text-[9px] sm:text-[10px] font-mono font-bold shadow-xs border border-white dark:border-slate-900">
-                    Lv. 100
                   </div>
                 </div>
 
@@ -354,38 +382,30 @@ export const DeveloperSection: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400">
-                      Software Engineer & Pokémon Archivist
+                      Software & Pokémon Hobbyist
                     </p>
                   </div>
 
                   {/* Trainer Philosophy Quote */}
-                  <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic bg-slate-50/80 dark:bg-slate-950/80 p-2 sm:p-2.5 rounded-xl border border-slate-200/70 dark:border-slate-800">
-                    "A persistent, keyboard-first Pokédex companion that remembers every victory."
+                  <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed italic bg-slate-50/80 dark:bg-slate-950/80 p-2.5 rounded-xl border border-slate-200/70 dark:border-slate-800">
+                    "A Pokédex companion should remember every victory."
                   </p>
 
-                  {/* Stats Row */}
-                  <div className="flex items-center justify-center sm:justify-start gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-                    <div>
-                      <span className="text-slate-400">ROSTER: </span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">1,025 Logged</span>
-                    </div>
-                    <span className="text-slate-300 dark:text-slate-700">•</span>
-                    <div>
-                      <span className="text-slate-400">REGION: </span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200">National</span>
-                    </div>
+                  {/* Single Consolidated Stat */}
+                  <div className="flex items-center justify-center sm:justify-start text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-mono">
+                    <span className="text-slate-400 dark:text-slate-500">NATIONAL POKÉDEX:</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200 ml-1.5">{TOTAL_POKEMON_COUNT.toLocaleString()} SPECIES</span>
                   </div>
                 </div>
               </div>
 
               {/* Badges Display Case Ribbon */}
-              <div className="space-y-2 pt-1">
+              <div className="space-y-2.5 pt-1">
                 <div className="flex items-center justify-between text-[11px] sm:text-xs">
                   <span className="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1.5">
                     <span>Mastery Badges</span>
                     <span className="text-amber-500">🏆</span>
                   </span>
-                  <span className="text-slate-400 dark:text-slate-500 font-mono text-[10px] sm:text-[11px]">8 / 8 Mastered</span>
                 </div>
 
                 {/* Inset Badge Tray */}
@@ -396,12 +416,12 @@ export const DeveloperSection: React.FC = () => {
                         key={badge.id}
                         onMouseEnter={() => setHoveredBadge(badge)}
                         onMouseLeave={() => setHoveredBadge(null)}
-                        className="relative group/badge p-1 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer"
+                        className="relative group/badge p-1 sm:p-1.5 rounded-lg sm:rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-all duration-200 flex flex-col items-center justify-center cursor-pointer"
                       >
                         <motion.div
-                          whileHover={{ scale: 1.2, y: -2 }}
+                          whileHover={{ scale: 1.25, y: -2 }}
                           transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-                          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center"
+                          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center"
                         >
                           {badge.renderSvg()}
                         </motion.div>
@@ -411,7 +431,7 @@ export const DeveloperSection: React.FC = () => {
                 </div>
 
                 {/* Dynamic Badge Tooltip */}
-                <div className="h-4 sm:h-5 flex items-center justify-center text-center">
+                <div className="min-h-6 flex items-center justify-center text-center px-2">
                   <AnimatePresence mode="wait">
                     {hoveredBadge ? (
                       <motion.div
@@ -420,18 +440,15 @@ export const DeveloperSection: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -2 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center gap-1.5 text-[10px] sm:text-xs font-mono"
+                        className="flex items-center gap-1.5 text-xs sm:text-sm font-mono"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: hoveredBadge.color }} />
-                        <span className="font-extrabold text-slate-900 dark:text-white font-display">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: hoveredBadge.color }} />
+                        <span className="font-extrabold text-slate-900 dark:text-white font-display tracking-tight">
                           "{hoveredBadge.creativeTitle}"
-                        </span>
-                        <span className="text-slate-400 text-[10px] hidden sm:inline">
-                          ({hoveredBadge.name} • {hoveredBadge.location})
                         </span>
                       </motion.div>
                     ) : (
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono hidden sm:inline">
+                      <span className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 font-mono">
                         Hover badges to view creative mastery titles
                       </span>
                     )}

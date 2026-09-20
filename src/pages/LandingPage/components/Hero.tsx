@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronDown, Flame, Compass, Shield } from 'lucide-react';
+import { ArrowRight, ChevronDown, Compass, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { Pokemon } from '../../../types/pokemon';
+import {
+  TOTAL_POKEMON_COUNT,
+  TOTAL_REGIONS_COUNT,
+  TOTAL_TYPES_COUNT,
+} from '../../../services/pokemonIndex';
 import ThreeHeroCanvas from './ThreeHeroCanvas';
 import PokeBallBurst from './PokeBallBurst';
 import PeekingSquad from './PeekingSquad';
 import PokeBallHoverDialog from './PokeBallHoverDialog';
+
+const ElementalTypeIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="currentColor" fillOpacity="0.2" />
+    <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+  </svg>
+);
 
 interface HeroProps {
   onNavigateToLogin: () => void;
@@ -107,16 +119,15 @@ export const Hero: React.FC<HeroProps> = ({
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-          >
-            {/* Live System Status Pill */}
+          >            {/* Live System Status Pill */}
             <motion.div
               variants={itemVariants}
               className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs select-none"
             >
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="font-semibold text-slate-900 dark:text-white">1,000+ Pokémon</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{TOTAL_POKEMON_COUNT.toLocaleString()}+ Pokémon</span>
               <span className="text-slate-300 dark:text-slate-700">•</span>
-              <span className="text-slate-500 dark:text-slate-400 font-medium">Gen 1–9</span>
+              <span className="text-slate-500 dark:text-slate-400 font-medium">Gen 1–{TOTAL_REGIONS_COUNT}</span>
             </motion.div>
 
             {/* Display Headline */}
@@ -145,7 +156,7 @@ export const Hero: React.FC<HeroProps> = ({
               variants={itemVariants}
               className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0"
             >
-              Test your Pokémon familiarity, uncover species, pursue quizzes, and complete a {' '}
+              Test your Pokémon familiarity, uncover species, pursue quizzes, and complete a{' '}
               <strong className="text-slate-900 dark:text-white font-semibold">personal Pokédex that stays with you</strong>.
             </motion.p>
 
@@ -221,7 +232,7 @@ export const Hero: React.FC<HeroProps> = ({
 
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="w-11 h-11 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 group-hover:bg-red-600 group-hover:text-white dark:group-hover:bg-red-600 dark:group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs group-hover:scale-105">
-                <Flame className="w-5 h-5" />
+                <Search className="w-5 h-5" />
               </div>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-50/80 dark:bg-red-950/60 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-900/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
@@ -231,7 +242,7 @@ export const Hero: React.FC<HeroProps> = ({
 
             <div>
               <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-display tracking-tight flex items-baseline gap-1.5">
-                1,025
+                {TOTAL_POKEMON_COUNT.toLocaleString()}
                 <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-sans uppercase tracking-wider">Entries</span>
               </div>
               <div className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">Documented Species</div>
@@ -263,12 +274,12 @@ export const Hero: React.FC<HeroProps> = ({
 
             <div>
               <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-display tracking-tight flex items-baseline gap-1.5">
-                9
+                {TOTAL_REGIONS_COUNT}
                 <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-sans uppercase tracking-wider">Regions</span>
               </div>
               <div className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">Generations Covered</div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                Spans all 9 generations with regional variations and evolutions.
+                Spans all {TOTAL_REGIONS_COUNT} generations with regional variations and evolutions.
               </p>
             </div>
           </motion.div>
@@ -286,7 +297,7 @@ export const Hero: React.FC<HeroProps> = ({
 
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="w-11 h-11 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white dark:group-hover:bg-purple-600 dark:group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs group-hover:scale-105">
-                <Shield className="w-5 h-5" />
+                <ElementalTypeIcon className="w-5 h-5" />
               </div>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50/80 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-900/60">
                 Battle Matrix
@@ -295,10 +306,10 @@ export const Hero: React.FC<HeroProps> = ({
 
             <div>
               <div className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-display tracking-tight flex items-baseline gap-1.5">
-                18
-                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-sans uppercase tracking-wider">Types</span>
+                {TOTAL_TYPES_COUNT}
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-sans uppercase tracking-wider">Colors</span>
               </div>
-              <div className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">Elemental Types</div>
+              <div className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">Types Intact</div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                 Full damage effectiveness charts, dual affinities, and battle matchups.
               </p>

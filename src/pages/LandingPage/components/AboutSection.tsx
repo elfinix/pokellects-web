@@ -7,6 +7,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { TOTAL_POKEMON_COUNT } from '../../../services/pokemonIndex';
 
 export const AboutSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -121,7 +122,7 @@ export const AboutSection: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3.5 pt-1">
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0" />
-                  <span>1,025 Species National Roster</span>
+                  <span>{TOTAL_POKEMON_COUNT.toLocaleString()} Species National Roster</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   <CheckCircle2 className="w-4 h-4 text-red-500 shrink-0" />
@@ -157,7 +158,7 @@ export const AboutSection: React.FC = () => {
                 <div className="py-2 space-y-2">
                   <div className="flex justify-between text-xs sm:text-sm font-mono">
                     <span className="text-slate-500 dark:text-slate-400">Ledger Completion</span>
-                    <span className="text-red-600 dark:text-red-400 font-bold">384 / 1,025 (37.5%)</span>
+                    <span className="text-red-600 dark:text-red-400 font-bold">384 / {TOTAL_POKEMON_COUNT.toLocaleString()} (37.5%)</span>
                   </div>
                   <div className="w-full h-2.5 bg-slate-200/80 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-red-500 via-rose-400 to-amber-400 rounded-full w-[37.5%]" />

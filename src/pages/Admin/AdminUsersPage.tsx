@@ -76,7 +76,7 @@ export const AdminUsersPage: React.FC = () => {
           Registered Trainer Directory
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-          Inspect player progress, Pokédex completion rates, role permissions, and active SQLite credential records.
+          Inspect player progress, Pokédex completion rates, role permissions, and active trainer credential records.
         </p>
       </div>
 

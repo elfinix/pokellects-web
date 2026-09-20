@@ -42,6 +42,34 @@ export const REGION_METADATA: RegionMeta[] = [
   { generation: 9, name: 'Paldea', startId: 906, endId: 1025 },
 ];
 
+export const ALL_POKEMON_TYPES = [
+  'normal',
+  'fire',
+  'water',
+  'grass',
+  'electric',
+  'ice',
+  'fighting',
+  'poison',
+  'ground',
+  'flying',
+  'psychic',
+  'bug',
+  'rock',
+  'ghost',
+  'dragon',
+  'steel',
+  'fairy',
+  'dark',
+] as const;
+
+/**
+ * Dynamic counts derived from canonical PokéAPI indexes
+ */
+export const TOTAL_POKEMON_COUNT = ALL_KNOWN_POKEMON.length;
+export const TOTAL_REGIONS_COUNT = REGION_METADATA.length;
+export const TOTAL_TYPES_COUNT = ALL_POKEMON_TYPES.length;
+
 // Asynchronously fetch canonical names from PokeAPI v2 to refine stubs
 fetchAllPokemonList().then((list) => {
   list.forEach((item) => {

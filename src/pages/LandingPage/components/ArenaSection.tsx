@@ -177,25 +177,39 @@ export const ArenaSection: React.FC<ArenaSectionProps> = ({ onNavigateToLogin, o
                   }`}
                   style={{ animationDuration: '6s' }}
                 />
-                <motion.img
+
+                {/* Soft ambient glow on reveal */}
+                <div
+                  className={`absolute inset-0 rounded-full bg-purple-500/25 blur-md transition-opacity duration-500 ease-out pointer-events-none ${
+                    hoveredCard === 'silhouette' ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+
+                {/* Silhouette Layer (Smooth cross-fade) */}
+                <img
+                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+                  alt="Pikachu Silhouette"
+                  className={`absolute w-20 h-20 sm:w-24 sm:h-24 object-contain select-none z-10 transition-all duration-500 ease-out ${
+                    hoveredCard === 'silhouette'
+                      ? 'opacity-0 scale-105'
+                      : isDark
+                      ? 'opacity-85 brightness-0 invert-[0.35] scale-100'
+                      : 'opacity-85 brightness-0 invert-[0.2] scale-100'
+                  }`}
+                />
+
+                {/* Full-Color Artwork Layer (Smooth emergence) */}
+                <img
                   src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
                   alt="Pikachu"
-                  animate={{
-                    filter:
-                      hoveredCard === 'silhouette'
-                        ? 'brightness(1) drop-shadow(0 8px 16px rgba(168,85,247,0.4))'
-                        : isDark
-                        ? 'brightness(0) invert(0.35) opacity(0.85)'
-                        : 'brightness(0) invert(0.2) opacity(0.85)',
-                    scale: hoveredCard === 'silhouette' ? 1.05 : 1,
-                  }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="w-20 h-20 sm:w-24 sm:h-24 object-contain select-none z-10"
+                  className={`relative w-20 h-20 sm:w-24 sm:h-24 object-contain select-none z-20 transition-all duration-500 ease-out drop-shadow-[0_8px_16px_rgba(168,85,247,0.35)] ${
+                    hoveredCard === 'silhouette' ? 'opacity-100 scale-105' : 'opacity-0 scale-95 pointer-events-none'
+                  }`}
                 />
               </div>
 
               <div className="space-y-2 text-center sm:text-left flex-1">
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white transition-colors duration-300">
                   {hoveredCard === 'silhouette' ? '#025 Pikachu' : 'Shadow Silhouette Scan'}
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">

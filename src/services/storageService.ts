@@ -1,4 +1,4 @@
-import { AppUser, PlayerUser, AdminUser, Gender, UserRole } from '../types/user';
+import { AppUser, PlayerUser, AdminUser } from '../types/user';
 import { UnlockedPokemonEntry } from '../types/pokemon';
 import { GameConfiguration, FeatureFlags, ArenaGameType, Achievement } from '../types/game';
 import {
@@ -8,12 +8,6 @@ import {
   DEFAULT_FEATURE_FLAGS,
   MOCK_ACHIEVEMENTS,
 } from './mockdata';
-import {
-  getSqliteDatabase,
-  getMemoryState,
-  executeSql,
-  resetSqliteDatabase,
-} from './sqliteDatabase';
 
 export interface ArenaSessionRecord {
   id: string;
@@ -43,148 +37,83 @@ const DEFAULT_ADMIN_DISPLAY_CONFIG: AdminDisplayConfiguration = {
   theme: 'light',
 };
 
+const listeners = new Set<() => void>();
+
+export function subscribeToStorage(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function notifyListeners(): void {
+  listeners.forEach((fn) => fn());
+}
+
 /**
- * SQLite Local File Database Repository.
- * Powered by local SQLite database file (`data/pokellects.db`) on disk,
- * designed for seamless transition to Convex database in the future.
+ * Local State Repository for offline/fallback mock data.
+ * The primary backend database is Convex Cloud.
  */
 class StorageService {
-  private isReady = false;
-  private readyPromise: Promise<void>;
-
-  constructor() {
-    this.readyPromise = this.initDatabase();
-  }
-
-  private async initDatabase(): Promise<void> {
-    await getSqliteDatabase();
-    this.isReady = true;
-  }
+  private users: AppUser[] = [...MOCK_PLAYERS, MOCK_ADMIN];
+  private pokedexEntries: UnlockedPokemonEntry[] = [];
+  private arenaSessions: ArenaSessionRecord[] = [];
+  private achievements: Achievement[] = [...MOCK_ACHIEVEMENTS];
+  private userSettings: Map<string, UserSettings> = new Map();
+  private gameConfig: GameConfiguration = { ...DEFAULT_GAME_CONFIG };
+  private featureFlags: FeatureFlags = { ...DEFAULT_FEATURE_FLAGS };
+  private activeUserId: string = MOCK_PLAYERS[0].id;
 
   public async whenReady(): Promise<void> {
-    return this.readyPromise;
+    return Promise.resolve();
   }
 
-  // --- USER OPERATIONS (SQLite: users & session_state) ---
+  // --- USER OPERATIONS ---
   public getUsers(): AppUser[] {
-    const { users } = getMemoryState();
-    if (!users || users.length === 0) {
-      return [...MOCK_PLAYERS, MOCK_ADMIN];
-    }
-
-    return users.map((r: any) => {
-      const unlockedIds: number[] = typeof r.unlocked_pokemon_ids === 'string'
-        ? JSON.parse(r.unlocked_pokemon_ids || '[]')
-        : (r.unlocked_pokemon_ids || []);
-      const stats = typeof r.stats_json === 'string'
-        ? JSON.parse(r.stats_json || '{"totalGuesses":0,"correctGuesses":0,"arenaWins":0}')
-        : (r.stats || { totalGuesses: 0, correctGuesses: 0, arenaWins: 0 });
-
-      if (r.role === 'admin') {
-        const admin: AdminUser = {
-          id: r.id,
-          username: r.username,
-          email: r.email,
-          role: 'admin',
-          firstName: r.first_name || r.firstName,
-          lastName: r.last_name || r.lastName || undefined,
-          gender: r.gender,
-          birthday: r.birthday,
-          department: r.department || 'Administration',
-          createdAt: r.created_at || r.createdAt,
-        };
-        return admin;
-      }
-
-      const player: PlayerUser = {
-        id: r.id,
-        username: r.username,
-        email: r.email,
-        role: 'player',
-        firstName: r.first_name || r.firstName,
-        lastName: r.last_name || r.lastName || undefined,
-        gender: r.gender,
-        birthday: r.birthday,
-        createdAt: r.created_at || r.createdAt,
-        unlockedPokemonIds: unlockedIds,
-        stats: {
-          totalGuesses: stats.totalGuesses || 0,
-          correctGuesses: stats.correctGuesses || 0,
-          arenaWins: stats.arenaWins || 0,
-        },
-      };
-      return player;
-    });
+    return this.users;
   }
 
   public getActiveUser(): AppUser | null {
-    const { sessionState } = getMemoryState();
-    const activeId = sessionState['active_user_id'] || MOCK_PLAYERS[0].id;
-    const users = this.getUsers();
-    return users.find((u) => u.id === activeId) || users[0] || null;
+    return this.users.find((u) => u.id === this.activeUserId) || this.users[0] || null;
   }
 
   public setActiveUserId(userId: string): void {
-    getMemoryState().sessionState['active_user_id'] = userId;
-    executeSql('INSERT OR REPLACE INTO session_state (key, value) VALUES (?, ?)', ['active_user_id', userId]);
+    this.activeUserId = userId;
+    notifyListeners();
   }
 
   public updateUser(updated: AppUser): void {
-    const unlockedIds = updated.role === 'player' ? (updated as PlayerUser).unlockedPokemonIds : [];
-    const stats = updated.role === 'player' ? (updated as PlayerUser).stats : { totalGuesses: 0, correctGuesses: 0, arenaWins: 0 };
-    const department = updated.role === 'admin' ? (updated as AdminUser).department : null;
-
-    // Update in-memory copy
-    const users = getMemoryState().users;
-    const idx = users.findIndex((u) => u.id === updated.id);
+    const idx = this.users.findIndex((u) => u.id === updated.id);
     if (idx >= 0) {
-      users[idx] = {
-        ...users[idx],
-        first_name: updated.firstName,
-        last_name: updated.lastName || null,
-        gender: updated.gender,
-        birthday: updated.birthday,
-        department,
-        unlocked_pokemon_ids: JSON.stringify(unlockedIds),
-        stats_json: JSON.stringify(stats),
-      };
+      this.users[idx] = updated;
+      notifyListeners();
     }
-
-    executeSql(
-      'UPDATE users SET first_name = ?, last_name = ?, gender = ?, birthday = ?, department = ?, unlocked_pokemon_ids = ?, stats_json = ? WHERE id = ?',
-      [
-        updated.firstName,
-        updated.lastName || null,
-        updated.gender,
-        updated.birthday,
-        department,
-        JSON.stringify(unlockedIds),
-        JSON.stringify(stats),
-        updated.id,
-      ]
-    );
   }
 
   public deleteUser(userId: string): void {
-    const mem = getMemoryState();
-    mem.users = (mem.users || []).filter((u: any) => u.id !== userId);
-    mem.pokedexEntries = (mem.pokedexEntries || []).filter((e: any) => e.user_id !== userId);
-    mem.arenaSessions = (mem.arenaSessions || []).filter((s: any) => s.user_id !== userId);
-    mem.achievements = (mem.achievements || []).filter((a: any) => a.user_id !== userId);
-    mem.userSettings = (mem.userSettings || []).filter((s: any) => s.user_id !== userId);
-
-    executeSql('DELETE FROM pokedex_entries WHERE user_id = ?', [userId]);
-    executeSql('DELETE FROM arena_sessions WHERE user_id = ?', [userId]);
-    executeSql('DELETE FROM user_achievements WHERE user_id = ?', [userId]);
-    executeSql('DELETE FROM user_settings WHERE user_id = ?', [userId]);
-    executeSql('DELETE FROM users WHERE id = ?', [userId]);
+    this.users = this.users.filter((u) => u.id !== userId);
+    this.pokedexEntries = this.pokedexEntries.filter((e) => (e as any).userId !== userId);
+    this.arenaSessions = this.arenaSessions.filter((s) => s.userId !== userId);
+    this.userSettings.delete(userId);
+    notifyListeners();
   }
 
-  // --- POKEDEX ENTRIES (SQLite: pokedex_entries) ---
-  public getPlayerUnlockedEntries(playerId: string): UnlockedPokemonEntry[] {
-    const { pokedexEntries } = getMemoryState();
-    const userEntries = (pokedexEntries || []).filter((e: any) => e.user_id === playerId);
+  // --- POKEDEX ENTRIES ---
+  public getAllPokedexEntries(): UnlockedPokemonEntry[] {
+    if (this.pokedexEntries.length > 0) return this.pokedexEntries;
+    const entries: UnlockedPokemonEntry[] = [];
+    MOCK_PLAYERS.forEach((p) => {
+      (p.unlockedPokemonIds || []).forEach((id) => {
+        entries.push({
+          pokemonId: id,
+          unlockedAt: p.createdAt || new Date().toISOString(),
+          discoveryMethod: 'starter_grant',
+        });
+      });
+    });
+    return entries;
+  }
 
+  public getPlayerUnlockedEntries(playerId: string): UnlockedPokemonEntry[] {
+    const userEntries = this.pokedexEntries.filter((e: any) => e.userId === playerId);
     if (userEntries.length === 0) {
       const mock = MOCK_PLAYERS.find((p) => p.id === playerId);
       return (mock?.unlockedPokemonIds || []).map((id) => ({
@@ -193,271 +122,140 @@ class StorageService {
         discoveryMethod: 'starter_grant',
       }));
     }
-
-    return userEntries.map((r: any) => ({
-      pokemonId: r.pokemon_id,
-      unlockedAt: r.unlocked_at,
-      discoveryMethod: r.discovery_method,
-    }));
+    return userEntries;
   }
 
-  public getAllPokedexEntries(): (UnlockedPokemonEntry & { userId: string })[] {
-    const { pokedexEntries } = getMemoryState();
-    return (pokedexEntries || []).map((r: any) => ({
-      userId: r.user_id,
-      pokemonId: r.pokemon_id,
-      unlockedAt: r.unlocked_at,
-      discoveryMethod: r.discovery_method,
-    }));
-  }
-
-  public registerPokemonToPlayer(
-    playerId: string,
-    pokemonId: number,
-    method: UnlockedPokemonEntry['discoveryMethod'] = 'manual_dex_input'
-  ): { isNew: boolean; entry: UnlockedPokemonEntry } {
-    const { pokedexEntries } = getMemoryState();
-    const existing = pokedexEntries.find((e: any) => e.user_id === playerId && e.pokemon_id === pokemonId);
-
-    if (existing) {
-      return {
-        isNew: false,
-        entry: {
-          pokemonId: existing.pokemon_id,
-          unlockedAt: existing.unlocked_at,
-          discoveryMethod: existing.discovery_method as UnlockedPokemonEntry['discoveryMethod'],
-        },
-      };
-    }
-
-    const now = new Date().toISOString();
-    const entryId = `entry-${playerId}-${pokemonId}-${Date.now()}`;
-
-    // Update in-memory list
-    pokedexEntries.unshift({
-      id: entryId,
-      user_id: playerId,
-      pokemon_id: pokemonId,
-      unlocked_at: now,
-      discovery_method: method,
-    });
-
-    executeSql(
-      'INSERT OR IGNORE INTO pokedex_entries (id, user_id, pokemon_id, unlocked_at, discovery_method) VALUES (?, ?, ?, ?, ?)',
-      [entryId, playerId, pokemonId, now, method]
-    );
-
-    // Sync user's quick unlocked array in the users table
-    const users = this.getUsers();
-    const target = users.find((u) => u.id === playerId);
-    if (target && target.role === 'player') {
-      const player = target as PlayerUser;
+  public unlockPokemon(playerId: string, pokemonId: number, method: UnlockedPokemonEntry['discoveryMethod']): boolean {
+    const user = this.users.find((u) => u.id === playerId);
+    if (user && user.role === 'player') {
+      const player = user as PlayerUser;
       if (!player.unlockedPokemonIds.includes(pokemonId)) {
-        player.unlockedPokemonIds = [...player.unlockedPokemonIds, pokemonId];
-        this.updateUser(player);
+        player.unlockedPokemonIds.push(pokemonId);
       }
     }
 
-    return {
-      isNew: true,
-      entry: {
+    const exists = this.pokedexEntries.some((e: any) => e.userId === playerId && e.pokemonId === pokemonId);
+    if (!exists) {
+      this.pokedexEntries.push({
         pokemonId,
-        unlockedAt: now,
+        unlockedAt: new Date().toISOString(),
         discoveryMethod: method,
-      },
-    };
+        ...({ userId: playerId } as any),
+      });
+      notifyListeners();
+      return true;
+    }
+    return false;
   }
 
-  // --- ARENA SESSIONS (SQLite: arena_sessions) ---
-  public recordArenaSession(session: Omit<ArenaSessionRecord, 'id' | 'playedAt'>): ArenaSessionRecord {
-    const id = `arena-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-    const playedAt = new Date().toISOString();
+  public isPokemonUnlocked(playerId: string, pokemonId: number): boolean {
+    const entries = this.getPlayerUnlockedEntries(playerId);
+    return entries.some((e) => e.pokemonId === pokemonId);
+  }
 
-    const newRecord = {
-      id,
-      user_id: session.userId,
-      game_type: session.gameType,
-      pokemon_id: session.pokemonId,
-      is_won: session.isWon ? 1 : 0,
-      attempts_used: session.attemptsUsed,
-      time_taken_seconds: session.timeTakenSeconds,
-      played_at: playedAt,
-    };
+  // --- ARENA / MINIGAME SESSIONS ---
+  public getArenaSessions(playerId?: string): ArenaSessionRecord[] {
+    if (playerId) {
+      return this.arenaSessions.filter((s) => s.userId === playerId);
+    }
+    return this.arenaSessions;
+  }
 
-    getMemoryState().arenaSessions.unshift(newRecord);
-
-    executeSql(
-      'INSERT INTO arena_sessions (id, user_id, game_type, pokemon_id, is_won, attempts_used, time_taken_seconds, played_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        id,
-        session.userId,
-        session.gameType,
-        session.pokemonId,
-        session.isWon ? 1 : 0,
-        session.attemptsUsed,
-        session.timeTakenSeconds,
-        playedAt,
-      ]
-    );
-
-    return {
+  public recordArenaSession(session: Omit<ArenaSessionRecord, 'id' | 'playedAt'>): void {
+    const record: ArenaSessionRecord = {
       ...session,
-      id,
-      playedAt,
+      id: `sess-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      playedAt: new Date().toISOString(),
     };
+    this.arenaSessions.unshift(record);
+
+    const user = this.users.find((u) => u.id === session.userId);
+    if (user && user.role === 'player') {
+      const player = user as PlayerUser;
+      player.stats.totalGuesses = (player.stats.totalGuesses || 0) + session.attemptsUsed;
+      if (session.isWon) {
+        player.stats.correctGuesses = (player.stats.correctGuesses || 0) + 1;
+        player.stats.arenaWins = (player.stats.arenaWins || 0) + 1;
+      }
+    }
+    notifyListeners();
   }
 
-  public getArenaSessions(userId?: string): ArenaSessionRecord[] {
-    const { arenaSessions } = getMemoryState();
-    const rows = userId
-      ? arenaSessions.filter((s: any) => s.user_id === userId)
-      : arenaSessions;
-
-    return rows.map((r: any) => ({
-      id: r.id,
-      userId: r.user_id,
-      gameType: r.game_type,
-      pokemonId: r.pokemon_id,
-      isWon: r.is_won === 1 || r.is_won === true,
-      attemptsUsed: r.attempts_used,
-      timeTakenSeconds: r.time_taken_seconds,
-      playedAt: r.played_at,
-    }));
-  }
-
-  // --- CONFIGURATIONS & FEATURE FLAGS (SQLite: system_configs) ---
+  // --- CONFIGURATIONS & FEATURE FLAGS ---
   public getGameConfig(): GameConfiguration {
-    const { systemConfigs } = getMemoryState();
-    const stored = systemConfigs['game_config'] || {};
-    return {
-      ...DEFAULT_GAME_CONFIG,
-      ...stored,
-      whosThatPokemon: { ...DEFAULT_GAME_CONFIG.whosThatPokemon, ...stored.whosThatPokemon },
-      hangmon: { ...DEFAULT_GAME_CONFIG.hangmon, ...stored.hangmon },
-      identicry: { ...DEFAULT_GAME_CONFIG.identicry, ...stored.identicry },
-      biologist: { ...DEFAULT_GAME_CONFIG.biologist, ...stored.biologist },
-      general: { ...DEFAULT_GAME_CONFIG.general, ...stored.general },
-    };
+    return this.gameConfig;
   }
 
-  public updateGameConfig(config: Partial<GameConfiguration>): GameConfiguration {
-    const current = this.getGameConfig();
-    const updated = {
-      ...current,
-      ...config,
-      whosThatPokemon: { ...current.whosThatPokemon, ...config.whosThatPokemon },
-      hangmon: { ...current.hangmon, ...config.hangmon },
-      identicry: { ...current.identicry, ...config.identicry },
-      biologist: { ...current.biologist, ...config.biologist },
-      general: { ...current.general, ...config.general },
-    };
-    getMemoryState().systemConfigs['game_config'] = updated;
-    executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
-      'game_config',
-      JSON.stringify(updated),
-      new Date().toISOString(),
-    ]);
-    return updated;
+  public updateGameConfig(config: Partial<GameConfiguration>): void {
+    this.gameConfig = { ...this.gameConfig, ...config };
+    notifyListeners();
   }
 
   public getFeatureFlags(): FeatureFlags {
-    const { systemConfigs } = getMemoryState();
-    return systemConfigs['feature_flags'] || DEFAULT_FEATURE_FLAGS;
+    return this.featureFlags;
   }
 
-  public updateFeatureFlags(flags: Partial<FeatureFlags>): FeatureFlags {
-    const current = this.getFeatureFlags();
-    const updated = { ...current, ...flags };
-    getMemoryState().systemConfigs['feature_flags'] = updated;
-    executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
-      'feature_flags',
-      JSON.stringify(updated),
-      new Date().toISOString(),
-    ]);
-    return updated;
+  public updateFeatureFlags(flags: Partial<FeatureFlags>): void {
+    this.featureFlags = { ...this.featureFlags, ...flags };
+    notifyListeners();
   }
 
-  // --- ADMIN CONSOLE DISPLAY (SQLite: system_configs) ---
   public getAdminDisplayConfig(): AdminDisplayConfiguration {
-    const { systemConfigs } = getMemoryState();
-    const stored = systemConfigs['admin_display_config'] || {};
-    return { ...DEFAULT_ADMIN_DISPLAY_CONFIG, ...stored, theme: stored.theme === 'dark' ? 'dark' : 'light' };
+    return DEFAULT_ADMIN_DISPLAY_CONFIG;
   }
 
-  public updateAdminDisplayConfig(config: Partial<AdminDisplayConfiguration>): AdminDisplayConfiguration {
-    const updated = { ...this.getAdminDisplayConfig(), ...config };
-    getMemoryState().systemConfigs['admin_display_config'] = updated;
-    executeSql('INSERT OR REPLACE INTO system_configs (key, value_json, updated_at) VALUES (?, ?, ?)', [
-      'admin_display_config',
-      JSON.stringify(updated),
-      new Date().toISOString(),
-    ]);
-    return updated;
+  public updateAdminDisplayConfig(_config: Partial<AdminDisplayConfiguration>): void {
+    notifyListeners();
   }
 
-  // --- PER-USER SETTINGS (SQLite: user_settings) ---
+  // --- USER SETTINGS ---
   public getUserSettings(userId: string): UserSettings {
-    const row = getMemoryState().userSettings.find((item: any) => item.user_id === userId);
-    return {
-      userId,
-      theme: row?.theme === 'dark' ? 'dark' : 'light',
-      minigamesView: row?.minigames_view === 'row' ? 'row' : 'grid',
-      soundEnabled: row ? row.sound_enabled === 1 || row.sound_enabled === true : true,
-      reducedMotion: row ? row.reduced_motion === 1 || row.reduced_motion === true : false,
-      updatedAt: row?.updated_at || '',
-    };
+    return (
+      this.userSettings.get(userId) || {
+        userId,
+        theme: 'light',
+        minigamesView: 'grid',
+        soundEnabled: true,
+        reducedMotion: false,
+        updatedAt: new Date().toISOString(),
+      }
+    );
   }
 
-  public updateUserSettings(userId: string, settings: Partial<Omit<UserSettings, 'userId' | 'updatedAt'>>): UserSettings {
+  public updateUserSettings(userId: string, partial: Partial<UserSettings>): UserSettings {
     const current = this.getUserSettings(userId);
-    const updated: UserSettings = { ...current, ...settings, updatedAt: new Date().toISOString() };
-    const rows = getMemoryState().userSettings;
-    const index = rows.findIndex((item: any) => item.user_id === userId);
-    const row = {
-      user_id: userId,
-      theme: updated.theme,
-      minigames_view: updated.minigamesView,
-      sound_enabled: updated.soundEnabled ? 1 : 0,
-      reduced_motion: updated.reducedMotion ? 1 : 0,
-      updated_at: updated.updatedAt,
+    const updated: UserSettings = {
+      ...current,
+      ...partial,
+      updatedAt: new Date().toISOString(),
     };
-    if (index >= 0) rows[index] = row;
-    else rows.push(row);
-    executeSql('INSERT OR REPLACE INTO user_settings (user_id, theme, minigames_view, sound_enabled, reduced_motion, updated_at) VALUES (?, ?, ?, ?, ?, ?)', [userId, row.theme, row.minigames_view, row.sound_enabled, row.reduced_motion, row.updated_at]);
+    this.userSettings.set(userId, updated);
+    notifyListeners();
     return updated;
   }
 
-  // --- ACHIEVEMENTS (SQLite: achievements) ---
+  // --- ACHIEVEMENTS ---
   public getAchievements(): Achievement[] {
-    const { achievements } = getMemoryState();
-    if (!achievements || achievements.length === 0) return MOCK_ACHIEVEMENTS;
-
-    return achievements.map((r: any) => ({
-      id: r.id,
-      title: r.title,
-      description: r.description,
-      icon: r.icon,
-      category: r.category,
-      targetCount: r.target_count || r.targetCount,
-      unlockedAt: r.unlocked_at || r.unlockedAt || undefined,
-    }));
+    return this.achievements;
   }
 
   public unlockAchievement(achievementId: string): void {
-    const now = new Date().toISOString();
-    const achs = getMemoryState().achievements;
-    const item = achs.find((a: any) => a.id === achievementId);
-    if (item && !item.unlocked_at) {
-      item.unlocked_at = now;
+    const item = this.achievements.find((a) => a.id === achievementId);
+    if (item && !item.unlockedAt) {
+      item.unlockedAt = new Date().toISOString();
+      notifyListeners();
     }
-    executeSql('UPDATE achievements SET unlocked_at = ? WHERE id = ? AND unlocked_at IS NULL', [now, achievementId]);
   }
 
-  /**
-   * Resets progress and restores SQLite database to factory defaults.
-   */
   public async resetToDefaults(): Promise<void> {
-    await resetSqliteDatabase();
+    this.users = [...MOCK_PLAYERS, MOCK_ADMIN];
+    this.pokedexEntries = [];
+    this.arenaSessions = [];
+    this.achievements = [...MOCK_ACHIEVEMENTS];
+    this.userSettings.clear();
+    this.gameConfig = { ...DEFAULT_GAME_CONFIG };
+    this.featureFlags = { ...DEFAULT_FEATURE_FLAGS };
+    notifyListeners();
   }
 }
 

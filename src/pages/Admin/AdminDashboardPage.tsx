@@ -80,7 +80,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
             System Control & Overview
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
-            Logged in as <span className="font-semibold text-slate-800 dark:text-slate-200">{currentUser?.firstName} {currentUser?.lastName || ''}</span> ({currentUser?.username}). Live metrics synchronized with local SQLite database.
+            Logged in as <span className="font-semibold text-slate-800 dark:text-slate-200">{currentUser?.firstName} {currentUser?.lastName || ''}</span> ({currentUser?.username}). Live metrics synchronized with Convex cloud backend.
           </p>
         </div>
 
@@ -161,11 +161,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
           </div>
         </div>
 
-        {/* Card 4: SQLite Database Health */}
+        {/* Card 4: Convex Cloud Database */}
         <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Local SQLite
+              Convex Cloud
             </span>
             <div className="w-9 h-9 rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200/70 dark:border-teal-800/60 flex items-center justify-center text-teal-600 dark:text-teal-400">
               <HardDrive className="w-4 h-4" />
@@ -174,10 +174,10 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
           <div>
             <div className="text-sm font-black text-slate-900 dark:text-slate-100 font-display tracking-tight flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>data/pokellects.db</span>
+              <span>Production Cluster</span>
             </div>
             <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-              Live records synchronized from SQLite
+              Live records synchronized in real-time
             </div>
           </div>
         </div>

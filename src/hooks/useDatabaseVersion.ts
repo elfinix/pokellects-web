@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { subscribeToDatabase } from '../services/sqliteDatabase';
+import { subscribeToStorage } from '../services/storageService';
 
-/** Re-renders a view whenever the SQLite bridge refreshes its in-memory state. */
+/** Re-renders a view whenever local fallback storage refreshes. */
 export function useDatabaseVersion(): number {
   const [version, setVersion] = useState(0);
 
-  useEffect(() => subscribeToDatabase(() => setVersion((current) => current + 1)), []);
+  useEffect(() => subscribeToStorage(() => setVersion((current) => current + 1)), []);
 
   return version;
 }

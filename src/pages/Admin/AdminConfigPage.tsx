@@ -117,7 +117,7 @@ export const AdminConfigPage: React.FC = () => {
       {savedNotice && (
         <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
           <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>System configurations successfully updated and saved to SQLite repository.</span>
+          <span>System configurations successfully updated and saved.</span>
         </div>
       )}
 
