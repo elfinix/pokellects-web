@@ -36,6 +36,8 @@ Test your knowledge across all 9 generations, unlock entries permanently into yo
 - 🎨 **Tailored Light and Dark Themes** — Type-harmonized color system with accessible high-contrast modes, ambient glow effects, and reduced-motion support.
 - ☁️ **Real-Time Cloud Persistence** — Backed by Convex for sub-millisecond reactive subscriptions, secure auth, and atomic cascading data synchronization.
 
+<img width="1912" height="861" alt="image" src="https://github.com/user-attachments/assets/c7b40dd4-87c2-4949-8221-5952f3157862" />
+
 ---
 
 ## 🎮 Minigames
