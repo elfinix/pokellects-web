@@ -1,60 +1,63 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 export type ThemeMode = 'light' | 'dark';
 
 interface ThemeContextType {
-  /** The theme active for the current surface. */
+  /** The currently active theme ('light' | 'dark'). */
   theme: ThemeMode;
-  /** Trainer Vault preference. It is deliberately separate from public-site and admin themes. */
+  /** Set active theme directly. */
   setTheme: (theme: ThemeMode) => void;
+  /** Toggle between light and dark modes. */
+  toggleTheme: () => void;
+  /** Public site theme alias for compatibility. */
   publicTheme: ThemeMode;
+  /** Toggle public theme alias. */
   togglePublicTheme: () => void;
+  /** Admin theme alias for compatibility. */
   adminTheme: ThemeMode;
+  /** Set admin theme alias. */
   setAdminTheme: (theme: ThemeMode) => void;
+  /** Boolean helper indicating if dark mode is active. */
   isDark: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-const TRAINER_THEME_STORAGE_KEY = 'pokellects-trainer-theme';
-const PUBLIC_THEME_STORAGE_KEY = 'pokellects-public-theme';
-const ADMIN_THEME_STORAGE_KEY = 'pokellects-admin-theme';
+const THEME_STORAGE_KEY = 'pokellects-theme';
 
-const readSavedTheme = (key: string): ThemeMode | null => {
-  if (typeof window === 'undefined') return null;
-  const saved = window.localStorage.getItem(key);
-  return saved === 'dark' || saved === 'light' ? saved : null;
+const readSavedTheme = (): ThemeMode => {
+  if (typeof window === 'undefined') return 'light';
+  const saved =
+    window.localStorage.getItem(THEME_STORAGE_KEY) ||
+    window.localStorage.getItem('pokellects-trainer-theme') ||
+    window.localStorage.getItem('pokellects-public-theme') ||
+    window.localStorage.getItem('pokellects-admin-theme');
+  return saved === 'dark' || saved === 'light' ? saved : 'light';
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { currentUser, isAdmin, isLoading } = useAuth();
-  const [trainerTheme, setTrainerTheme] = useState<ThemeMode>(() => readSavedTheme(TRAINER_THEME_STORAGE_KEY) ?? 'light');
-  const [publicTheme, setPublicTheme] = useState<ThemeMode>(() => readSavedTheme(PUBLIC_THEME_STORAGE_KEY) ?? 'light');
-  const [adminTheme, setAdminThemeState] = useState<ThemeMode>(() => readSavedTheme(ADMIN_THEME_STORAGE_KEY) ?? 'light');
+  const [theme, setThemeState] = useState<ThemeMode>(() => readSavedTheme());
 
-  // Public pages, Trainer Vault, and Admin Console intentionally retain separate themes.
-  // While Convex restores a session, retain the last Trainer Vault theme instead
-  // of briefly painting the landing page with the public default before profile
-  // data arrives. Once resolved, each surface uses its own saved preference.
-  const theme = isLoading ? trainerTheme : !currentUser ? publicTheme : isAdmin ? adminTheme : trainerTheme;
+  const setTheme = useCallback((newTheme: ThemeMode) => {
+    setThemeState(newTheme);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+      window.localStorage.setItem('pokellects-trainer-theme', newTheme);
+      window.localStorage.setItem('pokellects-public-theme', newTheme);
+      window.localStorage.setItem('pokellects-admin-theme', newTheme);
+    }
+  }, []);
 
-  const setTheme = (newTheme: ThemeMode) => {
-    setTrainerTheme(newTheme);
-    window.localStorage.setItem(TRAINER_THEME_STORAGE_KEY, newTheme);
-  };
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
-  const togglePublicTheme = () => {
-    setPublicTheme((currentTheme) => {
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      window.localStorage.setItem(PUBLIC_THEME_STORAGE_KEY, newTheme);
-      return newTheme;
-    });
-  };
+  const togglePublicTheme = useCallback(() => {
+    toggleTheme();
+  }, [toggleTheme]);
 
-  const setAdminTheme = (newTheme: ThemeMode) => {
-    setAdminThemeState(newTheme);
-    window.localStorage.setItem(ADMIN_THEME_STORAGE_KEY, newTheme);
-  };
+  const setAdminTheme = useCallback((newTheme: ThemeMode) => {
+    setTheme(newTheme);
+  }, [setTheme]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -68,7 +71,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, publicTheme, togglePublicTheme, adminTheme, setAdminTheme, isDark: theme === 'dark' }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+        toggleTheme,
+        publicTheme: theme,
+        togglePublicTheme,
+        adminTheme: theme,
+        setAdminTheme,
+        isDark: theme === 'dark',
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -81,3 +95,4 @@ export const useTheme = (): ThemeContextType => {
   }
   return context;
 };
+

@@ -37,10 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const currentUser = useMemo<AppUser | null>(() => {
-    if (!profile || !profile.email || !profile.username || !profile.firstName || !profile.role) {
-      if (availableUsers.length > 0) {
-        return { ...availableUsers[0], ...localOverrides } as AppUser;
-      }
+    if (!isAuthenticated || !profile || !profile.email || !profile.username || !profile.firstName || !profile.role) {
       return null;
     }
     const base = {
@@ -67,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       unlockedPokemonIds: [],
       stats: { totalGuesses: 0, correctGuesses: 0, arenaWins: 0 },
     };
-  }, [profile, availableUsers, localOverrides]);
+  }, [isAuthenticated, profile, localOverrides]);
 
   const updateCurrentUserProfile = useCallback(
     async (data: Partial<AppUser>) => {
@@ -102,6 +99,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [currentUser, isAuthenticated, updateProfileMutation]
   );
 
+  const logout = useCallback(async () => {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('pokellects_active_profile_overrides');
+      }
+      setLocalOverrides({});
+      await signOut();
+    } catch (err) {
+      console.error('Sign out error:', err);
+    }
+  }, [signOut]);
+
   const value = useMemo<AuthContextType>(
     () => ({
       currentUser,
@@ -109,12 +118,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAuthenticated,
       isPlayer: currentUser?.role === 'player',
       isAdmin: currentUser?.role === 'admin',
-      logout: signOut,
+      logout,
       switchUser: () => {},
       updateCurrentUserProfile,
       availableUsers,
     }),
-    [availableUsers, currentUser, isAuthenticated, isLoading, profile, signOut, updateCurrentUserProfile]
+    [availableUsers, currentUser, isAuthenticated, isLoading, logout, profile, updateCurrentUserProfile]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
