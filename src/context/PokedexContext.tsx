@@ -68,7 +68,11 @@ export const PokedexProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [allPokemonList, setAllPokemonList] = useState<Pokemon[]>(() => getAllKnownPokemon());
 
   useEffect(() => {
-    if (currentUser) void ensureStarter();
+    if (currentUser) {
+      ensureStarter().catch((err) => {
+        console.debug('ensureStarter non-blocking error:', err);
+      });
+    }
   }, [currentUser, ensureStarter]);
 
   const unlockedIds = useMemo(

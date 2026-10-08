@@ -19,10 +19,10 @@ export const ensureStarter = mutation({
   args: {}, returns: v.boolean(),
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Sign in to access your Pokédex.");
+    if (!userId) return false;
     const user = await ctx.db.get(userId);
     if (!user || user.legacyId) return false;
-    const existing = await ctx.db.query("pokedexEntries").withIndex("by_userId_and_pokemonId", (q) => q.eq("userId", userId).eq("pokemonId", 25)).unique();
+    const existing = await ctx.db.query("pokedexEntries").withIndex("by_userId_and_pokemonId", (q) => q.eq("userId", userId).eq("pokemonId", 25)).first();
     if (existing) return false;
     await ctx.db.insert("pokedexEntries", { userId, pokemonId: 25, unlockedAt: Date.now(), discoveryMethod: "starter_grant" });
     return true;
@@ -34,7 +34,7 @@ export const register = mutation({
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Sign in to register Pokémon.");
-    const existing = await ctx.db.query("pokedexEntries").withIndex("by_userId_and_pokemonId", (q) => q.eq("userId", userId).eq("pokemonId", args.pokemonId)).unique();
+    const existing = await ctx.db.query("pokedexEntries").withIndex("by_userId_and_pokemonId", (q) => q.eq("userId", userId).eq("pokemonId", args.pokemonId)).first();
     if (existing) return false;
     await ctx.db.insert("pokedexEntries", { userId, pokemonId: args.pokemonId, unlockedAt: Date.now(), discoveryMethod: args.discoveryMethod });
     return true;
